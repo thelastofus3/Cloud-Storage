@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head th:insert="~{fragments/head :: head}"></head>
+<body class="min-vh-100 d-flex flex-column">
+<header th:insert="~{fragments/header :: header1}"></header>
+<section class="flex-grow-1">
+    <div class="container mt-5 pt-5">
+        <div class="row">
+            <div class="col-8 col-sm-6 col-md-4 m-auto">
+                <div class="card border-0 shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center align-items-center my-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
+                                <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
+                            </svg>
+                        </div>
+                        <form  th:method="POST" th:action="@{/auth/registration}" th:object="${user}">
+                            <input type="text" th:field="*{username}" name="username" id="username" class="form-control my-4 py-2 " placeholder="Username">
+                            <input type="email" th:field="*{email}" name="email" id="email" class="form-control my-4 py-2" placeholder="Email">
+                            <input type="password" th:field="*{password}" name="password" id="password" class="form-control my-4 py-2" placeholder="Password">
+                            <input type="password" th:field="*{matchingPassword}" name="matchingPassword" id="matchingPassword" class="form-control my-4 py-2" placeholder="Confirm password">
+                            <div class="text-center">
+                                <button class="btn btn-light" type="submit">Register</button>
+                                <p class="py-2">Already have account? <a th:href="@{/auth/login}" class="link-offset-2 link-underline link-underline-opacity-0">Log in!</a></p>
+                            </div>
+                            <div th:if="${#fields.hasErrors('password')}">
+                                <div class="alert alert-light text-center" role="alert" th:errors="*{password}">
+                                    Password error
+                                </div>
+                            </div>
+                            <div th:if="${#fields.hasErrors('username')}">
+                                <div class="alert alert-light text-center" role="alert" th:errors="*{username}">
+                                    Login error
+                                </div>
+                            </div>
+                            <div th:if="${#fields.hasErrors('matchingPassword')}">
+                                <div class="alert alert-light text-center" role="alert" th:errors="*{matchingPassword}">
+                                    Match error
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<footer th:insert="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

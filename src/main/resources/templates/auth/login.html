@@ -1,10 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
+<html lang="en" data-bs-theme="dark">
+<head th:insert="~{fragments/head :: head}"></head>
+<body class="min-vh-100 d-flex flex-column">
+<header th:insert="~{fragments/header :: header1}"></header>
+<section class="flex-grow-1">
+    <div class="container mt-5 pt-5 ">
+        <div class="row">
+            <div class="col-8 col-sm-6 col-md-4 m-auto">
+                <div class="card border-0 shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center align-items-center my-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="mx-auto bi bi-person-bounding-box " viewBox="0 0 16 16">
+                                <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5M.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5"/>
+                                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                            </svg>
+                        </div>
+                        <form action="/auth/login" method="post" name="f">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                            <input type="text" name="username" id="username" class="form-control my-4 py-2 " placeholder="Username">
+                            <input type="password" name="password" id="password" class="form-control my-4 py-2" placeholder="Password">
+                            <div class="text-center">
+                                <button class="btn btn-light" type="submit">Login</button>
+                                <p class="py-2">No account? <a th:href="@{/auth/registration}" class="link-offset-2 link-underline link-underline-opacity-0">Create One!</a></p>
+                            </div>
+                            <div th:if="${param.error}" class="text-danger">
+                                <div class="alert alert-light text-center" role="alert">
+                                    Incorrect login or password
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<footer th:insert="~{fragments/footer :: footer}"></footer>
 </body>
 </html>
