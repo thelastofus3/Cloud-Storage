@@ -1,0 +1,25 @@
+version: '3.9'
+
+
+volumes:
+  db:
+    driver: local
+#  redis-data:
+#    driver: local
+
+services:
+  mysql:
+    image: 'mysql:latest'
+    environment:
+      - 'MYSQL_DATABASE=${MYSQL_DATABASE}'
+      - 'MYSQL_PASSWORD=${MYSQL_PASSWORD}'
+      - 'MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}'
+      - 'MYSQL_USER=${MYSQL_USER}'
+    ports:
+      - '3306:3306'
+    volumes:
+      - db:/var/lib/mysql
+#  redis:
+#    image: 'redis:latest'
+#    ports:
+#      - '6379:6379'
