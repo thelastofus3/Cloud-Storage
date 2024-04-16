@@ -17,22 +17,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/auth")
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class AuthenticationController {
 
     UserService userService;
     UserMapper userMapper;
+    public static final String AUTH_REGISTRATION = "/auth/registration";
+    public static final String AUTH_LOGIN = "/auth/login";
 
-    @GetMapping("/login")
+    @GetMapping(AUTH_LOGIN)
     public String getLoginPage(){
         return "auth/login";
     }
-    @GetMapping("/registration")
+    @GetMapping(AUTH_REGISTRATION)
     public String getRegistrationPage(@ModelAttribute("user")UserDto userDto){
         return "auth/registration";
     }
-    @PostMapping("/registration")
+    @PostMapping(AUTH_REGISTRATION)
     public String doRegistration(@ModelAttribute("user") @Valid UserDto userDto, BindingResult bindingResult){
         if (bindingResult.hasErrors())
             return "auth/registration";
