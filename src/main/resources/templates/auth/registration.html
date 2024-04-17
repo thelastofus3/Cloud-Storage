@@ -25,18 +25,7 @@
                                 <button class="btn btn-light" type="submit">Register</button>
                                 <p class="py-2">Already have account? <a th:href="@{/auth/login}" class="link-offset-2 link-underline link-underline-opacity-0">Log in!</a></p>
                             </div>
-                            <div class="text-center">
-                                <div class="d-flex align-items-center">
-                                    <hr class="flex-grow-1">
-                                    <span class="px-3">or</span>
-                                    <hr class="flex-grow-1">
-                                </div>
-                                <div class="d-flex justify-content-evenly align-items-center py-2">
-                                    <i class="bi bi-google fs-3"></i>
-                                    <i class="bi bi-facebook fs-3"></i>
-                                    <i class="bi bi-github fs-3"></i>
-                                </div>
-                            </div>
+                            <div th:insert="~{fragments/oauth2_choice :: oauth2}"></div>
                             <div th:if="${#fields.hasErrors('password')}">
                                 <div class="alert alert-light text-center" role="alert" th:errors="*{password}">
                                     Password error
