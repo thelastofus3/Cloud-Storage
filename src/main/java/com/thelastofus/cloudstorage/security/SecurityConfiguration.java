@@ -20,7 +20,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfiguration  {
 
-
     @Bean
     @SneakyThrows
     public SecurityFilterChain securityFilterChain(HttpSecurity http){
@@ -39,25 +38,10 @@ public class SecurityConfiguration  {
         return http.build();
     }
 
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
-    }
-
     @Bean
     public PasswordEncoder getPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
-    //    @Bean
-//    public DaoAuthenticationProvider daoAuthenticationProvider(){
-//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-//
-//        provider.setPasswordEncoder(getPasswordEncoder());
-//        provider.setUserDetailsService(userDetailsService);
-//
-//        return provider;
-//    }
 
 }
