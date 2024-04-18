@@ -1,12 +1,9 @@
-package com.thelastofus.cloudstorage.security;
+package com.thelastofus.cloudstorage.security.service;
 
 import com.thelastofus.cloudstorage.mapper.UserMapper;
-import com.thelastofus.cloudstorage.model.User;
 import com.thelastofus.cloudstorage.repository.UserRepository;
-import com.thelastofus.cloudstorage.security.CustomUserDetails;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,4 +1,4 @@
-package com.thelastofus.cloudstorage.security;
+package com.thelastofus.cloudstorage.security.user;
 
 import com.thelastofus.cloudstorage.model.Role;
 import com.thelastofus.cloudstorage.model.User;

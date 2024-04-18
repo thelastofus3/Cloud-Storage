@@ -2,7 +2,7 @@ package com.thelastofus.cloudstorage.mapper;
 
 import com.thelastofus.cloudstorage.dto.UserDto;
 import com.thelastofus.cloudstorage.model.User;
-import com.thelastofus.cloudstorage.security.CustomUserDetails;
+import com.thelastofus.cloudstorage.security.user.CustomUserDetails;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

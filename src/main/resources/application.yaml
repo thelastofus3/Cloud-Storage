@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: cloud-storage
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/${MYSQL_DATABASE}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
+  liquibase:
+    change-log: classpath:db/changelog/changelog.yaml
+    enabled: true
+    default-schema: ${MYSQL_DATABASE}
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: ${CLIENT_ID_GITHUB}
+            client-secret: ${CLIENT_SECRET_GITHUB}
+          google:
+            client-id: ${CLIENT_ID_GOOGLE}
+            client-secret: ${CLIENT_SECRET_GOOGLE}
+            scope:
+              - profile
+          facebook:
+            client-id: ${CLIENT_ID_FACEBOOK}
+            client-secret: ${CLIENT_SECRET_FACEBOOK}
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE

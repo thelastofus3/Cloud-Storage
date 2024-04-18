@@ -13,4 +13,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/static/");
     }
 
+
+
 }
