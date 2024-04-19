@@ -13,7 +13,7 @@ import java.util.Map;
 @ToString
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
-public class CustomOAuth2User implements OAuth2User {
+public abstract class CustomOAuth2User implements OAuth2User {
 
     OAuth2User oAuth2User;
     String nameAttributeKey;

@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Configuration
-public class OAuth2UserFactoryConfig {
+public class OAuth2UserFactoryConfiguration {
     @Bean
     public Map<String, Function<OAuth2User, OAuth2User>> oauthUserFactories() {
         Map<String, Function<OAuth2User, OAuth2User>> factories = new HashMap<>();

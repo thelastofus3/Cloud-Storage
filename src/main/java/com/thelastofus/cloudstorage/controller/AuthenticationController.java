@@ -13,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,8 +21,8 @@ public class AuthenticationController {
 
     UserService userService;
     UserMapper userMapper;
-    public static final String AUTH_REGISTRATION = "/auth/registration";
-    public static final String AUTH_LOGIN = "/auth/login";
+    private static final String AUTH_REGISTRATION = "/auth/registration";
+    private static final String AUTH_LOGIN = "/auth/login";
 
     @GetMapping(AUTH_LOGIN)
     public String getLoginPage(){
