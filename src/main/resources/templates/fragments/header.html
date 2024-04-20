@@ -13,19 +13,19 @@
 <header th:fragment="header2">
     <nav class="navbar bg-body-tertiary p-0">
         <div class="container">
-            <div class="col">
+            <div class="col d-none d-lg-flex">
                 <a class="navbar-brand d-flex align-items-center">
-                    <i class="bi bi-cloud"></i>
+                    <i class="bi bi-cloud logo"></i>
                     <p class="m-auto ms-2">Cloud Storage</p>
                 </a>
             </div>
-            <div class="col">
+            <div class="col py-4">
                 <form class="d-flex" role="search" th:method="POST" th:action="@{/search}">
-                    <input class="form-control me-2" type="search" name="q" id="q" placeholder="Search" aria-label="Search">
+                    <input class="form-control me-2" type="search" name="search" id="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
             </div>
-            <div class="col">
+            <div class="col d-none d-lg-flex">
                 <form class="container-fluid d-flex justify-content-end align-items-center" th:method="POST" th:action="@{/auth/logout}">
                     <p class="mb-0 pe-4" th:text="${username}">User</p>
                     <button class="btn btn-secondary" type="submit">Logout</button>

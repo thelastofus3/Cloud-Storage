@@ -4,6 +4,8 @@ version: '3.9'
 volumes:
   db:
     driver: local
+  minio-data:
+    driver: local
 #  redis-data:
 #    driver: local
 
@@ -19,6 +21,17 @@ services:
       - '3306:3306'
     volumes:
       - db:/var/lib/mysql
+  minio:
+    image: 'minio/minio:latest'
+    environment:
+      - 'MINIO_ROOT_USER=${MINIO_USER}'
+      - 'MINIO_ROOT_PASSWORD=${MINIO_PASSWORD}'
+    command: server ~/minio --console-address :9090
+    ports:
+      - '9090:9090'
+      - '9000:9000'
+    volumes:
+      - minio-data:/minio
 #  redis:
 #    image: 'redis:latest'
 #    ports:
