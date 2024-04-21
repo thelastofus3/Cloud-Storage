@@ -1,5 +1,6 @@
 package com.thelastofus.cloudstorage.controller;
 
+import com.thelastofus.cloudstorage.dto.FileUploadRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -13,7 +14,7 @@ import java.security.Principal;
 @Controller
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
-public class MainController {
+public class HomeController {
 
     private static final String HOME = "/";
 
@@ -23,7 +24,7 @@ public class MainController {
     }
 
     @GetMapping(HOME)
-    public String test(){
-        return "test";
+    public String getHomePage(@ModelAttribute("response") FileUploadRequest fileUploadRequest){
+        return "file/upload";
     }
 }

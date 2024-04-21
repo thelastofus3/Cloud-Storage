@@ -8,14 +8,17 @@ import com.thelastofus.cloudstorage.service.FileService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
@@ -30,23 +33,16 @@ public class FileController {
         model.addAttribute("username", principal.getName());
     }
 
-    @GetMapping(FILE_UPLOAD)
-    public String getFileUploadPage(@ModelAttribute("response") FileUploadRequest fileUploadRequest) {
-        fileUploadRequest.setOwner(new User(
-                15L,"Gena","gena@gmail.com","password", Role.ROLE_USER)
-        );
-        return "file/upload";
-    }
-
     @PostMapping(FILE_UPLOAD)
-    public String uploadFile(Model model, @ModelAttribute("response") FileUploadRequest fileUploadRequest) {
-        try {
-            fileService.upload(fileUploadRequest);
-        } catch (Exception e) {
-            model.addAttribute("message","Minio error");
-            throw new FileUploadException("File upload error");
+    public String uploadFile(@ModelAttribute("response") FileUploadRequest fileUploadRequest,
+                             Principal principal,  BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "redirect:/";
         }
-        model.addAttribute("message","File Successfully Upload");
+
+        fileService.upload(fileUploadRequest,principal);
+        log.debug("File success save in minio");
+
         return "file/upload";
     }
 }

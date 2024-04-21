@@ -1,6 +1,6 @@
 package com.thelastofus.cloudstorage.security.config;
 
-import com.thelastofus.cloudstorage.security.user.provider.FaceBookOAuth2User;
+import com.thelastofus.cloudstorage.security.user.provider.FacebookOAuth2User;
 import com.thelastofus.cloudstorage.security.user.provider.GitHubOAuth2User;
 import com.thelastofus.cloudstorage.security.user.provider.GoogleOAuth2User;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +18,7 @@ public class OAuth2UserFactoryConfiguration {
         Map<String, Function<OAuth2User, OAuth2User>> factories = new HashMap<>();
         factories.put("github", GitHubOAuth2User::new);
         factories.put("google", GoogleOAuth2User::new);
-        factories.put("facebook", FaceBookOAuth2User::new);
+        factories.put("facebook", FacebookOAuth2User::new);
         return factories;
     }
 }

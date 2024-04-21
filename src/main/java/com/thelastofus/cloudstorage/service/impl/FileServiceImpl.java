@@ -3,6 +3,7 @@ package com.thelastofus.cloudstorage.service.impl;
 import com.thelastofus.cloudstorage.dto.FileUploadRequest;
 import com.thelastofus.cloudstorage.exception.FileUploadException;
 import com.thelastofus.cloudstorage.props.MinioProperties;
+import com.thelastofus.cloudstorage.repository.FileRepository;
 import com.thelastofus.cloudstorage.service.FileService;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
@@ -24,6 +25,7 @@ public class FileServiceImpl implements FileService {
 
     MinioClient minioClient;
     MinioProperties minioProperties;
+    FileRepository fileRepository;
 
     @Override
     public void upload(FileUploadRequest fileUploadRequest) {

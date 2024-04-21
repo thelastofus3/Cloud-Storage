@@ -17,6 +17,7 @@ public abstract class CustomOAuth2User implements OAuth2User {
 
     OAuth2User oAuth2User;
     String nameAttributeKey;
+
     @Override
     public Map<String, Object> getAttributes() {
         return oAuth2User.getAttributes();
