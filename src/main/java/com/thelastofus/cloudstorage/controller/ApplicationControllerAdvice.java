@@ -1,9 +1,6 @@
 package com.thelastofus.cloudstorage.controller;
 
-import com.thelastofus.cloudstorage.exception.ExceptionBody;
-import com.thelastofus.cloudstorage.exception.UnsupportedRegistrationServiceException;
-import com.thelastofus.cloudstorage.exception.UserAlreadyExistException;
-import com.thelastofus.cloudstorage.exception.UserNotFoundException;
+import com.thelastofus.cloudstorage.exception.*;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -35,6 +32,18 @@ public class ApplicationControllerAdvice {
     }
     @ExceptionHandler(UnsupportedRegistrationServiceException.class)
     public ExceptionBody handleUnsupportedRegistrationServiceException(UnsupportedRegistrationServiceException e){
+        return new ExceptionBody(e.getMessage());
+    }
+    @ExceptionHandler(CreateFolderException.class)
+    public ExceptionBody handleCreateFolderException(CreateFolderException e) {
+        return new ExceptionBody(e.getMessage());
+    }
+    @ExceptionHandler(FileUploadException.class)
+    public ExceptionBody handleFileUploadException(FileUploadException e) {
+        return new ExceptionBody(e.getMessage());
+    }
+    @ExceptionHandler(FolderUploadException.class)
+    public ExceptionBody handleFolderUploadException(FolderUploadException e) {
         return new ExceptionBody(e.getMessage());
     }
 
