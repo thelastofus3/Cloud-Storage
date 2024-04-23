@@ -5,6 +5,7 @@ import com.thelastofus.cloudstorage.exception.FileUploadException;
 import com.thelastofus.cloudstorage.model.Role;
 import com.thelastofus.cloudstorage.model.User;
 import com.thelastofus.cloudstorage.service.FileService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -34,7 +35,7 @@ public class FileController {
     }
 
     @PostMapping(FILE_UPLOAD)
-    public String uploadFile(@ModelAttribute("response") FileUploadRequest fileUploadRequest,
+    public String uploadFile(@ModelAttribute("response") @Valid FileUploadRequest fileUploadRequest,
                              Principal principal,  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "redirect:/";
