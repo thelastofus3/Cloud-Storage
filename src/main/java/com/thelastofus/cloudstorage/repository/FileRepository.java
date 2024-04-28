@@ -1,6 +1,7 @@
 package com.thelastofus.cloudstorage.repository;
 
-import org.springframework.stereotype.Repository;
+import io.minio.Result;
+import io.minio.messages.Item;
 
 import java.io.InputStream;
 
@@ -8,4 +9,5 @@ import java.io.InputStream;
 public interface FileRepository {
 
     void saveFile(InputStream inputStream, String filename);
+
 }
