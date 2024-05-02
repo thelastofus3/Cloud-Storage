@@ -1,10 +1,12 @@
 package com.thelastofus.cloudstorage.security.config;
 
+import com.thelastofus.cloudstorage.security.handler.OAuth2LoginSuccessHandler;
 import com.thelastofus.cloudstorage.security.service.CustomOAuth2Service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -22,6 +24,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration  {
 
     CustomOAuth2Service customOAuth2Service;
+    OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
     @Bean
     @SneakyThrows
@@ -42,16 +45,10 @@ public class SecurityConfiguration  {
                .userInfoEndpoint(userEndpoint -> userEndpoint
                        .userService(customOAuth2Service))
                .defaultSuccessUrl("/",true)
+               .successHandler(oAuth2LoginSuccessHandler)
                .failureUrl("/auth/login?error=true")
        );
 
         return http.build();
     }
-    @Bean
-    public PasswordEncoder getPasswordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-
-
-
 }

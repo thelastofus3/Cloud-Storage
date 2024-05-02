@@ -17,6 +17,7 @@ public abstract class CustomOAuth2User implements OAuth2User {
 
     OAuth2User oAuth2User;
     String nameAttributeKey;
+    String emailAttributeKey;
 
     @Override
     public Map<String, Object> getAttributes() {
@@ -31,6 +32,10 @@ public abstract class CustomOAuth2User implements OAuth2User {
     @Override
     public String getName() {
         return getAttribute(nameAttributeKey);
+    }
+
+    public String getEmail() {
+        return getAttribute(emailAttributeKey);
     }
 
 }
