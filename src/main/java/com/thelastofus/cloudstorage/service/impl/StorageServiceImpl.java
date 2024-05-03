@@ -21,7 +21,7 @@ public class StorageServiceImpl implements StorageService {
     StorageRepository storageRepository;
 
     @Override
-    public List<String> showAllFiles() {
+    public List<String> getAllFiles() {
         Iterable<Result<Item>> results = storageRepository.getObjects();
         List<String> fileNames = new ArrayList<>();
         try {

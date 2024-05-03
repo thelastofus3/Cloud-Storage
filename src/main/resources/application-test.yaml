@@ -10,3 +10,8 @@ spring:
         show_sql: true
   liquibase:
     enabled: false
+minio:
+  bucket: user-bucket
+  url: http://localhost:9000
+  accessKey: user
+  secretKey: user

@@ -1,6 +1,6 @@
 package com.thelastofus.cloudstorage.service;
 
-import com.thelastofus.cloudstorage.dto.UserDto;
+import com.thelastofus.cloudstorage.dto.UserRegistrationDto;
 import com.thelastofus.cloudstorage.exception.UserAlreadyExistException;
 import com.thelastofus.cloudstorage.mapper.UserMapper;
 import com.thelastofus.cloudstorage.repository.UserRepository;
@@ -31,8 +31,6 @@ class UserServiceTest {
     UserService userService;
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    UserMapper userMapper;
 
     @Container
     static MySQLContainer<?> mysql = new MySQLContainer<>(
@@ -54,32 +52,28 @@ class UserServiceTest {
 
     @Test
     void successSaveInDatabase() {
-        var userDto = UserDto.builder()
+        var userDto = UserRegistrationDto.builder()
                 .username("user")
                 .email("user@gmail.com")
                 .password("pass")
                 .matchingPassword("pass").build();
 
-        var user =  userMapper.convertToUser(userDto);
-
-        userService.create(user);
+        userService.create(userDto);
 
         assertEquals(1,userRepository.findAll().size(),"User success save in database");
     }
 
     @Test
     void failSaveInDatabaseUserAlreadyExist() {
-        var userDto = UserDto.builder()
+        var userDto = UserRegistrationDto.builder()
                 .username("user")
                 .email("user@gmail.com")
                 .password("pass")
                 .matchingPassword("pass").build();
 
-        var user =  userMapper.convertToUser(userDto);
+        userService.create(userDto);
 
-        userService.create(user);
-
-        assertThrows(UserAlreadyExistException.class, () -> userService.create(user));
+        assertThrows(UserAlreadyExistException.class, () -> userService.create(userDto));
 
     }
 }

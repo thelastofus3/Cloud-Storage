@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface StorageService {
 
-    List<String> showAllFiles();
+    List<String> getAllFiles();
 
 }

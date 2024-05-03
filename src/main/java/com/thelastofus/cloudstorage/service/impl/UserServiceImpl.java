@@ -1,6 +1,8 @@
 package com.thelastofus.cloudstorage.service.impl;
 
+import com.thelastofus.cloudstorage.dto.UserRegistrationDto;
 import com.thelastofus.cloudstorage.exception.UserAlreadyExistException;
+import com.thelastofus.cloudstorage.mapper.UserMapper;
 import com.thelastofus.cloudstorage.model.Role;
 import com.thelastofus.cloudstorage.model.User;
 import com.thelastofus.cloudstorage.repository.UserRepository;
@@ -22,6 +24,7 @@ public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
     PasswordEncoder passwordEncoder;
+    UserMapper userMapper;
     @Override
     public User getByUsername(String username) {
         return null;
@@ -29,7 +32,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void create(User user) {
+    public void create(UserRegistrationDto userRegistrationDto) {
+        User user = userMapper.convertToUser(userRegistrationDto);
+
         if (userRepository.findByUsername(user.getUsername()).isPresent())
             throw new UserAlreadyExistException("User %s already exist".formatted(user.getUsername()));
 

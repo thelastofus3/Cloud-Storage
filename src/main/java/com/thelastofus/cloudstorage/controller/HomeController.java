@@ -29,8 +29,9 @@ public class HomeController {
 
     @GetMapping(HOME)
     public String getHomePage(@ModelAttribute("response") FileUploadRequest fileUploadRequest,Model model){
-        log.info("All users files {}",storageService.showAllFiles());
-        model.addAttribute("files",storageService.showAllFiles());
+        log.info("All users files {}",storageService.getAllFiles());
+        model.addAttribute("files",storageService.getAllFiles());
+
         return "file/upload";
     }
 }

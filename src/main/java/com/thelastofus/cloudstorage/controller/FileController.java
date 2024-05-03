@@ -37,9 +37,8 @@ public class FileController {
     @PostMapping(FILE_UPLOAD)
     public String uploadFile(@ModelAttribute("response") @Valid FileUploadRequest fileUploadRequest,
                              Principal principal,  BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors())
             return "redirect:/";
-        }
 
         fileService.upload(fileUploadRequest,principal);
         log.debug("File success save in minio");
