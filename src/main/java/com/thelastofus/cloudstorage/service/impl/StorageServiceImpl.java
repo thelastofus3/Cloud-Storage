@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +22,8 @@ public class StorageServiceImpl implements StorageService {
     StorageRepository storageRepository;
 
     @Override
-    public List<String> getAllFiles() {
-        Iterable<Result<Item>> results = storageRepository.getObjects();
+    public List<String> getAllFiles(Principal principal) {
+        Iterable<Result<Item>> results = storageRepository.getObjects(principal);
         List<String> fileNames = new ArrayList<>();
         try {
             for (Result<Item> result : results) {

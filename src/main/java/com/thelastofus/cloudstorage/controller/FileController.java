@@ -35,7 +35,7 @@ public class FileController {
     }
 
     @PostMapping(FILE_UPLOAD)
-    public String uploadFile(@ModelAttribute("response") @Valid FileUploadRequest fileUploadRequest,
+    public String uploadFile(@Valid @ModelAttribute("response")  FileUploadRequest fileUploadRequest,
                              Principal principal,  BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "redirect:/";

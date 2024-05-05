@@ -11,6 +11,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Repository;
 
+import java.security.Principal;
+
+import static com.thelastofus.cloudstorage.util.MinioUtil.getUserParentFolder;
+
 @Repository
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
@@ -20,9 +24,11 @@ public class StorageRepositoryImpl implements StorageRepository {
     MinioClient minioClient;
 
     @Override
-    public Iterable<Result<Item>> getObjects() {
+    public Iterable<Result<Item>> getObjects(Principal principal) {
         ListObjectsArgs listObjectsArgs = ListObjectsArgs.builder()
                 .bucket(minioProperties.getBucket())
+                .prefix(getUserParentFolder(principal))
+                .recursive(true)
                 .build();
 
         return minioClient.listObjects(listObjectsArgs);

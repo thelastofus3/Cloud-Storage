@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,8 +18,9 @@ import java.util.stream.Collectors;
 public class ApplicationControllerAdvice {
 
     @ExceptionHandler(UserAlreadyExistException.class)
-    public ExceptionBody handleUserAlreadyExist(UserAlreadyExistException e){
-        return new ExceptionBody(e.getMessage());
+    public String handleUserAlreadyExistException(RedirectAttributes attributes) {
+        attributes.addFlashAttribute("error", "Sorry, this username already taken");
+        return "redirect:/auth/registration";
     }
 
     @ExceptionHandler(UserNotFoundException.class)
