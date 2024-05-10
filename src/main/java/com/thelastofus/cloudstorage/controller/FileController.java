@@ -25,9 +25,11 @@ import java.security.Principal;
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class FileController {
 
+    private static final String FILE_UPLOAD = "/file/upload";
+
+
     FileService fileService;
 
-    private static final String FILE_UPLOAD = "/file/upload";
 
     @ModelAttribute
     public void addAttributes(Principal principal, Model model){

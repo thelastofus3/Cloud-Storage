@@ -1,6 +1,6 @@
 package com.thelastofus.cloudstorage.util;
 
-import com.thelastofus.cloudstorage.dto.UserRegistrationDto;
+import com.thelastofus.cloudstorage.dto.UserRegistration;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -12,7 +12,7 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
 
     @Override
     public boolean isValid(Object o, ConstraintValidatorContext constraintValidatorContext) {
-        UserRegistrationDto user = (UserRegistrationDto) o;
+        UserRegistration user = (UserRegistration) o;
         boolean valid = user.getPassword() != null && user.getMatchingPassword() != null &&
                 user.getPassword().equals(user.getMatchingPassword());
         if (!valid) {

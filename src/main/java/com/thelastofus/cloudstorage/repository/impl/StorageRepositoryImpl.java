@@ -28,7 +28,6 @@ public class StorageRepositoryImpl implements StorageRepository {
         ListObjectsArgs listObjectsArgs = ListObjectsArgs.builder()
                 .bucket(minioProperties.getBucket())
                 .prefix(getUserParentFolder(principal))
-                .recursive(true)
                 .build();
 
         return minioClient.listObjects(listObjectsArgs);

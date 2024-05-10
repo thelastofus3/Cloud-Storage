@@ -1,6 +1,7 @@
 package com.thelastofus.cloudstorage.controller;
 
 import com.thelastofus.cloudstorage.dto.FileUploadRequest;
+import com.thelastofus.cloudstorage.dto.StorageObject;
 import com.thelastofus.cloudstorage.service.StorageService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.security.Principal;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -19,8 +21,9 @@ import java.security.Principal;
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class HomeController {
 
-    StorageService storageService;
     private static final String HOME = "/";
+
+    StorageService storageService;
 
     @ModelAttribute
     public void addAttributes(Principal principal, Model model){
@@ -30,8 +33,9 @@ public class HomeController {
     @GetMapping(HOME)
     public String getHomePage(@ModelAttribute("response") FileUploadRequest fileUploadRequest,
                               Principal principal,Model model){
-        log.error("All users files {}",storageService.getAllFiles(principal));
-        model.addAttribute("files",storageService.getAllFiles(principal));
+
+        log.debug("All users objects {}",storageService.getAllStorageObjects(principal));
+        model.addAttribute("storageObjects",storageService.getAllStorageObjects(principal));
 
         return "file/upload";
     }

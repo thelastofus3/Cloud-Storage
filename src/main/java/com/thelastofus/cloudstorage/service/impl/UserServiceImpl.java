@@ -1,6 +1,6 @@
 package com.thelastofus.cloudstorage.service.impl;
 
-import com.thelastofus.cloudstorage.dto.UserRegistrationDto;
+import com.thelastofus.cloudstorage.dto.UserRegistration;
 import com.thelastofus.cloudstorage.exception.UserAlreadyExistException;
 import com.thelastofus.cloudstorage.mapper.UserMapper;
 import com.thelastofus.cloudstorage.model.Role;
@@ -10,8 +10,6 @@ import com.thelastofus.cloudstorage.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,8 +30,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void create(UserRegistrationDto userRegistrationDto) {
-        User user = userMapper.convertToUser(userRegistrationDto);
+    public void create(UserRegistration userRegistration) {
+        User user = userMapper.convertToUser(userRegistration);
 
         if (userRepository.findByUsername(user.getUsername()).isPresent())
             throw new UserAlreadyExistException("User %s already exist".formatted(user.getUsername()));

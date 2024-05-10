@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserRegistrationDto {
+public class UserRegistration {
 
     @NotBlank(message = "Username should not be empty")
     @Size(min = 4,max = 120,message = "Username should be between 4 and 120 characters")

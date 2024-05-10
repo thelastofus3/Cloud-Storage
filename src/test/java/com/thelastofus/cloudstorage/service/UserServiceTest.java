@@ -1,8 +1,7 @@
 package com.thelastofus.cloudstorage.service;
 
-import com.thelastofus.cloudstorage.dto.UserRegistrationDto;
+import com.thelastofus.cloudstorage.dto.UserRegistration;
 import com.thelastofus.cloudstorage.exception.UserAlreadyExistException;
-import com.thelastofus.cloudstorage.mapper.UserMapper;
 import com.thelastofus.cloudstorage.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +51,7 @@ class UserServiceTest {
 
     @Test
     void successSaveInDatabase() {
-        var userDto = UserRegistrationDto.builder()
+        var userDto = UserRegistration.builder()
                 .username("user")
                 .email("user@gmail.com")
                 .password("pass")
@@ -65,7 +64,7 @@ class UserServiceTest {
 
     @Test
     void failSaveInDatabaseUserAlreadyExist() {
-        var userDto = UserRegistrationDto.builder()
+        var userDto = UserRegistration.builder()
                 .username("user")
                 .email("user@gmail.com")
                 .password("pass")

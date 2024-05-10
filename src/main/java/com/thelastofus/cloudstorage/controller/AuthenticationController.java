@@ -1,8 +1,6 @@
 package com.thelastofus.cloudstorage.controller;
 
-import com.thelastofus.cloudstorage.dto.UserRegistrationDto;
-import com.thelastofus.cloudstorage.mapper.UserMapper;
-import com.thelastofus.cloudstorage.model.User;
+import com.thelastofus.cloudstorage.dto.UserRegistration;
 import com.thelastofus.cloudstorage.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -19,25 +17,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class AuthenticationController {
 
-    UserService userService;
     private static final String AUTH_REGISTRATION = "/auth/registration";
     private static final String AUTH_LOGIN = "/auth/login";
+
+
+    UserService userService;
 
     @GetMapping(AUTH_LOGIN)
     public String showLoginPage(){
         return "auth/login";
     }
     @GetMapping(AUTH_REGISTRATION)
-    public String showRegistrationPage(@ModelAttribute("user") UserRegistrationDto userRegistrationDto){
+    public String showRegistrationPage(@ModelAttribute("user") UserRegistration userRegistration){
         return "auth/registration";
     }
     @PostMapping(AUTH_REGISTRATION)
-    public String doRegistration(@ModelAttribute("user") @Valid UserRegistrationDto userRegistrationDto,
+    public String doRegistration(@ModelAttribute("user") @Valid UserRegistration userRegistration,
                                  BindingResult bindingResult){
         if (bindingResult.hasErrors())
             return "auth/registration";
 
-        userService.create(userRegistrationDto);
+        userService.create(userRegistration);
 
         return "redirect:/auth/login";
     }

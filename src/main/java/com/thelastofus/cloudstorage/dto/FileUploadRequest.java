@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
