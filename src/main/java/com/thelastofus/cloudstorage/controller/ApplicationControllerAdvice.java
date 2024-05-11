@@ -18,14 +18,9 @@ import java.util.stream.Collectors;
 public class ApplicationControllerAdvice {
 
     @ExceptionHandler(UserAlreadyExistException.class)
-    public String handleUserAlreadyExistException(RedirectAttributes attributes) {
-        attributes.addFlashAttribute("error", "Sorry, this username already taken");
+    public String handleUserAlreadyExistException(UserAlreadyExistException e, RedirectAttributes attributes) {
+        attributes.addFlashAttribute("error", e.getMessage());
         return "redirect:/auth/registration";
-    }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ExceptionBody handleUserNotFound(UserNotFoundException e){
-        return new ExceptionBody(e.getMessage());
     }
 
     @ExceptionHandler(IllegalStateException.class)
@@ -33,22 +28,30 @@ public class ApplicationControllerAdvice {
         return new ExceptionBody(e.getMessage());
     }
     @ExceptionHandler(UnsupportedRegistrationServiceException.class)
-    public ExceptionBody handleUnsupportedRegistrationServiceException(UnsupportedRegistrationServiceException e){
-        return new ExceptionBody(e.getMessage());
+    public String handleUnsupportedRegistrationServiceException(UnsupportedRegistrationServiceException e, RedirectAttributes attributes){
+        attributes.addFlashAttribute("errorMessage",e.getMessage());
+        return "redirect:/";
     }
     @ExceptionHandler(CreateFolderException.class)
-    public ExceptionBody handleCreateFolderException(CreateFolderException e) {
-        return new ExceptionBody(e.getMessage());
+    public String handleCreateFolderException(CreateFolderException e, RedirectAttributes attributes) {
+        attributes.addFlashAttribute("errorMessage",e.getMessage());
+        return "redirect:/";
     }
     @ExceptionHandler(FileUploadException.class)
-    public ExceptionBody handleFileUploadException(FileUploadException e) {
-        return new ExceptionBody(e.getMessage());
+    public String handleFileUploadException(FileUploadException e, RedirectAttributes attributes) {
+        attributes.addFlashAttribute("errorMessage",e.getMessage());
+        return "redirect:/";
     }
     @ExceptionHandler(FolderUploadException.class)
-    public ExceptionBody handleFolderUploadException(FolderUploadException e) {
-        return new ExceptionBody(e.getMessage());
+    public String handleFolderUploadException(FolderUploadException e, RedirectAttributes attributes) {
+        attributes.addFlashAttribute("errorMessage",e.getMessage());
+        return "redirect:/";
     }
-
+    @ExceptionHandler(NoSuchFilesException.class)
+    public String handleNoSuchFilesException(NoSuchFilesException e, RedirectAttributes attributes) {
+        attributes.addFlashAttribute("errorMessage",e.getMessage());
+        return "redirect:/";
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ExceptionBody handleMethodArgumentNotValid(MethodArgumentNotValidException e){
         ExceptionBody exceptionBody = new ExceptionBody("Validation failed");

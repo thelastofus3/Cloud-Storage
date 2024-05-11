@@ -1,7 +1,7 @@
 .logo{
     font-size: 2.7em;
 }
-.input-file {
+.input-storage-object {
     width: 0.1px;
     height: 0.1px;
     opacity: 0;
@@ -9,10 +9,10 @@
     position: absolute;
     z-index: -1;
 }
-.input-file + label {
+.input-storage-object + label {
     color: white;
     display: inline-block;
 }
-.input-file + label {
+.input-storage-object + label {
     cursor: pointer;
 }

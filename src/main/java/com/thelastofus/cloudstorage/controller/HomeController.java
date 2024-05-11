@@ -39,6 +39,6 @@ public class HomeController {
         log.debug("All users objects {}",storageService.getAllStorageObjects(principal));
         model.addAttribute("storageObjects",storageService.getAllStorageObjects(principal));
 
-        return "file/upload";
+        return "storage/upload";
     }
 }
