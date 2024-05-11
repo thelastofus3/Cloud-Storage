@@ -35,6 +35,10 @@ spring:
           facebook:
             client-id: ${CLIENT_ID_FACEBOOK}
             client-secret: ${CLIENT_SECRET_FACEBOOK}
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
 logging:
   level:
     org:

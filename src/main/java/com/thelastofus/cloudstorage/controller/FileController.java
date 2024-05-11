@@ -31,13 +31,8 @@ public class FileController {
     FileService fileService;
 
 
-    @ModelAttribute
-    public void addAttributes(Principal principal, Model model){
-        model.addAttribute("username", principal.getName());
-    }
-
     @PostMapping(FILE_UPLOAD)
-    public String uploadFile(@Valid @ModelAttribute("response")  FileUploadRequest fileUploadRequest,
+    public String uploadFile(@Valid @ModelAttribute("fileUpload")  FileUploadRequest fileUploadRequest,
                              Principal principal,  BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "redirect:/";

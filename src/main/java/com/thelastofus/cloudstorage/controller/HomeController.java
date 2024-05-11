@@ -1,6 +1,7 @@
 package com.thelastofus.cloudstorage.controller;
 
 import com.thelastofus.cloudstorage.dto.FileUploadRequest;
+import com.thelastofus.cloudstorage.dto.FolderUploadRequest;
 import com.thelastofus.cloudstorage.dto.StorageObject;
 import com.thelastofus.cloudstorage.service.StorageService;
 import lombok.AccessLevel;
@@ -31,8 +32,9 @@ public class HomeController {
     }
 
     @GetMapping(HOME)
-    public String getHomePage(@ModelAttribute("response") FileUploadRequest fileUploadRequest,
-                              Principal principal,Model model){
+    public String getHomePage(@ModelAttribute("fileUpload") FileUploadRequest fileUploadRequest,
+                              @ModelAttribute("folderUpload")FolderUploadRequest folderUploadRequest,
+                              Principal principal, Model model){
 
         log.debug("All users objects {}",storageService.getAllStorageObjects(principal));
         model.addAttribute("storageObjects",storageService.getAllStorageObjects(principal));
