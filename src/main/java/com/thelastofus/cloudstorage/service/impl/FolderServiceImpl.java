@@ -28,7 +28,7 @@ public class FolderServiceImpl implements FolderService {
     public void upload(FolderUploadRequest folderUploadRequest, Principal principal) {
         MultipartFile folder = folderUploadRequest.getFolder();
         if (folder.isEmpty() || folder.getOriginalFilename() == null)
-            throw new FolderUploadException("Folder must have name");
+            throw new FolderUploadException("Folder must have name and content");
 
         try {
             String folderName = getUserParentFolder(principal) + folder.getOriginalFilename();
