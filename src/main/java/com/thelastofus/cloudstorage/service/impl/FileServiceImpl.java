@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.security.Principal;
 
-import static com.thelastofus.cloudstorage.util.MinioUtil.getUserParentFolder;
+import static com.thelastofus.cloudstorage.util.StorageUtil.getUserParentFolder;
 
 @Service
 @RequiredArgsConstructor

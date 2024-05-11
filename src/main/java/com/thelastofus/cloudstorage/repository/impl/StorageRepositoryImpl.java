@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.security.Principal;
 
-import static com.thelastofus.cloudstorage.util.MinioUtil.getUserParentFolder;
+import static com.thelastofus.cloudstorage.util.StorageUtil.getUserParentFolder;
 
 @Repository
 @RequiredArgsConstructor

@@ -37,7 +37,10 @@ public class HomeController {
                               Principal principal, Model model){
 
         log.debug("All users objects {}",storageService.getAllStorageObjects(principal));
+        log.debug("Storage information {}",storageService.getStorageSummary(principal));
+
         model.addAttribute("storageObjects",storageService.getAllStorageObjects(principal));
+        model.addAttribute("storageSummary",storageService.getStorageSummary(principal));
 
         return "storage/upload";
     }
