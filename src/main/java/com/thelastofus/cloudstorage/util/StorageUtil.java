@@ -5,6 +5,8 @@ import com.thelastofus.cloudstorage.dto.StorageSummary;
 import io.minio.messages.Item;
 import lombok.experimental.UtilityClass;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.Principal;
 
 import static com.thelastofus.cloudstorage.util.TimeUtil.getTimePattern;
@@ -14,6 +16,8 @@ public class StorageUtil {
 
     private static final int GMT2_TIME = 2;
 
+    private static final BigDecimal BToKiB_DIVIDER = new BigDecimal("1024");
+
     public static String getUserParentFolder(Principal principal) {
         return "user-" + principal.getName() + "-files/" ;
     }
@@ -21,7 +25,11 @@ public class StorageUtil {
     public static StorageObject createStorageObject(Item item, String userFolder) {
         String objectName = item.objectName();
         String relativePath = objectName.substring(userFolder.length());
-        String size = String.valueOf(item.size());
+
+        BigDecimal sizeInKib = new BigDecimal(item.size());
+        BigDecimal sizeInMb = sizeInKib.divide(BToKiB_DIVIDER,1, RoundingMode.HALF_UP);
+        String size = String.valueOf(sizeInMb);
+
         String lastModified = item.isDir() ? null : item.lastModified().plusHours(GMT2_TIME).format(getTimePattern());
 
         return StorageObject.builder()
@@ -31,10 +39,10 @@ public class StorageUtil {
                 .build();
     }
 
-//    public static StorageSummary createStorageSummary(int countOfObjects) {
-//        return StorageSummary.builder()
-//                .countOfObjects(countOfObjects)
+    public static StorageSummary createStorageSummary(int countOfObjects) {
+        return StorageSummary.builder()
+                .countOfObjects(countOfObjects)
 //                .creationDate()
-//                .build();
-//    }
+                .build();
+    }
 }

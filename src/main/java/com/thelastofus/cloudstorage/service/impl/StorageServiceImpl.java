@@ -16,8 +16,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.thelastofus.cloudstorage.util.StorageUtil.createStorageObject;
-import static com.thelastofus.cloudstorage.util.StorageUtil.getUserParentFolder;
+import static com.thelastofus.cloudstorage.util.StorageUtil.*;
 
 @Service
 @RequiredArgsConstructor
@@ -55,9 +54,7 @@ public class StorageServiceImpl implements StorageService {
             throw new NoSuchFilesException("Failed to get information about files for user: " + principal.getName() + ", error: " + e.getMessage());
         }
 
-        return StorageSummary.builder()
-                .countOfObjects(countOfObjects)
-                .build();
+        return createStorageSummary(countOfObjects);
     }
 
 }

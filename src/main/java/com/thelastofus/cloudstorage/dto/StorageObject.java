@@ -17,7 +17,7 @@ public class StorageObject {
     String path;
     @Builder.Default
     String lastModified = " ";
-    @Builder.Default
-    String size = "-";
+
+    String size ;
 
 }
