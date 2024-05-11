@@ -34,21 +34,29 @@
             </div>
         </section>
         <section class="border p-3">
-            <div class="row border-bottom  p-1 pb-3" id="path">
-                <div class="col-9">
-                    <p class="d-flex text-center m-2">/home/user/documents</p>
-                </div>
-                <div class="col-3 text-end">
-                    <button type="button" class="btn btn-secondary">
-                        <i class="bi bi-folder-plus"></i> New folder
-                    </button>
+            <div id="info-list">
+                <div class="row border-bottom  p-1 pb-3" id="path">
+                    <div class="col-4">
+                        <p class="d-flex text-center m-2">/home/user/documents</p>
+                    </div>
+                    <div class="col-4">
+                        <p class="d-flex text-center ms-0 m-2">Modified</p>
+                    </div>
+                    <div class="col-2">
+                        <p class="d-flex text-center ms-0 m-2">Size</p>
+                    </div>
+                    <div class="col-2 text-end">
+                        <button type="button" class="btn btn-secondary">
+                            <i class="bi bi-folder-plus"></i> New folder
+                        </button>
+                    </div>
                 </div>
             </div>
             <div id="file-list">
                 <div class="row border-bottom py-2" th:each="storageObject : ${storageObjects}">
                     <div class="col-4 mt-2"><p class="p-0 m-0" th:text="${storageObject.getPath()}">File1.txt</p></div>
-                    <div class="col-4 mt-2"><p class="p-0 m-0" th:text="${'Modified:' + storageObject.getLastModified()}">Modified: 2024-04-19</p></div>
-                    <div class="col-3 mt-2"><p class="p-0 m-0" th:text="${'Size:' + storageObject.getSize() + ' KiB'}">Size: 1MB</p></div>
+                    <div class="col-4 mt-2"><p class="p-0 m-0" th:text="${storageObject.getLastModified()}">Modified: 2024-04-19</p></div>
+                    <div class="col-3 mt-2"><p class="p-0 m-0" th:text="${storageObject.getSize() + ' KiB'}">Size: 1MB</p></div>
                     <div class="col-1 p-0 dropdown">
                         <button class="btn btn-secondary">
                             <i class="bi bi-download"></i>

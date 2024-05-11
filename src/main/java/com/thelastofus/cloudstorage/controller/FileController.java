@@ -45,6 +45,6 @@ public class FileController {
         fileService.upload(fileUploadRequest,principal);
         log.debug("File success save in minio");
 
-        return "file/upload";
+        return "redirect:/";
     }
 }
