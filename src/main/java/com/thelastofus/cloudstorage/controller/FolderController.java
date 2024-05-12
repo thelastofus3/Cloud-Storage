@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 
@@ -26,11 +27,12 @@ public class FolderController {
 
     @PostMapping(FOLDER_UPLOAD)
     public String uploadFile(@Valid @ModelAttribute("folderUpload")FolderUploadRequest folderUploadRequest,
+                             @RequestParam(value = "path",required = false,defaultValue = "") String currentPath,
                              Principal principal, BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "redirect:/";
 
-        folderService.upload(folderUploadRequest,principal);
+        folderService.upload(folderUploadRequest, principal, currentPath);
         log.error("Folder success save in minio");
 
         return "redirect:/";

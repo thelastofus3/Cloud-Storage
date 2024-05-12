@@ -13,8 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import java.security.Principal;
 
-import static com.thelastofus.cloudstorage.util.StorageUtil.getUserParentFolder;
-
 @Repository
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
@@ -24,10 +22,10 @@ public class StorageRepositoryImpl implements StorageRepository {
     MinioClient minioClient;
 
     @Override
-    public Iterable<Result<Item>> getObjects(Principal principal) {
+    public Iterable<Result<Item>> getObjects(Principal principal, String currentPath) {
         ListObjectsArgs listObjectsArgs = ListObjectsArgs.builder()
                 .bucket(minioProperties.getBucket())
-                .prefix(getUserParentFolder(principal))
+                .prefix(currentPath)
                 .build();
 
         return minioClient.listObjects(listObjectsArgs);

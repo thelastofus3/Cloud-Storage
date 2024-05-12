@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface StorageService {
 
-    List<StorageObject> getAllStorageObjects(Principal principal);
+    List<StorageObject> getAllStorageObjects(Principal principal, String currentPath);
 
-    StorageSummary getStorageSummary(Principal principal);
+    StorageSummary getStorageSummary(Principal principal, String currentPath);
 
 }

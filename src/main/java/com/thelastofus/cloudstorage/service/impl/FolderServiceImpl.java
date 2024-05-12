@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.security.Principal;
 
-import static com.thelastofus.cloudstorage.util.StorageUtil.getUserParentFolder;
+import static com.thelastofus.cloudstorage.util.StorageUtil.getUserFolder;
 
 @Service
 @RequiredArgsConstructor
@@ -23,13 +23,13 @@ public class FolderServiceImpl implements FolderService {
     FolderRepository folderRepository;
 
     @Override
-    public void upload(FolderUploadRequest folderUploadRequest, Principal principal) {
+    public void upload(FolderUploadRequest folderUploadRequest, Principal principal, String currentPath) {
         MultipartFile folder = folderUploadRequest.getFolder();
         if (folder.isEmpty() || folder.getOriginalFilename() == null)
             throw new FolderUploadException("Folder must have name and content");
 
         try {
-            String folderName = getUserParentFolder(principal) + folder.getOriginalFilename();
+            String folderName = getUserFolder(principal, currentPath) + folder.getOriginalFilename();
             InputStream inputStream = folder.getInputStream();
             folderRepository.saveFolder(inputStream, folderName);
         } catch (Exception e) {

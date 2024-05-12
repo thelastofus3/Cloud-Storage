@@ -2,7 +2,6 @@ package com.thelastofus.cloudstorage.controller;
 
 import com.thelastofus.cloudstorage.dto.FileUploadRequest;
 import com.thelastofus.cloudstorage.dto.FolderUploadRequest;
-import com.thelastofus.cloudstorage.dto.StorageObject;
 import com.thelastofus.cloudstorage.service.StorageService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -34,13 +33,14 @@ public class HomeController {
     @GetMapping(HOME)
     public String getHomePage(@ModelAttribute("fileUpload") FileUploadRequest fileUploadRequest,
                               @ModelAttribute("folderUpload")FolderUploadRequest folderUploadRequest,
+                              @RequestParam(value = "path",required = false,defaultValue = "") String currentPath,
                               Principal principal, Model model){
 
-        log.debug("All users objects {}",storageService.getAllStorageObjects(principal));
-        log.debug("Storage information {}",storageService.getStorageSummary(principal));
+        log.debug("All users objects {}",storageService.getAllStorageObjects(principal, currentPath));
+        log.debug("Storage information {}",storageService.getStorageSummary(principal, currentPath));
 
-        model.addAttribute("storageObjects",storageService.getAllStorageObjects(principal));
-        model.addAttribute("storageSummary",storageService.getStorageSummary(principal));
+        model.addAttribute("storageObjects",storageService.getAllStorageObjects(principal, currentPath));
+        model.addAttribute("storageSummary",storageService.getStorageSummary(principal, currentPath));
 
         return "storage/upload";
     }

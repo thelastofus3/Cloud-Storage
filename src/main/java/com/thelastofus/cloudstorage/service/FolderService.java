@@ -6,5 +6,5 @@ import java.security.Principal;
 
 public interface FolderService {
 
-    void upload(FolderUploadRequest folderUploadRequest, Principal principal);
+    void upload(FolderUploadRequest folderUploadRequest, Principal principal, String currentPath);
 }

@@ -18,6 +18,7 @@ public class StorageObject {
     @Builder.Default
     String lastModified = " ";
 
-    String size ;
+    String size;
+
 
 }

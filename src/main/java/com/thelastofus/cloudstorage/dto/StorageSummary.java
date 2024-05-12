@@ -13,6 +13,8 @@ import lombok.experimental.FieldDefaults;
 public class StorageSummary {
 
     Integer countOfObjects;
+
+    String currentPath;
 //
 //    String creationDate;
 

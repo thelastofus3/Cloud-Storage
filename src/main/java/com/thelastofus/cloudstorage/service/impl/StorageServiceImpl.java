@@ -26,14 +26,16 @@ public class StorageServiceImpl implements StorageService {
     StorageRepository storageRepository;
 
     @Override
-    public List<StorageObject> getAllStorageObjects(Principal principal) {
-        String userFolder = getUserParentFolder(principal);
+    public List<StorageObject> getAllStorageObjects(Principal principal, String currentPath) {
+        String userFolder = getUserFolder(principal, currentPath);
         List<StorageObject> storageObjects = new ArrayList<>();
         try {
-            Iterable<Result<Item>> results = storageRepository.getObjects(principal);
+            Iterable<Result<Item>> results = storageRepository.getObjects(principal, userFolder);
             for (Result<Item> result : results) {
                 Item item = result.get();
-                storageObjects.add(createStorageObject(item, userFolder));
+                if (item.objectName().startsWith(userFolder)) {
+                    storageObjects.add(createStorageObject(item, userFolder));
+                }
             }
         } catch (Exception e) {
             throw new NoSuchFilesException("Failed to get files for user: " + principal.getName() + ", error: " + e.getMessage());
@@ -42,11 +44,11 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public StorageSummary getStorageSummary(Principal principal) {
+    public StorageSummary getStorageSummary(Principal principal, String currentPath) {
         int countOfObjects = 0;
-
+        String userFolder = getUserFolder(principal,currentPath);
         try {
-            Iterable<Result<Item>> results = storageRepository.getObjects(principal);
+            Iterable<Result<Item>> results = storageRepository.getObjects(principal, userFolder);
             for (Result<Item> ignored : results) {
                 countOfObjects++;
             }

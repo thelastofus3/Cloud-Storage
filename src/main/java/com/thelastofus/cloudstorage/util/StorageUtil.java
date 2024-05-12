@@ -18,18 +18,19 @@ public class StorageUtil {
 
     private static final BigDecimal BToKiB_DIVIDER = new BigDecimal("1024");
 
-    public static String getUserParentFolder(Principal principal) {
-        return "user-" + principal.getName() + "-files/" ;
+    public static String getUserFolder(Principal principal, String currentPath) {
+
+        String userFolder = "user-" + principal.getName() + "-files/" ;
+        if (!currentPath.isEmpty()) {
+            userFolder = userFolder + currentPath + "/";
+        }
+        return userFolder;
     }
 
     public static StorageObject createStorageObject(Item item, String userFolder) {
         String objectName = item.objectName();
-        String relativePath = objectName.substring(userFolder.length());
-
-        BigDecimal sizeInKib = new BigDecimal(item.size());
-        BigDecimal sizeInMb = sizeInKib.divide(BToKiB_DIVIDER,1, RoundingMode.HALF_UP);
-        String size = String.valueOf(sizeInMb);
-
+        String relativePath = cutPath(objectName.substring(userFolder.length())) ;
+        String size = String.valueOf(convertFromBToKiB(item));
         String lastModified = item.isDir() ? null : item.lastModified().plusHours(GMT2_TIME).format(getTimePattern());
 
         return StorageObject.builder()
@@ -45,4 +46,14 @@ public class StorageUtil {
 //                .creationDate()
                 .build();
     }
+    private BigDecimal convertFromBToKiB(Item item) {
+        BigDecimal sizeInB = new BigDecimal(item.size());
+        return sizeInB.divide(BToKiB_DIVIDER,1, RoundingMode.HALF_UP);
+    }
+
+    private String cutPath(String path) {
+        int index = path.lastIndexOf('/');
+        return index != -1 ? path.substring(0,index) : path;
+    }
+
 }
