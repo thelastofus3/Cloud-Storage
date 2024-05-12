@@ -20,5 +20,6 @@ public class StorageObject {
 
     String size;
 
+    Boolean isFolder;
 
 }

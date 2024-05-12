@@ -29,13 +29,16 @@ public class StorageUtil {
 
     public static StorageObject createStorageObject(Item item, String userFolder) {
         String objectName = item.objectName();
-        String relativePath = cutPath(objectName.substring(userFolder.length())) ;
+        String absolutePath = objectName.substring(userFolder.length());
+        Boolean isFolder = isFolder(absolutePath);
+        String relativePath = cutPath(absolutePath) ;
         String size = String.valueOf(convertFromBToKiB(item));
         String lastModified = item.isDir() ? null : item.lastModified().plusHours(GMT2_TIME).format(getTimePattern());
 
         return StorageObject.builder()
                 .path(relativePath)
                 .size(size)
+                .isFolder(isFolder)
                 .lastModified(lastModified)
                 .build();
     }
@@ -54,6 +57,10 @@ public class StorageUtil {
     private String cutPath(String path) {
         int index = path.lastIndexOf('/');
         return index != -1 ? path.substring(0,index) : path;
+    }
+
+    private Boolean isFolder(String absolutePath) {
+        return absolutePath.contains("/");
     }
 
 }

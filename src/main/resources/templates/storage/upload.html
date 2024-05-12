@@ -60,10 +60,10 @@
             <div id="file-list">
                 <div class="row border-bottom py-2" th:each="storageObject : ${storageObjects}">
                     <div class="col-4 mt-2">
-                        <a class="link-body-emphasis link-offset-2 link-underline-opacity-0" th:href="@{'/?path=' + ${storageObject.getPath()}}" th:if="${storageObject.getSize() == '0.0'}">
+                        <a class="link-body-emphasis link-offset-2 link-underline-opacity-0" th:href="@{'/?path=' + ${storageObject.getPath()}}" th:if="${storageObject.getIsFolder()}">
                             <p class="p-0 m-0" th:utext="'&lt;i class=&quot;bi bi-folder&quot;&gt;&lt;/i&gt;' + ${' ' + storageObject.getPath()}">File1.txt</p>
                         </a>
-                        <p class="p-0 m-0" th:utext="'&lt;i class=&quot;bi bi-file-earmark&quot;&gt;&lt;/i&gt;' + ${' ' + storageObject.getPath()}" th:unless="${storageObject.getSize() == '0.0'}">File1.txt</p>
+                        <p class="p-0 m-0" th:utext="'&lt;i class=&quot;bi bi-file-earmark&quot;&gt;&lt;/i&gt;' + ${' ' + storageObject.getPath()}" th:unless="${storageObject.getIsFolder()}">File1.txt</p>
                     </div>
                     <div class="col-4 mt-2"><p class="p-0 m-0" th:text="${storageObject.getLastModified()}">Modified: 2024-04-19</p></div>
                     <div class="col-3 mt-2"><p class="p-0 m-0" th:text="${storageObject.getSize() + ' KiB'}">Size: 1MB</p></div>
