@@ -2,12 +2,15 @@ package com.thelastofus.cloudstorage.util;
 
 import com.thelastofus.cloudstorage.dto.StorageObject;
 import com.thelastofus.cloudstorage.dto.StorageSummary;
+import io.minio.SnowballObject;
 import io.minio.messages.Item;
 import lombok.experimental.UtilityClass;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.Principal;
+import java.util.List;
 
 import static com.thelastofus.cloudstorage.util.TimeUtil.getTimePattern;
 
@@ -27,20 +30,33 @@ public class StorageUtil {
         return userFolder;
     }
 
-    public static StorageObject createStorageObject(Item item, String userFolder) {
+    public static int userFolderLength(Principal principal) {
+        return ("user-" + principal.getName() + "-files/").length() ;
+    }
+
+    public static StorageObject createStorageObject(Item item, String userFolder, int userFolderLength) {
         String objectName = item.objectName();
-        String absolutePath = objectName.substring(userFolder.length());
-        Boolean isFolder = isFolder(absolutePath);
+        String name = cutPath(objectName.substring(userFolder.length()));
+        String absolutePath = objectName.substring(userFolderLength);
         String relativePath = cutPath(absolutePath) ;
         String size = String.valueOf(convertFromBToKiB(item));
         String lastModified = item.isDir() ? null : item.lastModified().plusHours(GMT2_TIME).format(getTimePattern());
 
         return StorageObject.builder()
+                .name(name)
                 .path(relativePath)
                 .size(size)
-                .isFolder(isFolder)
                 .lastModified(lastModified)
                 .build();
+    }
+
+    public static SnowballObject createSnowballObject(String folderName, InputStream inputStream, long folderSize) {
+        return new SnowballObject(
+                folderName,
+                inputStream,
+                folderSize,
+                null
+        );
     }
 
     public static StorageSummary createStorageSummary(int countOfObjects) {

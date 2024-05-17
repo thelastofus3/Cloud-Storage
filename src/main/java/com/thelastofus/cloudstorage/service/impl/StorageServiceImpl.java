@@ -28,13 +28,14 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public List<StorageObject> getAllStorageObjects(Principal principal, String currentPath) {
         String userFolder = getUserFolder(principal, currentPath);
+        int userFolderLength = userFolderLength(principal);
         List<StorageObject> storageObjects = new ArrayList<>();
         try {
             Iterable<Result<Item>> results = storageRepository.getObjects(principal, userFolder);
             for (Result<Item> result : results) {
                 Item item = result.get();
                 if (item.objectName().startsWith(userFolder)) {
-                    storageObjects.add(createStorageObject(item, userFolder));
+                    storageObjects.add(createStorageObject(item, userFolder,userFolderLength));
                 }
             }
         } catch (Exception e) {

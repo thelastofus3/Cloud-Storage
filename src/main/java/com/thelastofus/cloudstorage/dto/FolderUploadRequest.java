@@ -5,6 +5,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -14,6 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class FolderUploadRequest {
 
     @NotNull(message = "Name of the folder should not be null")
-    MultipartFile folder;
+    List<MultipartFile> folder;;
 
 }

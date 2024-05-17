@@ -4,6 +4,8 @@ import com.thelastofus.cloudstorage.props.MinioProperties;
 import com.thelastofus.cloudstorage.repository.FolderRepository;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.SnowballObject;
+import io.minio.UploadSnowballObjectsArgs;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -11,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Repository;
 
 import java.io.InputStream;
+import java.util.List;
 
 
 @Repository
@@ -23,11 +26,10 @@ public class FolderRepositoryImpl implements FolderRepository {
 
     @Override
     @SneakyThrows
-    public void saveFolder(InputStream inputStream, String folderName) {
-        minioClient.putObject(PutObjectArgs.builder()
-                .stream(inputStream, inputStream.available(), -1)
+    public void saveFolder(List<SnowballObject> objects) {
+        minioClient.uploadSnowballObjects(UploadSnowballObjectsArgs.builder()
                 .bucket(minioProperties.getBucket())
-                .object(folderName)
+                .objects(objects)
                 .build());
     }
 }

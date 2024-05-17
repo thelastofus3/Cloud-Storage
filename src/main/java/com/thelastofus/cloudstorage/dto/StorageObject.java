@@ -14,12 +14,13 @@ import java.time.ZonedDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StorageObject {
 
+    String name;
+
     String path;
     @Builder.Default
     String lastModified = " ";
 
     String size;
 
-    Boolean isFolder;
 
 }
