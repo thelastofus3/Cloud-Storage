@@ -44,7 +44,9 @@
             <div id="info-list">
                 <div class="row border-bottom  p-1 pb-3" id="currentPath">
                     <div class="col-4">
-                        <p class="d-flex text-center ms-0 m-2" th:text="${'/home/' + storageSummary.getCurrentPath()}">/home/user/documents</p>
+                        <a class="link-body-emphasis link-offset-2 link-underline-opacity-0" th:href="@{/}">
+                            <p class="d-flex text-center ms-0 m-2" th:text="${'/home/' + storageSummary.getCurrentPath()}">/home/user/documents</p>
+                        </a>
                     </div>
                     <div class="col-4">
                         <p class="d-flex text-center ms-0 m-2">Modified</p>
@@ -62,7 +64,7 @@
             <div id="file-list">
                 <div class="row border-bottom py-2" th:each="storageObject : ${storageObjects}">
                     <div class="col-4 mt-2">
-                        <a class="link-body-emphasis link-offset-2 link-underline-opacity-0" th:href="@{'/?path=' + ${storageObject.getPath()}}" th:if="${storageObject.getLastModified() == null}">
+                        <a class="link-body-emphasis link-offset-2 link-underline-opacity-0" th:href="@{'?path=' + ${storageObject.getPath()}}" th:if="${storageObject.getLastModified() == null}">
                             <p class="p-0 m-0" th:utext="'&lt;i class=&quot;bi bi-folder&quot;&gt;&lt;/i&gt;' + ${' ' + storageObject.getName()}">File1.txt</p>
                         </a>
                         <p class="p-0 m-0" th:utext="'&lt;i class=&quot;bi bi-file-earmark&quot;&gt;&lt;/i&gt;' + ${' ' + storageObject.getName()}" th:unless="${storageObject.getLastModified() == null}">File1.txt</p>
