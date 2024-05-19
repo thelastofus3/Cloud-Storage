@@ -42,7 +42,7 @@
             <div id="info-list">
                 <div class="row border-bottom  p-1 pb-3" id="currentPath">
                     <div class="col-4">
-                        <p class="d-flex text-center ms-0 m-2">/home/user/documents</p>
+                        <p class="d-flex text-center ms-0 m-2" th:text="${'/home' + storageSummary.getCurrentPath()}">/home/user/documents</p>
                     </div>
                     <div class="col-4">
                         <p class="d-flex text-center ms-0 m-2">Modified</p>

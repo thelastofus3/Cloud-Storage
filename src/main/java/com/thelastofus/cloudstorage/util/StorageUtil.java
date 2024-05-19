@@ -59,9 +59,10 @@ public class StorageUtil {
         );
     }
 
-    public static StorageSummary createStorageSummary(int countOfObjects) {
+    public static StorageSummary createStorageSummary(int countOfObjects, String currentPath) {
         return StorageSummary.builder()
                 .countOfObjects(countOfObjects)
+                .currentPath(currentPath)
 //                .creationDate()
                 .build();
     }

@@ -47,7 +47,7 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public StorageSummary getStorageSummary(Principal principal, String currentPath) {
         int countOfObjects = 0;
-        String userFolder = getUserMainFolder(principal,currentPath);
+        String userFolder = getUserMainFolder(principal, currentPath);
         try {
             Iterable<Result<Item>> results = storageRepository.getObjects(principal, userFolder);
             for (Result<Item> ignored : results) {
@@ -57,7 +57,7 @@ public class StorageServiceImpl implements StorageService {
             throw new NoSuchFilesException("Failed to get information about files for user: " + principal.getName() + ", error: " + e.getMessage());
         }
 
-        return createStorageSummary(countOfObjects);
+        return createStorageSummary(countOfObjects, currentPath);
     }
 
 }
