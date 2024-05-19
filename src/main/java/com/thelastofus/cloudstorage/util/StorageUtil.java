@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.Principal;
-import java.util.List;
 
 import static com.thelastofus.cloudstorage.util.TimeUtil.getTimePattern;
 
@@ -21,7 +20,7 @@ public class StorageUtil {
 
     private static final BigDecimal BToKiB_DIVIDER = new BigDecimal("1024");
 
-    public static String getUserFolder(Principal principal, String currentPath) {
+    public static String getUserMainFolder(Principal principal, String currentPath) {
 
         String userFolder = "user-" + principal.getName() + "-files/" ;
         if (!currentPath.isEmpty()) {
@@ -30,15 +29,16 @@ public class StorageUtil {
         return userFolder;
     }
 
-    public static int userFolderLength(Principal principal) {
+    public static int getUserMainFolderLength(Principal principal) {
         return ("user-" + principal.getName() + "-files/").length() ;
     }
 
     public static StorageObject createStorageObject(Item item, String userFolder, int userFolderLength) {
         String objectName = item.objectName();
-        String name = cutPath(objectName.substring(userFolder.length()));
-        String absolutePath = objectName.substring(userFolderLength);
-        String relativePath = cutPath(absolutePath) ;
+        String name = extractNameFromPath(objectName, userFolder.length());
+
+        String relativePath = extractNameFromPath(objectName, userFolderLength) ;
+
         String size = String.valueOf(convertFromBToKiB(item));
         String lastModified = item.isDir() ? null : item.lastModified().plusHours(GMT2_TIME).format(getTimePattern());
 
@@ -70,13 +70,10 @@ public class StorageUtil {
         return sizeInB.divide(BToKiB_DIVIDER,1, RoundingMode.HALF_UP);
     }
 
-    private String cutPath(String path) {
+    private String extractNameFromPath(String fullPath, int userFolderLength) {
+        String path = fullPath.substring(userFolderLength);
         int index = path.lastIndexOf('/');
         return index != -1 ? path.substring(0,index) : path;
-    }
-
-    private Boolean isFolder(String absolutePath) {
-        return absolutePath.contains("/");
     }
 
 }

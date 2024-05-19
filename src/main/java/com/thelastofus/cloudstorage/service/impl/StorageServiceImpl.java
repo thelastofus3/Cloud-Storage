@@ -27,15 +27,15 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public List<StorageObject> getAllStorageObjects(Principal principal, String currentPath) {
-        String userFolder = getUserFolder(principal, currentPath);
-        int userFolderLength = userFolderLength(principal);
+        String userMainFolder = getUserMainFolder(principal, currentPath);
+        int userMainFolderLength = getUserMainFolderLength(principal);
         List<StorageObject> storageObjects = new ArrayList<>();
         try {
-            Iterable<Result<Item>> results = storageRepository.getObjects(principal, userFolder);
+            Iterable<Result<Item>> results = storageRepository.getObjects(principal, userMainFolder);
             for (Result<Item> result : results) {
                 Item item = result.get();
-                if (item.objectName().startsWith(userFolder)) {
-                    storageObjects.add(createStorageObject(item, userFolder,userFolderLength));
+                if (item.objectName().startsWith(userMainFolder)) {
+                    storageObjects.add(createStorageObject(item, userMainFolder,userMainFolderLength));
                 }
             }
         } catch (Exception e) {
@@ -47,7 +47,7 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public StorageSummary getStorageSummary(Principal principal, String currentPath) {
         int countOfObjects = 0;
-        String userFolder = getUserFolder(principal,currentPath);
+        String userFolder = getUserMainFolder(principal,currentPath);
         try {
             Iterable<Result<Item>> results = storageRepository.getObjects(principal, userFolder);
             for (Result<Item> ignored : results) {

@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.security.Principal;
 
-import static com.thelastofus.cloudstorage.util.StorageUtil.getUserFolder;
+import static com.thelastofus.cloudstorage.util.StorageUtil.getUserMainFolder;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +29,7 @@ public class FileServiceImpl implements FileService {
             throw new FileUploadException("File must have name and content");
 
         try {
-            String fileName = getUserFolder(principal, currentPath) + file.getOriginalFilename();
+            String fileName = getUserMainFolder(principal, currentPath) + file.getOriginalFilename();
             InputStream inputStream = file.getInputStream();
             fileRepository.saveFile(inputStream, fileName);
         } catch (Exception e) {

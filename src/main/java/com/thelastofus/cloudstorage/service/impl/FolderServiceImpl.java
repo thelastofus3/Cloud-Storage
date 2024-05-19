@@ -17,7 +17,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.thelastofus.cloudstorage.util.StorageUtil.getUserFolder;
+import static com.thelastofus.cloudstorage.util.StorageUtil.getUserMainFolder;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +34,7 @@ public class FolderServiceImpl implements FolderService {
                 throw new FolderUploadException("Folder must have name and content");
 
             try {
-                String folderName = getUserFolder(principal, currentPath) + folder.getOriginalFilename();
+                String folderName = getUserMainFolder(principal, currentPath) + folder.getOriginalFilename();
                 InputStream inputStream = folder.getInputStream();
                 long folderSize = folder.getSize();
                 objects.add(StorageUtil.createSnowballObject(folderName, inputStream, folderSize));
