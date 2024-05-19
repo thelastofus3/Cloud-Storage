@@ -27,14 +27,14 @@ public class FolderServiceImpl implements FolderService {
     FolderRepository folderRepository;
 
     @Override
-    public void upload(FolderUploadRequest folderUploadRequest, Principal principal, String currentPath) {
+    public void upload(FolderUploadRequest folderUploadRequest, Principal principal) {
         List<SnowballObject> objects = new ArrayList<>();
         for (MultipartFile folder : folderUploadRequest.getFolder()) {
             if (folder.isEmpty() || folder.getOriginalFilename() == null)
                 throw new FolderUploadException("Folder must have name and content");
 
             try {
-                String folderName = getUserMainFolder(principal, currentPath) + folder.getOriginalFilename();
+                String folderName = getUserMainFolder(principal, folderUploadRequest.getPath()) + folder.getOriginalFilename();
                 InputStream inputStream = folder.getInputStream();
                 long folderSize = folder.getSize();
                 objects.add(StorageUtil.createSnowballObject(folderName, inputStream, folderSize));

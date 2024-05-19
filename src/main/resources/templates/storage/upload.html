@@ -27,12 +27,14 @@
                 <div class="col-1" >
                     <form id="uploadFolder" th:method="POST" th:action="@{/folder/upload}" enctype="multipart/form-data" th:object="${folderUpload}">
                         <input type="file" id="folder" th:field="*{folder}" class="input-storage-object" name="folder" webkitdirectory>
+                        <input type="text" id="pathFolder" th:field="*{path}" th:value="${storageSummary.getCurrentPath()}" class="input-storage-object" name="path">
                         <label for="folder" class="btn btn-secondary"><i class="bi bi-folder"></i>Upload</label>
                     </form>
                 </div>
                 <div class="col-1" >
                     <form id="uploadFile" th:method="POST" th:action="@{/file/upload}" enctype="multipart/form-data" th:object="${fileUpload}">
                         <input type="file" id="file" th:field="*{file}" class="input-storage-object" name="file">
+                        <input type="text" id="pathFile" th:field="*{path}" th:value="${storageSummary.getCurrentPath()}" class="input-storage-object" name="path">
                         <label for="file" class="btn btn-secondary"><i class="bi bi-file-earmark"></i>Upload</label>
                     </form>
                 </div>
@@ -42,7 +44,7 @@
             <div id="info-list">
                 <div class="row border-bottom  p-1 pb-3" id="currentPath">
                     <div class="col-4">
-                        <p class="d-flex text-center ms-0 m-2" th:text="${'/home' + storageSummary.getCurrentPath()}">/home/user/documents</p>
+                        <p class="d-flex text-center ms-0 m-2" th:text="${'/home/' + storageSummary.getCurrentPath()}">/home/user/documents</p>
                     </div>
                     <div class="col-4">
                         <p class="d-flex text-center ms-0 m-2">Modified</p>

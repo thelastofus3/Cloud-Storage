@@ -23,13 +23,13 @@ public class FileServiceImpl implements FileService {
     FileRepository fileRepository;
 
     @Override
-    public void upload(FileUploadRequest fileUploadRequest, Principal principal, String currentPath) {
+    public void upload(FileUploadRequest fileUploadRequest, Principal principal) {
         MultipartFile file = fileUploadRequest.getFile();
         if (file.isEmpty() || file.getOriginalFilename() == null || file.getSize() == 0)
             throw new FileUploadException("File must have name and content");
 
         try {
-            String fileName = getUserMainFolder(principal, currentPath) + file.getOriginalFilename();
+            String fileName = getUserMainFolder(principal, fileUploadRequest.getPath()) + file.getOriginalFilename();
             InputStream inputStream = file.getInputStream();
             fileRepository.saveFile(inputStream, fileName);
         } catch (Exception e) {

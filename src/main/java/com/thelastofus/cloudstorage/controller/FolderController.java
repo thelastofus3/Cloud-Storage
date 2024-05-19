@@ -27,12 +27,12 @@ public class FolderController {
 
     @PostMapping(FOLDER_UPLOAD)
     public String uploadFile(@Valid @ModelAttribute("folderUpload")FolderUploadRequest folderUploadRequest,
-                             @RequestParam(value = "path",required = false,defaultValue = "") String currentPath,
+//                             @RequestParam(value = "path",required = false,defaultValue = "") String currentPath,
                              Principal principal, BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "redirect:/";
 
-        folderService.upload(folderUploadRequest, principal, currentPath);
+        folderService.upload(folderUploadRequest, principal);
         log.error("Folder success save in minio");
 
         return "redirect:/";

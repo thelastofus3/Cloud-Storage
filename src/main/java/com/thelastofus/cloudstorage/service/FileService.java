@@ -8,6 +8,6 @@ import java.util.List;
 
 @Service
 public interface FileService {
-    void upload(FileUploadRequest fileUploadRequest, Principal principal, String currentPath);
+    void upload(FileUploadRequest fileUploadRequest, Principal principal);
 
 }

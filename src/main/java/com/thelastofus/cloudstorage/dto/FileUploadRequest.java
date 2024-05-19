@@ -14,8 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FileUploadRequest {
+
     @NotNull(message = "Name of the file should not be empty")
     MultipartFile file;
-//    @NotNull(message = "Can not find the owner of the file")
-//    User owner;
+
+    String path;
+
 }

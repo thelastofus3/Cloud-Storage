@@ -15,7 +15,9 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FolderUploadRequest {
 
-    @NotNull(message = "Name of the folder should not be null")
-    List<MultipartFile> folder;;
+    @NotNull(message = "Name of the folder should not be empty")
+    List<MultipartFile> folder;
+
+    String path;
 
 }

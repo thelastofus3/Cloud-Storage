@@ -27,12 +27,12 @@ public class FileController {
 
     @PostMapping(FILE_UPLOAD)
     public String uploadFile(@Valid @ModelAttribute("fileUpload")  FileUploadRequest fileUploadRequest,
-                             @RequestParam(value = "path",required = false,defaultValue = "") String currentPath,
+//                             @RequestParam(value = "path",required = false,defaultValue = "") String currentPath,
                              Principal principal, BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "redirect:/";
 
-        fileService.upload(fileUploadRequest,principal, currentPath);
+        fileService.upload(fileUploadRequest,principal);
         log.error("File success save in minio");
 
         return "redirect:/";
