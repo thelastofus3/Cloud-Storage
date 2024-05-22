@@ -1,6 +1,8 @@
 package com.thelastofus.cloudstorage.service.impl;
 
+import com.thelastofus.cloudstorage.dto.FolderCreateRequest;
 import com.thelastofus.cloudstorage.dto.FolderUploadRequest;
+import com.thelastofus.cloudstorage.exception.FolderCreateException;
 import com.thelastofus.cloudstorage.exception.FolderUploadException;
 import com.thelastofus.cloudstorage.repository.FolderRepository;
 import com.thelastofus.cloudstorage.service.FolderService;
@@ -43,5 +45,15 @@ public class FolderServiceImpl implements FolderService {
             }
         }
         folderRepository.saveFolder(objects);
+    }
+
+    @Override
+    public void create(FolderCreateRequest folderCreateRequest, Principal principal) {
+        String folderName = getUserMainFolder(principal, folderCreateRequest.getPath()) + folderCreateRequest.getName() + "/";
+        try {
+            folderRepository.createFolder(folderName);
+        } catch (Exception e) {
+            throw new FolderCreateException("Folder create failed " + e.getMessage());
+        }
     }
 }

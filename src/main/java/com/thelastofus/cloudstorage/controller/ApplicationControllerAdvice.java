@@ -3,12 +3,10 @@ package com.thelastofus.cloudstorage.controller;
 import com.thelastofus.cloudstorage.exception.*;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -32,8 +30,8 @@ public class ApplicationControllerAdvice {
         attributes.addFlashAttribute("errorMessage",e.getMessage());
         return "redirect:/";
     }
-    @ExceptionHandler(CreateFolderException.class)
-    public String handleCreateFolderException(CreateFolderException e, RedirectAttributes attributes) {
+    @ExceptionHandler(FolderCreateException.class)
+    public String handleCreateFolderException(FolderCreateException e, RedirectAttributes attributes) {
         attributes.addFlashAttribute("errorMessage",e.getMessage());
         return "redirect:/";
     }

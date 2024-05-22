@@ -12,6 +12,7 @@ import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Repository;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -30,6 +31,16 @@ public class FolderRepositoryImpl implements FolderRepository {
         minioClient.uploadSnowballObjects(UploadSnowballObjectsArgs.builder()
                 .bucket(minioProperties.getBucket())
                 .objects(objects)
+                .build());
+    }
+
+    @Override
+    @SneakyThrows
+    public void createFolder(String folderName) {
+        minioClient.putObject(PutObjectArgs.builder()
+                .stream(new ByteArrayInputStream(new byte[] {}), 0, -1)
+                .bucket(minioProperties.getBucket())
+                .object(folderName)
                 .build());
     }
 }

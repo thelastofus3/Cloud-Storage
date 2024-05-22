@@ -55,19 +55,43 @@
                         <p class="d-flex text-center ms-0 m-2">Size</p>
                     </div>
                     <div class="col-2 text-end">
-                        <button type="button" class="btn btn-secondary">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createModal">
                             <i class="bi bi-folder-plus"></i> New folder
                         </button>
+                        <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Create a folder</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="createFolder" th:method="POST" th:action="@{/folder/create}" th:object="${folderCreate}">
+                                            <div class="mb-4">
+                                                <label for="recipient-name" class="col-form-label">Enter a name:</label>
+                                                <input type="text" class="form-control" id="recipient-name" name="name" th:field="*{name}">
+                                                <input type="hidden" id="pathCreateFolder" th:field="*{path}" th:value="${storageSummary.getCurrentPath()}" name="path">
+                                            </div>
+                                            <div class="modal-footer pe-0">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-success">Create</button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div id="file-list">
-                <div class="row border-bottom py-2" th:each="storageObject : ${storageObjects}">
+                <div class="row border-bottom py-2" th:each="storageObject : ${storageObjects}" th:if="${!storageObject.getName().isEmpty()}">
                     <div class="col-4 mt-2">
                         <a class="link-body-emphasis link-offset-2 link-underline-opacity-0" th:href="@{'?path=' + ${storageObject.getPath()}}" th:if="${storageObject.getLastModified() == null}">
                             <p class="p-0 m-0" th:utext="'&lt;i class=&quot;bi bi-folder&quot;&gt;&lt;/i&gt;' + ${' ' + storageObject.getName()}">File1.txt</p>
                         </a>
-                        <p class="p-0 m-0" th:utext="'&lt;i class=&quot;bi bi-file-earmark&quot;&gt;&lt;/i&gt;' + ${' ' + storageObject.getName()}" th:unless="${storageObject.getLastModified() == null}">File1.txt</p>
+                        <p class="p-0 m-0" th:utext="'&lt;i class=&quot;bi bi-file-earmark&quot;&gt;&lt;/i&gt;' + ${' ' +storageObject.getName()}" th:unless="${storageObject.getLastModified() == null}">File1.txt</p>
                     </div>
                     <div class="col-4 mt-2"><p class="p-0 m-0" th:text="${storageObject.getLastModified()}">Modified: 2024-04-19</p></div>
                     <div class="col-3 mt-2"><p class="p-0 m-0" th:text="${storageObject.getSize() + ' KiB'}">Size: 1MB</p></div>

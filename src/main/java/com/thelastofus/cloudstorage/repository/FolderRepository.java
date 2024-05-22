@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface FolderRepository {
     void saveFolder(List<SnowballObject> objects);
+
+    void createFolder(String folderName);
 }

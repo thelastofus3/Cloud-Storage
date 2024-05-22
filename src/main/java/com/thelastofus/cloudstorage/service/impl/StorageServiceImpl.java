@@ -34,9 +34,10 @@ public class StorageServiceImpl implements StorageService {
             Iterable<Result<Item>> results = storageRepository.getObjects(principal, userMainFolder);
             for (Result<Item> result : results) {
                 Item item = result.get();
-                if (item.objectName().startsWith(userMainFolder)) {
+
+                if (item.objectName().startsWith(userMainFolder))
                     storageObjects.add(createStorageObject(item, userMainFolder,userMainFolderLength));
-                }
+
             }
         } catch (Exception e) {
             throw new NoSuchFilesException("Failed to get files for user: " + principal.getName() + ", error: " + e.getMessage());

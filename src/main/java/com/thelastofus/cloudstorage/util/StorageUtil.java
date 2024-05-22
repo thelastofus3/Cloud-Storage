@@ -37,6 +37,7 @@ public class StorageUtil {
         String objectName = item.objectName();
         String name = extractNameFromPath(objectName, userFolder.length());
 
+
         String relativePath = extractNameFromPath(objectName, userFolderLength) ;
 
         String size = String.valueOf(convertFromBToKiB(item));

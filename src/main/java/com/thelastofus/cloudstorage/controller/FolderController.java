@@ -1,5 +1,6 @@
 package com.thelastofus.cloudstorage.controller;
 
+import com.thelastofus.cloudstorage.dto.FolderCreateRequest;
 import com.thelastofus.cloudstorage.dto.FolderUploadRequest;
 import com.thelastofus.cloudstorage.service.FolderService;
 import jakarta.validation.Valid;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 
@@ -23,17 +23,30 @@ public class FolderController {
 
     private static final String FOLDER_UPLOAD = "/folder/upload";
 
+    private static final String FOLDER_CREATE = "/folder/create";
+
     FolderService folderService;
 
     @PostMapping(FOLDER_UPLOAD)
-    public String uploadFile(@Valid @ModelAttribute("folderUpload")FolderUploadRequest folderUploadRequest,
-//                             @RequestParam(value = "path",required = false,defaultValue = "") String currentPath,
-                             Principal principal, BindingResult bindingResult) {
+    public String uploadFolder(@Valid @ModelAttribute("folderUpload")FolderUploadRequest folderUploadRequest,
+                               Principal principal, BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "redirect:/";
 
         folderService.upload(folderUploadRequest, principal);
-        log.error("Folder success save in minio");
+        log.info("Folder success save");
+
+        return "redirect:/";
+    }
+
+    @PostMapping(FOLDER_CREATE)
+    public String createFolder(@Valid @ModelAttribute("folderCreate")FolderCreateRequest folderCreateRequest,
+                               Principal principal,BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            return "redirect:/";
+
+        folderService.create(folderCreateRequest, principal);
+        log.info("Folder success create");
 
         return "redirect:/";
     }
