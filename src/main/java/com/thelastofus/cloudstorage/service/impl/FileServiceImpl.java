@@ -1,6 +1,8 @@
 package com.thelastofus.cloudstorage.service.impl;
 
+import com.thelastofus.cloudstorage.dto.FileRemoveRequest;
 import com.thelastofus.cloudstorage.dto.FileUploadRequest;
+import com.thelastofus.cloudstorage.exception.FileRemoveException;
 import com.thelastofus.cloudstorage.exception.FileUploadException;
 import com.thelastofus.cloudstorage.repository.FileRepository;
 import com.thelastofus.cloudstorage.service.FileService;
@@ -37,4 +39,14 @@ public class FileServiceImpl implements FileService {
         }
     }
 
+    @Override
+    public void remove(FileRemoveRequest fileRemoveRequest, Principal principal) {
+        String fullPath = getUserMainFolder(principal, fileRemoveRequest.getPath());
+        String fileName = fullPath.substring(0, fullPath.length() - 1);
+        try {
+            fileRepository.removeFile(fileName);
+        } catch (Exception e) {
+            throw new FileRemoveException("File remove failed " + e.getMessage());
+        }
+    }
 }

@@ -10,4 +10,6 @@ public interface FileRepository {
 
     void saveFile(InputStream inputStream, String filename);
 
+    void removeFile(String filename);
+
 }

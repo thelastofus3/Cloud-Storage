@@ -1,5 +1,6 @@
 package com.thelastofus.cloudstorage.controller;
 
+import com.thelastofus.cloudstorage.dto.FileRemoveRequest;
 import com.thelastofus.cloudstorage.dto.FileUploadRequest;
 import com.thelastofus.cloudstorage.service.FileService;
 import jakarta.validation.Valid;
@@ -9,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +24,7 @@ import java.security.Principal;
 public class FileController {
 
     private static final String FILE_UPLOAD = "/file/upload";
+    private static final String FILE_REMOVE = "/file/remove";
 
     FileService fileService;
 
@@ -32,7 +35,16 @@ public class FileController {
             return "redirect:/";
 
         fileService.upload(fileUploadRequest,principal);
-        log.error("File success save in minio");
+        log.debug("File success save in minio");
+
+        return "redirect:/";
+    }
+
+    @DeleteMapping(FILE_REMOVE)
+    public String removeFile(@ModelAttribute("fileRemove")FileRemoveRequest fileRemoveRequest,
+                             Principal principal) {
+        fileService.remove(fileRemoveRequest, principal);
+        log.debug("File success remove from minio");
 
         return "redirect:/";
     }

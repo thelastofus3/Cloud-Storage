@@ -108,7 +108,10 @@
                             <i class="bi bi-three-dots"></i>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-trash3"></i> Delete</a></li>
+                            <li th:if="${storageObject.getLastModified() != null}"><form th:method="DELETE" th:action="@{/file/remove}" th:object="${fileRemove}">
+                                <input type="hidden" name="path" th:value="${storageObject.getPath() + '/' + storageObject.getName()}">
+                                <button type="submit" class="btn btn-link text-white text-decoration-none"><i class="bi bi-trash"> Delete</i></button>
+                            </form></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-fill"></i> Rename</a></li>
                         </ul>
                     </div>

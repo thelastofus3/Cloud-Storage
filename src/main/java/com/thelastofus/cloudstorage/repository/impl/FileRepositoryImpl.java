@@ -4,6 +4,7 @@ import com.thelastofus.cloudstorage.props.MinioProperties;
 import com.thelastofus.cloudstorage.repository.FileRepository;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -28,6 +29,15 @@ public class FileRepositoryImpl implements FileRepository {
                 .stream(inputStream, inputStream.available(), -1)
                 .bucket(minioProperties.getBucket())
                 .object(fileName)
+                .build());
+    }
+
+    @Override
+    @SneakyThrows
+    public void removeFile(String filename) {
+        minioClient.removeObject(RemoveObjectArgs.builder()
+                .bucket(minioProperties.getBucket())
+                .object(filename)
                 .build());
     }
 }

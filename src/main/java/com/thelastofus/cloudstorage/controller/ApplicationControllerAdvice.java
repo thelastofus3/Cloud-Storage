@@ -35,6 +35,11 @@ public class ApplicationControllerAdvice {
         attributes.addFlashAttribute("errorMessage",e.getMessage());
         return "redirect:/";
     }
+    @ExceptionHandler(FileRemoveException.class)
+    public String handleFileRemoveException(FileRemoveException e, RedirectAttributes attributes) {
+        attributes.addFlashAttribute("errorMessage",e.getMessage());
+        return "redirect:/";
+    }
     @ExceptionHandler(FileUploadException.class)
     public String handleFileUploadException(FileUploadException e, RedirectAttributes attributes) {
         attributes.addFlashAttribute("errorMessage",e.getMessage());
