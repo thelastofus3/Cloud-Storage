@@ -7,9 +7,13 @@ import io.minio.messages.Item;
 import lombok.experimental.UtilityClass;
 
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static com.thelastofus.cloudstorage.util.TimeUtil.getTimePattern;
 
@@ -36,7 +40,6 @@ public class StorageUtil {
     public static StorageObject createStorageObject(Item item, String userFolder, int userFolderLength) {
         String objectName = item.objectName();
         String name = extractNameFromPath(objectName, userFolder.length());
-
 
         String relativePath = extractNameFromPath(objectName, userFolderLength) ;
 

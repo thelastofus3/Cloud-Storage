@@ -16,3 +16,6 @@
 .input-storage-object + label {
     cursor: pointer;
 }
+.delete-rename {
+    padding-left: 6.4rem !important;
+}

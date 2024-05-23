@@ -43,10 +43,16 @@
         <section class="border p-3">
             <div id="info-list">
                 <div class="row border-bottom  p-1 pb-3" id="currentPath">
-                    <div class="col-4">
-                        <a class="link-body-emphasis link-offset-2 link-underline-opacity-0" th:href="@{/}">
-                            <p class="d-flex text-center ms-0 m-2" th:text="${'/home/' + storageSummary.getCurrentPath()}">/home/user/documents</p>
-                        </a>
+                    <div class="col-4 my-2">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+                                <li th:each="path, stat : ${#strings.arraySplit(storageSummary.getCurrentPath(),'/')}" class="breadcrumb-item" th:unless="${stat.last}">
+                                    <a th:href="@{'?path=' + ${path}}" th:text="${path}" aria-current="page">Home</a>
+                                </li>
+                                <li th:each="path, stat : ${#strings.arraySplit(storageSummary.getCurrentPath(),'/')}" class="breadcrumb-item active" th:if="${stat.last}" th:text="${path}"></li>
+                            </ol>
+                        </nav>
                     </div>
                     <div class="col-4">
                         <p class="d-flex text-center ms-0 m-2">Modified</p>
@@ -78,7 +84,6 @@
                                             </div>
                                         </form>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -94,8 +99,8 @@
                         <p class="p-0 m-0" th:utext="'&lt;i class=&quot;bi bi-file-earmark&quot;&gt;&lt;/i&gt;' + ${' ' +storageObject.getName()}" th:unless="${storageObject.getLastModified() == null}">File1.txt</p>
                     </div>
                     <div class="col-4 mt-2"><p class="p-0 m-0" th:text="${storageObject.getLastModified()}">Modified: 2024-04-19</p></div>
-                    <div class="col-3 mt-2"><p class="p-0 m-0" th:text="${storageObject.getSize() + ' KiB'}">Size: 1MB</p></div>
-                    <div class="col-1 p-0 dropdown">
+                    <div class="col-2 mt-2"><p class="p-0 m-0" th:text="${storageObject.getSize() + ' KiB'}">Size: 1MB</p></div>
+                    <div class="col-2 p-0 delete-rename dropdown">
                         <button class="btn btn-secondary">
                             <i class="bi bi-download"></i>
                         </button>
