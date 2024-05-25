@@ -1,9 +1,6 @@
 package com.thelastofus.cloudstorage.controller;
 
-import com.thelastofus.cloudstorage.dto.FileRemoveRequest;
-import com.thelastofus.cloudstorage.dto.FileUploadRequest;
-import com.thelastofus.cloudstorage.dto.FolderCreateRequest;
-import com.thelastofus.cloudstorage.dto.FolderUploadRequest;
+import com.thelastofus.cloudstorage.dto.*;
 import com.thelastofus.cloudstorage.exception.FileRemoveException;
 import com.thelastofus.cloudstorage.service.StorageService;
 import lombok.AccessLevel;
@@ -38,6 +35,7 @@ public class HomeController {
                               @ModelAttribute("folderUpload")FolderUploadRequest folderUploadRequest,
                               @ModelAttribute("folderCreate") FolderCreateRequest folderCreateRequest,
                               @ModelAttribute("fileRemove") FileRemoveRequest fileRemoveRequest,
+                              @ModelAttribute("folderRemove") FolderRemoveRequest folderRemoveRequest,
                               @RequestParam(value = "path",required = false,defaultValue = "") String currentPath,
                               Principal principal, Model model){
 

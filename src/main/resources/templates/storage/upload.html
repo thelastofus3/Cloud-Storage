@@ -112,7 +112,12 @@
                                 <input type="hidden" name="path" th:value="${storageObject.getPath() + '/' + storageObject.getName()}">
                                 <button type="submit" class="btn btn-link text-white text-decoration-none"><i class="bi bi-trash"> Delete</i></button>
                             </form></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-fill"></i> Rename</a></li>
+                            <li th:unless="${storageObject.getLastModified() != null}"><form th:method="DELETE" th:action="@{/folder/remove}" th:object="${folderRemove}">
+                                <input type="hidden" name="path" th:value="${storageObject.getPath() + '/' + storageObject.getName()}">
+                                <button type="submit" class="btn btn-link text-white text-decoration-none"><i class="bi bi-trash"> Delete</i></button>
+                            </form></li>
+                            <li>
+                                <a class="dropdown-item" href="#"><i class="bi bi-pencil-fill"></i> Rename</a></li>
                         </ul>
                     </div>
                 </div>

@@ -3,17 +3,14 @@ package com.thelastofus.cloudstorage.util;
 import com.thelastofus.cloudstorage.dto.StorageObject;
 import com.thelastofus.cloudstorage.dto.StorageSummary;
 import io.minio.SnowballObject;
+import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
 import lombok.experimental.UtilityClass;
 
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.thelastofus.cloudstorage.util.TimeUtil.getTimePattern;
 
@@ -81,4 +78,8 @@ public class StorageUtil {
         return index != -1 ? path.substring(0,index) : path;
     }
 
+    public static DeleteObject createDeleteObject(Item item) {
+        String name = item.objectName();
+        return new DeleteObject(name);
+    }
 }

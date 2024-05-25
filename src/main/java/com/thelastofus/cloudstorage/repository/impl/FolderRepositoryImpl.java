@@ -2,10 +2,9 @@ package com.thelastofus.cloudstorage.repository.impl;
 
 import com.thelastofus.cloudstorage.props.MinioProperties;
 import com.thelastofus.cloudstorage.repository.FolderRepository;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.SnowballObject;
-import io.minio.UploadSnowballObjectsArgs;
+import io.minio.*;
+import io.minio.messages.DeleteError;
+import io.minio.messages.DeleteObject;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -41,6 +40,15 @@ public class FolderRepositoryImpl implements FolderRepository {
                 .stream(new ByteArrayInputStream(new byte[] {}), 0, -1)
                 .bucket(minioProperties.getBucket())
                 .object(folderName)
+                .build());
+    }
+
+    @Override
+    @SneakyThrows
+    public Iterable<Result<DeleteError>> removeFolder(List<DeleteObject> objects) {
+        return minioClient.removeObjects(RemoveObjectsArgs.builder()
+                .bucket(minioProperties.getBucket())
+                .objects(objects)
                 .build());
     }
 }
