@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.thelastofus.cloudstorage.util.StorageUtil.getFolderName;
 import static com.thelastofus.cloudstorage.util.StorageUtil.getUserMainFolder;
 
 @Service
@@ -69,19 +70,25 @@ public class FolderServiceImpl implements FolderService {
 
     @Override
     public void remove(FolderRemoveRequest folderRemoveRequest, Principal principal) {
+        String folderName = getFolderName(principal, folderRemoveRequest);
+        List<DeleteObject> objects = retrieveObjects(principal, folderName);
+
+        createDeleteObjects(objects);
+    }
+    private List<DeleteObject> retrieveObjects(Principal principal, String folderName) {
         List<DeleteObject> objects = new LinkedList<>();
-        String path = getUserMainFolder(principal, folderRemoveRequest.getPath());
-        String convert = path.substring(0, path.length() - 1);
-        String fullPath = convert.substring(0, convert.lastIndexOf('/') + 1);
         try {
-            Iterable<Result<Item>> results = storageRepository.getObjects(principal, fullPath);
+            Iterable<Result<Item>> results = storageRepository.getObjects(principal, folderName);
             for (Result<Item> result : results) {
                 Item item = result.get();
                 objects.add(StorageUtil.createDeleteObject(item));
             }
         } catch (Exception e) {
-            throw new FolderRemoveException("Failed to remove folder " + e.getMessage());
+            throw new FolderRemoveException("Failed to retrieve objects: " + e.getMessage());
         }
+        return objects;
+    }
+    private void createDeleteObjects(List<DeleteObject> objects) {
         Iterable<Result<DeleteError>> results = folderRepository.removeFolder(objects);
         results.forEach(deleteErrorResult -> {
             try {

@@ -1,5 +1,7 @@
 package com.thelastofus.cloudstorage.util;
 
+import com.thelastofus.cloudstorage.dto.FileRemoveRequest;
+import com.thelastofus.cloudstorage.dto.FolderRemoveRequest;
 import com.thelastofus.cloudstorage.dto.StorageObject;
 import com.thelastofus.cloudstorage.dto.StorageSummary;
 import io.minio.SnowballObject;
@@ -79,7 +81,18 @@ public class StorageUtil {
     }
 
     public static DeleteObject createDeleteObject(Item item) {
-        String name = item.objectName();
-        return new DeleteObject(name);
+        return new DeleteObject(item.objectName());
     }
+
+    public static String getFolderName(Principal principal, FolderRemoveRequest folderRemoveRequest) {
+        String path = getUserMainFolder(principal, folderRemoveRequest.getPath());
+        String rootFolderForDelete = path.substring(0, path.length() - 1);
+        return rootFolderForDelete.substring(0, rootFolderForDelete.lastIndexOf('/') + 1);
+    }
+
+    public static String getFileName(Principal principal, FileRemoveRequest fileRemoveRequest) {
+        String path = getUserMainFolder(principal, fileRemoveRequest.getPath());
+        return path.substring(0, path.length() - 1);
+    }
+
 }

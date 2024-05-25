@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.security.Principal;
 
+import static com.thelastofus.cloudstorage.util.StorageUtil.getFileName;
 import static com.thelastofus.cloudstorage.util.StorageUtil.getUserMainFolder;
 
 @Service
@@ -41,8 +42,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void remove(FileRemoveRequest fileRemoveRequest, Principal principal) {
-        String fullPath = getUserMainFolder(principal, fileRemoveRequest.getPath());
-        String fileName = fullPath.substring(0, fullPath.length() - 1);
+        String fileName = getFileName(principal, fileRemoveRequest);
         try {
             fileRepository.removeFile(fileName);
         } catch (Exception e) {
