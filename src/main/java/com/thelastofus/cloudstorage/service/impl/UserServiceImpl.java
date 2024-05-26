@@ -1,6 +1,6 @@
 package com.thelastofus.cloudstorage.service.impl;
 
-import com.thelastofus.cloudstorage.dto.UserRegistration;
+import com.thelastofus.cloudstorage.dto.user.UserRegistration;
 import com.thelastofus.cloudstorage.exception.UserAlreadyExistException;
 import com.thelastofus.cloudstorage.mapper.UserMapper;
 import com.thelastofus.cloudstorage.model.Role;

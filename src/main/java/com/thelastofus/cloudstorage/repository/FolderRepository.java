@@ -14,4 +14,5 @@ public interface FolderRepository {
     void createFolder(String folderName);
 
     Iterable<Result<DeleteError>> removeFolder(List<DeleteObject> objects);
+
 }

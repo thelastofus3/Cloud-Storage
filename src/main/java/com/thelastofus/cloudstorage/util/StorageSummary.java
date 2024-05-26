@@ -1,4 +1,4 @@
-package com.thelastofus.cloudstorage.dto;
+package com.thelastofus.cloudstorage.util;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

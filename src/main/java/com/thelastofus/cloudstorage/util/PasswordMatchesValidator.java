@@ -1,6 +1,6 @@
 package com.thelastofus.cloudstorage.util;
 
-import com.thelastofus.cloudstorage.dto.UserRegistration;
+import com.thelastofus.cloudstorage.dto.user.UserRegistration;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

@@ -1,9 +1,7 @@
 package com.thelastofus.cloudstorage.util;
 
-import com.thelastofus.cloudstorage.dto.FileRemoveRequest;
-import com.thelastofus.cloudstorage.dto.FolderRemoveRequest;
-import com.thelastofus.cloudstorage.dto.StorageObject;
-import com.thelastofus.cloudstorage.dto.StorageSummary;
+import com.thelastofus.cloudstorage.dto.file.FileRequest;
+import com.thelastofus.cloudstorage.dto.folder.FolderRemoveRequest;
 import io.minio.SnowballObject;
 import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
@@ -53,19 +51,19 @@ public class StorageUtil {
                 .build();
     }
 
-    public static SnowballObject createSnowballObject(String folderName, InputStream inputStream, long folderSize) {
+    public static SnowballObject createSnowballObject(String path, InputStream inputStream, long folderSize) {
         return new SnowballObject(
-                folderName,
+                path,
                 inputStream,
                 folderSize,
                 null
         );
     }
 
-    public static StorageSummary createStorageSummary(int countOfObjects, String currentPath) {
+    public static StorageSummary createStorageSummary(int countOfObjects, String path) {
         return StorageSummary.builder()
                 .countOfObjects(countOfObjects)
-                .currentPath(currentPath)
+                .currentPath(path)
 //                .creationDate()
                 .build();
     }
@@ -84,14 +82,14 @@ public class StorageUtil {
         return new DeleteObject(item.objectName());
     }
 
-    public static String getFolderName(Principal principal, FolderRemoveRequest folderRemoveRequest) {
+    public static String getFolderPath(Principal principal, FolderRemoveRequest folderRemoveRequest) {
         String path = getUserMainFolder(principal, folderRemoveRequest.getPath());
         String rootFolderForDelete = path.substring(0, path.length() - 1);
         return rootFolderForDelete.substring(0, rootFolderForDelete.lastIndexOf('/') + 1);
     }
 
-    public static String getFileName(Principal principal, FileRemoveRequest fileRemoveRequest) {
-        String path = getUserMainFolder(principal, fileRemoveRequest.getPath());
+    public static String getFilePath(Principal principal, FileRequest fileRequest) {
+        String path = getUserMainFolder(principal, fileRequest.getPath());
         return path.substring(0, path.length() - 1);
     }
 

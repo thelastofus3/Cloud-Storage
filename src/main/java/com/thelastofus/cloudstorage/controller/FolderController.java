@@ -1,9 +1,8 @@
 package com.thelastofus.cloudstorage.controller;
 
-import com.thelastofus.cloudstorage.dto.FileRemoveRequest;
-import com.thelastofus.cloudstorage.dto.FolderCreateRequest;
-import com.thelastofus.cloudstorage.dto.FolderRemoveRequest;
-import com.thelastofus.cloudstorage.dto.FolderUploadRequest;
+import com.thelastofus.cloudstorage.dto.folder.FolderCreateRequest;
+import com.thelastofus.cloudstorage.dto.folder.FolderRemoveRequest;
+import com.thelastofus.cloudstorage.dto.folder.FolderUploadRequest;
 import com.thelastofus.cloudstorage.service.FolderService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;

@@ -1,7 +1,8 @@
 package com.thelastofus.cloudstorage.controller;
 
-import com.thelastofus.cloudstorage.dto.FileRemoveRequest;
-import com.thelastofus.cloudstorage.dto.FileUploadRequest;
+import com.thelastofus.cloudstorage.dto.file.FileDownloadRequest;
+import com.thelastofus.cloudstorage.dto.file.FileRemoveRequest;
+import com.thelastofus.cloudstorage.dto.file.FileUploadRequest;
 import com.thelastofus.cloudstorage.service.FileService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -24,6 +26,8 @@ public class FileController {
 
     private static final String FILE_UPLOAD = "/file/upload";
     private static final String FILE_REMOVE = "/file/remove";
+
+    private static final String FILE_DOWNLOAD = "file/download";
 
     FileService fileService;
 
@@ -47,4 +51,14 @@ public class FileController {
 
         return "redirect:/";
     }
+
+    @GetMapping(FILE_DOWNLOAD)
+    public String downloadFile(@ModelAttribute("fileDownload")FileDownloadRequest fileDownloadRequest,
+                               Principal principal) {
+        fileService.download(fileDownloadRequest, principal);
+        log.debug("File success download from minio");
+
+        return "redirect:/";
+    }
+
 }

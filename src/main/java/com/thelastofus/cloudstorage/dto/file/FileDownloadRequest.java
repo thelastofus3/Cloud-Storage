@@ -1,4 +1,4 @@
-package com.thelastofus.cloudstorage.dto;
+package com.thelastofus.cloudstorage.dto.file;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -9,7 +9,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FileRemoveRequest {
+public class FileDownloadRequest extends FileRequest{
+
+    String fileName;
 
     String path;
 

@@ -1,6 +1,5 @@
-package com.thelastofus.cloudstorage.dto;
+package com.thelastofus.cloudstorage.dto.folder;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -10,9 +9,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FolderCreateRequest {
-
-    String name;
+public class FolderRequest {
 
     String path;
 

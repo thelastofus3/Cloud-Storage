@@ -1,8 +1,8 @@
 package com.thelastofus.cloudstorage.service.impl;
 
-import com.thelastofus.cloudstorage.dto.FolderCreateRequest;
-import com.thelastofus.cloudstorage.dto.FolderRemoveRequest;
-import com.thelastofus.cloudstorage.dto.FolderUploadRequest;
+import com.thelastofus.cloudstorage.dto.folder.FolderCreateRequest;
+import com.thelastofus.cloudstorage.dto.folder.FolderRemoveRequest;
+import com.thelastofus.cloudstorage.dto.folder.FolderUploadRequest;
 import com.thelastofus.cloudstorage.exception.FolderCreateException;
 import com.thelastofus.cloudstorage.exception.FolderRemoveException;
 import com.thelastofus.cloudstorage.exception.FolderUploadException;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.thelastofus.cloudstorage.util.StorageUtil.getFolderName;
+import static com.thelastofus.cloudstorage.util.StorageUtil.getFolderPath;
 import static com.thelastofus.cloudstorage.util.StorageUtil.getUserMainFolder;
 
 @Service
@@ -60,9 +60,9 @@ public class FolderServiceImpl implements FolderService {
 
     @Override
     public void create(FolderCreateRequest folderCreateRequest, Principal principal) {
-        String folderName = getUserMainFolder(principal, folderCreateRequest.getPath()) + folderCreateRequest.getName() + "/";
+        String path = getUserMainFolder(principal, folderCreateRequest.getPath()) + folderCreateRequest.getName() + "/";
         try {
-            folderRepository.createFolder(folderName);
+            folderRepository.createFolder(path);
         } catch (Exception e) {
             throw new FolderCreateException("Folder create failed " + e.getMessage());
         }
@@ -70,15 +70,15 @@ public class FolderServiceImpl implements FolderService {
 
     @Override
     public void remove(FolderRemoveRequest folderRemoveRequest, Principal principal) {
-        String folderName = getFolderName(principal, folderRemoveRequest);
-        List<DeleteObject> objects = retrieveObjects(principal, folderName);
+        String path = getFolderPath(principal, folderRemoveRequest);
+        List<DeleteObject> objects = retrieveObjects(principal, path);
 
         createDeleteObjects(objects);
     }
-    private List<DeleteObject> retrieveObjects(Principal principal, String folderName) {
+    private List<DeleteObject> retrieveObjects(Principal principal, String path) {
         List<DeleteObject> objects = new LinkedList<>();
         try {
-            Iterable<Result<Item>> results = storageRepository.getObjects(principal, folderName);
+            Iterable<Result<Item>> results = storageRepository.getObjects(principal, path);
             for (Result<Item> result : results) {
                 Item item = result.get();
                 objects.add(StorageUtil.createDeleteObject(item));

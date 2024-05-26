@@ -1,11 +1,11 @@
-package com.thelastofus.cloudstorage.dto;
+package com.thelastofus.cloudstorage.dto.folder;
 
-import com.thelastofus.cloudstorage.model.User;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,10 +13,10 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FileUploadRequest {
+public class FolderUploadRequest extends FolderRequest{
 
-    @NotNull(message = "Name of the file should not be empty")
-    MultipartFile file;
+    @NotNull(message = "Name of the folder should not be empty")
+    List<MultipartFile> folder;
 
     String path;
 

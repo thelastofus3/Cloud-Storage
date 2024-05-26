@@ -1,9 +1,8 @@
 package com.thelastofus.cloudstorage.service;
 
-import com.thelastofus.cloudstorage.dto.FolderCreateRequest;
-import com.thelastofus.cloudstorage.dto.FolderRemoveRequest;
-import com.thelastofus.cloudstorage.dto.FolderUploadRequest;
-import org.springframework.security.core.parameters.P;
+import com.thelastofus.cloudstorage.dto.folder.FolderCreateRequest;
+import com.thelastofus.cloudstorage.dto.folder.FolderRemoveRequest;
+import com.thelastofus.cloudstorage.dto.folder.FolderUploadRequest;
 
 import java.security.Principal;
 

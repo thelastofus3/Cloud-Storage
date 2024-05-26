@@ -100,16 +100,29 @@
                     </div>
                     <div class="col-4 mt-2"><p class="p-0 m-0" th:text="${storageObject.getLastModified()}">Modified: 2024-04-19</p></div>
                     <div class="col-2 mt-2"><p class="p-0 m-0" th:text="${storageObject.getSize() + ' KiB'}">Size: 1MB</p></div>
-                    <div class="col-2 p-0 delete-rename dropdown">
-                        <button class="btn btn-secondary">
-                            <i class="bi bi-download"></i>
-                        </button>
+                    <div class="col-2 p-0 delete-rename dropdown d-inline-flex">
+                        <form class="d-inline-flex" th:if="${storageObject.getLastModified() != null}" th:method="GET" th:action="@{/file/download}" th:object="${fileDownload}">
+                            <input type="hidden" name="path" th:value="${storageObject.getPath() + '/' + storageObject.getName()}" th:if="${storageObject.getPath() != storageObject.getName()}">
+                            <input type="hidden" name="path" th:value="${storageObject.getPath()}" th:unless="${storageObject.getPath() != storageObject.getName()}">
+                            <input type="hidden" name="fileName" th:value="${storageObject.getName()}">
+                            <button class="btn btn-secondary">
+                                <i class="bi bi-download"></i>
+                            </button>
+                        </form>
+                        <form class="d-inline-flex" th:unless="${storageObject.getLastModified() != null}" th:method="GET" th:action="@{/folder/download}" th:object="${folderDownload}">
+                            <input type="hidden" name="path" th:value="${storageObject.getPath() + '/' + storageObject.getName()}">
+                            <input type="hidden" name="fileName" th:value="${storageObject.getName()}">
+                            <button class="btn btn-secondary">
+                                <i class="bi bi-download"></i>
+                            </button>
+                        </form>
                         <button class="btn btn-secondary mx-2" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-three-dots"></i>
                         </button>
                         <ul class="dropdown-menu">
                             <li th:if="${storageObject.getLastModified() != null}"><form th:method="DELETE" th:action="@{/file/remove}" th:object="${fileRemove}">
-                                <input type="hidden" name="path" th:value="${storageObject.getPath() + '/' + storageObject.getName()}">
+                                <input type="hidden" name="path" th:value="${storageObject.getPath() + '/' + storageObject.getName()}" th:if="${storageObject.getPath() != storageObject.getName()}">
+                                <input type="hidden" name="path" th:value="${storageObject.getPath()}" th:unless="${storageObject.getPath() != storageObject.getName()}">
                                 <button type="submit" class="btn btn-link text-white text-decoration-none"><i class="bi bi-trash"> Delete</i></button>
                             </form></li>
                             <li th:unless="${storageObject.getLastModified() != null}"><form th:method="DELETE" th:action="@{/folder/remove}" th:object="${folderRemove}">

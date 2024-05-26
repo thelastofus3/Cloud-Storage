@@ -1,6 +1,6 @@
 package com.thelastofus.cloudstorage.service;
 
-import com.thelastofus.cloudstorage.dto.UserRegistration;
+import com.thelastofus.cloudstorage.dto.user.UserRegistration;
 import com.thelastofus.cloudstorage.exception.UserAlreadyExistException;
 import com.thelastofus.cloudstorage.repository.UserRepository;
 import lombok.AccessLevel;

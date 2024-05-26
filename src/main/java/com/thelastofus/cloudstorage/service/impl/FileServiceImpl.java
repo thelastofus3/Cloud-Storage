@@ -1,7 +1,9 @@
 package com.thelastofus.cloudstorage.service.impl;
 
-import com.thelastofus.cloudstorage.dto.FileRemoveRequest;
-import com.thelastofus.cloudstorage.dto.FileUploadRequest;
+import com.thelastofus.cloudstorage.dto.file.FileDownloadRequest;
+import com.thelastofus.cloudstorage.dto.file.FileRemoveRequest;
+import com.thelastofus.cloudstorage.dto.file.FileUploadRequest;
+import com.thelastofus.cloudstorage.exception.FileDownloadException;
 import com.thelastofus.cloudstorage.exception.FileRemoveException;
 import com.thelastofus.cloudstorage.exception.FileUploadException;
 import com.thelastofus.cloudstorage.repository.FileRepository;
@@ -15,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.security.Principal;
 
-import static com.thelastofus.cloudstorage.util.StorageUtil.getFileName;
+import static com.thelastofus.cloudstorage.util.StorageUtil.getFilePath;
 import static com.thelastofus.cloudstorage.util.StorageUtil.getUserMainFolder;
 
 @Service
@@ -32,9 +34,9 @@ public class FileServiceImpl implements FileService {
             throw new FileUploadException("File must have name and content");
 
         try {
-            String fileName = getUserMainFolder(principal, fileUploadRequest.getPath()) + file.getOriginalFilename();
+            String path = getUserMainFolder(principal, fileUploadRequest.getPath()) + file.getOriginalFilename();
             InputStream inputStream = file.getInputStream();
-            fileRepository.saveFile(inputStream, fileName);
+            fileRepository.saveFile(inputStream, path);
         } catch (Exception e) {
             throw new FileUploadException("File upload failed " + e.getMessage());
         }
@@ -42,11 +44,22 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void remove(FileRemoveRequest fileRemoveRequest, Principal principal) {
-        String fileName = getFileName(principal, fileRemoveRequest);
+        String path = getFilePath(principal, fileRemoveRequest);
         try {
-            fileRepository.removeFile(fileName);
+            fileRepository.removeFile(path);
         } catch (Exception e) {
             throw new FileRemoveException("File remove failed " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void download(FileDownloadRequest fileDownloadRequest, Principal principal) {
+        String fileName = fileDownloadRequest.getFileName();
+        String path = getFilePath(principal, fileDownloadRequest);
+        try {
+            fileRepository.downloadFile(fileName, path);
+        } catch (Exception e) {
+            throw new FileDownloadException("File download failed " + e.getMessage());
         }
     }
 }

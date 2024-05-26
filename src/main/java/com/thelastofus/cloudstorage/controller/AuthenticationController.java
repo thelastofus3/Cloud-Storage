@@ -1,6 +1,6 @@
 package com.thelastofus.cloudstorage.controller;
 
-import com.thelastofus.cloudstorage.dto.UserRegistration;
+import com.thelastofus.cloudstorage.dto.user.UserRegistration;
 import com.thelastofus.cloudstorage.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;

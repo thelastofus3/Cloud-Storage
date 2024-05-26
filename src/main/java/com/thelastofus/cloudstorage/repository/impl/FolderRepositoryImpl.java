@@ -26,29 +26,29 @@ public class FolderRepositoryImpl implements FolderRepository {
 
     @Override
     @SneakyThrows
-    public void saveFolder(List<SnowballObject> objects) {
+    public void saveFolder(List<SnowballObject> paths) {
         minioClient.uploadSnowballObjects(UploadSnowballObjectsArgs.builder()
                 .bucket(minioProperties.getBucket())
-                .objects(objects)
+                .objects(paths)
                 .build());
     }
 
     @Override
     @SneakyThrows
-    public void createFolder(String folderName) {
+    public void createFolder(String path) {
         minioClient.putObject(PutObjectArgs.builder()
                 .stream(new ByteArrayInputStream(new byte[] {}), 0, -1)
                 .bucket(minioProperties.getBucket())
-                .object(folderName)
+                .object(path)
                 .build());
     }
 
     @Override
     @SneakyThrows
-    public Iterable<Result<DeleteError>> removeFolder(List<DeleteObject> objects) {
+    public Iterable<Result<DeleteError>> removeFolder(List<DeleteObject> paths) {
         return minioClient.removeObjects(RemoveObjectsArgs.builder()
                 .bucket(minioProperties.getBucket())
-                .objects(objects)
+                .objects(paths)
                 .build());
     }
 }

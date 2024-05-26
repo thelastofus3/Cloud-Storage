@@ -1,4 +1,4 @@
-package com.thelastofus.cloudstorage.dto;
+package com.thelastofus.cloudstorage.dto.user;
 
 import com.thelastofus.cloudstorage.util.PasswordMatches;
 import jakarta.validation.constraints.Email;

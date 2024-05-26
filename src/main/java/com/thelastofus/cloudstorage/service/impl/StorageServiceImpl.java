@@ -1,7 +1,7 @@
 package com.thelastofus.cloudstorage.service.impl;
 
-import com.thelastofus.cloudstorage.dto.StorageObject;
-import com.thelastofus.cloudstorage.dto.StorageSummary;
+import com.thelastofus.cloudstorage.util.StorageObject;
+import com.thelastofus.cloudstorage.util.StorageSummary;
 import com.thelastofus.cloudstorage.exception.NoSuchFilesException;
 import com.thelastofus.cloudstorage.repository.StorageRepository;
 import com.thelastofus.cloudstorage.service.StorageService;
@@ -46,9 +46,9 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public StorageSummary getStorageSummary(Principal principal, String currentPath) {
+    public StorageSummary getStorageSummary(Principal principal, String path) {
         int countOfObjects = 0;
-        String userFolder = getUserMainFolder(principal, currentPath);
+        String userFolder = getUserMainFolder(principal, path);
         try {
             Iterable<Result<Item>> results = storageRepository.getObjects(principal, userFolder);
             for (Result<Item> ignored : results) {
@@ -58,7 +58,7 @@ public class StorageServiceImpl implements StorageService {
             throw new NoSuchFilesException("Failed to get information about files for user: " + principal.getName() + ", error: " + e.getMessage());
         }
 
-        return createStorageSummary(countOfObjects, currentPath);
+        return createStorageSummary(countOfObjects, path);
     }
 
 }

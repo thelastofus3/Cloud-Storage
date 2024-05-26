@@ -8,8 +8,10 @@ import java.io.InputStream;
 
 public interface FileRepository {
 
-    void saveFile(InputStream inputStream, String filename);
+    void saveFile(InputStream inputStream, String fileName);
 
-    void removeFile(String filename);
+    void removeFile(String fileName);
+
+    void downloadFile(String fileName, String path);
 
 }
