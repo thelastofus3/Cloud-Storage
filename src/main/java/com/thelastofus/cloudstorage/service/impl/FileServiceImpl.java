@@ -11,6 +11,7 @@ import com.thelastofus.cloudstorage.service.FileService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,11 +54,12 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void download(FileDownloadRequest fileDownloadRequest, Principal principal) {
+    public ByteArrayResource download(FileDownloadRequest fileDownloadRequest, Principal principal) {
         String fileName = fileDownloadRequest.getFileName();
         String path = getFilePath(principal, fileDownloadRequest);
         try {
-            fileRepository.downloadFile(fileName, path);
+            InputStream inputStream = fileRepository.downloadFile(fileName, path);
+            return new ByteArrayResource(inputStream.readAllBytes());
         } catch (Exception e) {
             throw new FileDownloadException("File download failed " + e.getMessage());
         }

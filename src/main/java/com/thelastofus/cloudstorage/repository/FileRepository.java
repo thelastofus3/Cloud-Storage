@@ -12,6 +12,6 @@ public interface FileRepository {
 
     void removeFile(String fileName);
 
-    void downloadFile(String fileName, String path);
+    InputStream downloadFile(String fileName, String path);
 
 }

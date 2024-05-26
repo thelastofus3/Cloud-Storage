@@ -2,10 +2,7 @@ package com.thelastofus.cloudstorage.repository.impl;
 
 import com.thelastofus.cloudstorage.props.MinioProperties;
 import com.thelastofus.cloudstorage.repository.FileRepository;
-import io.minio.DownloadObjectArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectArgs;
+import io.minio.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -44,11 +41,10 @@ public class FileRepositoryImpl implements FileRepository {
 
     @Override
     @SneakyThrows
-    public void downloadFile(String fileName, String path) {
-        minioClient.downloadObject(DownloadObjectArgs.builder()
+    public InputStream downloadFile(String fileName, String path) {
+        return minioClient.getObject(GetObjectArgs.builder()
                 .bucket(minioProperties.getBucket())
                 .object(path)
-                .filename(fileName)
                 .build());
     }
 }

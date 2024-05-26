@@ -9,12 +9,13 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -52,13 +53,18 @@ public class FileController {
         return "redirect:/";
     }
 
+    @ResponseBody
     @GetMapping(FILE_DOWNLOAD)
-    public String downloadFile(@ModelAttribute("fileDownload")FileDownloadRequest fileDownloadRequest,
-                               Principal principal) {
-        fileService.download(fileDownloadRequest, principal);
+    public ResponseEntity<ByteArrayResource> downloadFile(@ModelAttribute("fileDownload")FileDownloadRequest fileDownloadRequest,
+                                                          Principal principal) {
+        ByteArrayResource resource = fileService.download(fileDownloadRequest, principal);
         log.debug("File success download from minio");
 
-        return "redirect:/";
+        return ResponseEntity.ok()
+                .contentLength(resource.contentLength())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-Disposition", "attachment; filename=" + fileDownloadRequest.getFileName())
+                .body(resource);
     }
 
 }
