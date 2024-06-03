@@ -18,4 +18,6 @@ public class FileUploadRequest extends FileRequest{
 
     String path;
 
+    String owner;
+
 }

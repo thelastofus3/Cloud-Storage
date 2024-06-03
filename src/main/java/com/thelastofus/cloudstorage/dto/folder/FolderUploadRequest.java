@@ -20,4 +20,6 @@ public class FolderUploadRequest extends FolderRequest{
 
     String path;
 
+    String owner;
+
 }

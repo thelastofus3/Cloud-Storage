@@ -15,4 +15,6 @@ public class FolderRemoveRequest extends FolderRequest{
 
     String path;
 
+    String owner;
+
 }

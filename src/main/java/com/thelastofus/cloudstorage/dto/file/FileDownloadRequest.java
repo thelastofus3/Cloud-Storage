@@ -15,4 +15,6 @@ public class FileDownloadRequest extends FileRequest{
 
     String path;
 
+    String owner;
+
 }

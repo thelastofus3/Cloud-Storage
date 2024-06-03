@@ -127,14 +127,17 @@ public class FolderServiceImpl implements FolderService {
 
     }
 
-
     private List<DeleteObject> retrieveObjects(Principal principal, String path) {
         List<DeleteObject> objects = new LinkedList<>();
         try {
             Iterable<Result<Item>> results = storageRepository.getObjects(principal, path);
             for (Result<Item> result : results) {
                 Item item = result.get();
-                objects.add(StorageUtil.createDeleteObject(item));
+                if (item.isDir()) {
+                    objects.addAll(retrieveObjects(principal, item.objectName()));
+                } else {
+                    objects.add(StorageUtil.createDeleteObject(item));
+                }
             }
         } catch (Exception e) {
             throw new FolderRemoveException("Failed to retrieve objects: " + e.getMessage());

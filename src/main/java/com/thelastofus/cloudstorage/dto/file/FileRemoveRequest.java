@@ -13,4 +13,6 @@ public class FileRemoveRequest extends FileRequest{
 
     String path;
 
+    String owner;
+
 }

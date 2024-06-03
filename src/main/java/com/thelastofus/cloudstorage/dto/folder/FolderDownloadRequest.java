@@ -15,4 +15,6 @@ public class FolderDownloadRequest {
 
     String path;
 
+    String owner;
+
 }

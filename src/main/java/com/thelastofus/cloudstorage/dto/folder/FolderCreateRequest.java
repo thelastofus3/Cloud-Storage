@@ -16,4 +16,6 @@ public class FolderCreateRequest extends FolderRequest{
 
     String path;
 
+    String owner;
+
 }

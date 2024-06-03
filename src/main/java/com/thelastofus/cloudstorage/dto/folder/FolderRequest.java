@@ -13,4 +13,6 @@ public class FolderRequest {
 
     String path;
 
+    String owner;
+
 }

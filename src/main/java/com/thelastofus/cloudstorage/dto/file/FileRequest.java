@@ -13,4 +13,6 @@ public class FileRequest {
 
     String path;
 
+    String owner;
+
 }
