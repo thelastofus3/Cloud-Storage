@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
@@ -55,10 +56,9 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public ByteArrayResource download(FileDownloadRequest fileDownloadRequest, Principal principal) {
-        String fileName = fileDownloadRequest.getFileName();
         String path = getFilePath(principal, fileDownloadRequest);
         try {
-            InputStream inputStream = fileRepository.downloadFile(fileName, path);
+            InputStream inputStream = fileRepository.downloadFile(path);
             return new ByteArrayResource(inputStream.readAllBytes());
         } catch (Exception e) {
             throw new FileDownloadException("File download failed " + e.getMessage());

@@ -65,6 +65,7 @@ public class FileController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header("Content-Disposition", "attachment; filename=" + fileDownloadRequest.getFileName())
                 .body(resource);
+        //TODO: Заменить "Content-Disposition" на CONTENT-DISPOSITION
     }
 
 }

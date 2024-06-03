@@ -62,6 +62,12 @@ public class ApplicationControllerAdvice {
         return "redirect:/";
     }
 
+    @ExceptionHandler(FolderDownloadException.class)
+    public String handleFolderDownloadException(FolderDownloadException e, RedirectAttributes attributes) {
+        attributes.addFlashAttribute("errorMessage",e.getMessage());
+        return "redirect:/";
+    }
+
     @ExceptionHandler(NoSuchFilesException.class)
     public String handleNoSuchFilesException(NoSuchFilesException e, RedirectAttributes attributes) {
         attributes.addFlashAttribute("errorMessage",e.getMessage());

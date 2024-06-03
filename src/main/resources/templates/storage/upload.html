@@ -111,7 +111,7 @@
                         </form>
                         <form class="d-inline-flex" th:unless="${storageObject.getLastModified() != null}" th:method="GET" th:action="@{/folder/download}" th:object="${folderDownload}">
                             <input type="hidden" name="path" th:value="${storageObject.getPath() + '/' + storageObject.getName()}">
-                            <input type="hidden" name="fileName" th:value="${storageObject.getName()}">
+                            <input type="hidden" name="folderName" th:value="${storageObject.getName()}">
                             <button class="btn btn-secondary">
                                 <i class="bi bi-download"></i>
                             </button>

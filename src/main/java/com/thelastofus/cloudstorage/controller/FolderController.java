@@ -1,6 +1,7 @@
 package com.thelastofus.cloudstorage.controller;
 
 import com.thelastofus.cloudstorage.dto.folder.FolderCreateRequest;
+import com.thelastofus.cloudstorage.dto.folder.FolderDownloadRequest;
 import com.thelastofus.cloudstorage.dto.folder.FolderRemoveRequest;
 import com.thelastofus.cloudstorage.dto.folder.FolderUploadRequest;
 import com.thelastofus.cloudstorage.service.FolderService;
@@ -9,11 +10,12 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -28,6 +30,8 @@ public class FolderController {
     private static final String FOLDER_CREATE = "/folder/create";
 
     private static final String FOLDER_REMOVE = "/folder/remove";
+
+    private static final String FOLDER_DOWNLOAD = "/folder/download";
 
     FolderService folderService;
 
@@ -56,11 +60,24 @@ public class FolderController {
     }
 
     @DeleteMapping(FOLDER_REMOVE)
-    public String removeFile(@ModelAttribute("folderRemove")FolderRemoveRequest folderRemoveRequest,
-                             Principal principal) {
+    public String removeFolder(@ModelAttribute("folderRemove")FolderRemoveRequest folderRemoveRequest,
+                               Principal principal) {
         folderService.remove(folderRemoveRequest, principal);
         log.debug("Folder success remove from minio");
 
         return "redirect:/";
+    }
+
+    @ResponseBody
+    @GetMapping(FOLDER_DOWNLOAD)
+    public ResponseEntity<ByteArrayResource> downloadFolder(@ModelAttribute("folderDownload")FolderDownloadRequest folderDownloadRequest,
+                                                            Principal principal) {
+        ByteArrayResource resource = folderService.download(folderDownloadRequest, principal);
+
+        return ResponseEntity.ok()
+                .contentLength(resource.contentLength())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-Disposition", "attachment; filename=" + folderDownloadRequest.getFolderName() + ".zip")
+                .body(resource);
     }
 }

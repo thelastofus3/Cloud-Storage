@@ -15,4 +15,6 @@ public interface FolderRepository {
 
     Iterable<Result<DeleteError>> removeFolder(List<DeleteObject> objects);
 
+    InputStream downloadFolder(String path);
+
 }

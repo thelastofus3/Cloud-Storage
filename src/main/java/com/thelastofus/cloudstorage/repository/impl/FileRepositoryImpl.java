@@ -41,7 +41,7 @@ public class FileRepositoryImpl implements FileRepository {
 
     @Override
     @SneakyThrows
-    public InputStream downloadFile(String fileName, String path) {
+    public InputStream downloadFile(String path) {
         return minioClient.getObject(GetObjectArgs.builder()
                 .bucket(minioProperties.getBucket())
                 .object(path)

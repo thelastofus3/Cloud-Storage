@@ -51,4 +51,14 @@ public class FolderRepositoryImpl implements FolderRepository {
                 .objects(paths)
                 .build());
     }
+
+    @Override
+    @SneakyThrows
+    public InputStream downloadFolder(String path) {
+        return minioClient.getObject(GetObjectArgs.builder()
+                .bucket(minioProperties.getBucket())
+                .object(path)
+                .build());
+    }
+
 }

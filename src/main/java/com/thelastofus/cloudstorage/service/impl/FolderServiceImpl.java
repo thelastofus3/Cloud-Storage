@@ -1,9 +1,11 @@
 package com.thelastofus.cloudstorage.service.impl;
 
 import com.thelastofus.cloudstorage.dto.folder.FolderCreateRequest;
+import com.thelastofus.cloudstorage.dto.folder.FolderDownloadRequest;
 import com.thelastofus.cloudstorage.dto.folder.FolderRemoveRequest;
 import com.thelastofus.cloudstorage.dto.folder.FolderUploadRequest;
 import com.thelastofus.cloudstorage.exception.FolderCreateException;
+import com.thelastofus.cloudstorage.exception.FolderDownloadException;
 import com.thelastofus.cloudstorage.exception.FolderRemoveException;
 import com.thelastofus.cloudstorage.exception.FolderUploadException;
 import com.thelastofus.cloudstorage.repository.FolderRepository;
@@ -18,14 +20,22 @@ import io.minio.messages.Item;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.utils.IOUtils;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static com.thelastofus.cloudstorage.util.StorageUtil.getFolderPath;
 import static com.thelastofus.cloudstorage.util.StorageUtil.getUserMainFolder;
@@ -75,6 +85,46 @@ public class FolderServiceImpl implements FolderService {
 
         createDeleteObjects(objects);
     }
+
+    @Override
+    public ByteArrayResource download(FolderDownloadRequest folderDownloadRequest, Principal principal) {
+        String path = getUserMainFolder(principal, folderDownloadRequest.getPath().substring(0, folderDownloadRequest.getPath().length() - folderDownloadRequest.getFolderName().length() - 1));
+        String folderName = folderDownloadRequest.getFolderName();
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ZipOutputStream zos = new ZipOutputStream(baos);
+            addFilesToZip(zos, path, folderName, principal);
+            zos.close();
+            return new ByteArrayResource(baos.toByteArray());
+        } catch (Exception e) {
+            throw new FolderDownloadException("Folder download failed " + e.getMessage());
+        }
+    }
+
+    private void addFilesToZip(ZipOutputStream zos, String path,String folderName, Principal principal) {
+        Iterable<Result<Item>> results = storageRepository.getObjects(principal, path);
+        try {
+            for (Result<Item> result : results) {
+                Item item = result.get();
+                String objectName = item.objectName();
+                if (item.isDir()) {
+                    addFilesToZip(zos, objectName , folderName , principal);
+                } else {
+                    InputStream inputStream = folderRepository.downloadFolder(objectName);
+                    int folderNameIndex = objectName.indexOf(folderName);
+                    String fileName = objectName.substring(folderNameIndex);
+                    zos.putNextEntry(new ZipEntry(fileName));
+                    IOUtils.copy(inputStream, zos);
+                    zos.closeEntry();
+                    inputStream.close();
+                }
+            }
+        } catch (Exception e) {
+            throw new FolderDownloadException("Folder download exception " + e.getMessage());
+        }
+    }
+
+
     private List<DeleteObject> retrieveObjects(Principal principal, String path) {
         List<DeleteObject> objects = new LinkedList<>();
         try {
