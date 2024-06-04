@@ -21,10 +21,6 @@ public class ApplicationControllerAdvice {
         return "redirect:/auth/registration";
     }
 
-    @ExceptionHandler(IllegalStateException.class)
-    public ExceptionBody handleIllegalState(IllegalStateException e){
-        return new ExceptionBody(e.getMessage());
-    }
     @ExceptionHandler(UnsupportedRegistrationServiceException.class)
     public String handleUnsupportedRegistrationServiceException(UnsupportedRegistrationServiceException e, RedirectAttributes attributes){
         attributes.addFlashAttribute("errorMessage",e.getMessage());
@@ -73,28 +69,5 @@ public class ApplicationControllerAdvice {
         attributes.addFlashAttribute("errorMessage",e.getMessage());
         return "redirect:/";
     }
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ExceptionBody handleMethodArgumentNotValid(MethodArgumentNotValidException e){
-        ExceptionBody exceptionBody = new ExceptionBody("Validation failed");
-        List<FieldError> errors = e.getBindingResult().getFieldErrors();
-        exceptionBody.setErrors(errors.stream()
-                .collect(Collectors.toMap(FieldError::getField,FieldError::getDefaultMessage)));
-        return exceptionBody;
-    }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ExceptionBody handleConstraintViolation(ConstraintViolationException e){
-        ExceptionBody exceptionBody = new ExceptionBody("Validation failed");
-        exceptionBody.setErrors(e.getConstraintViolations().stream()
-                .collect(Collectors.toMap(
-                        violation -> violation.getPropertyPath().toString(),
-                        ConstraintViolation::getMessage
-                )));
-        return exceptionBody;
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ExceptionBody handleException(){
-        return new ExceptionBody("Access denied");
-    }
 }
