@@ -18,6 +18,8 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Component
 @Transactional
@@ -44,6 +46,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
                     .email(getUserEmail(oAuth2User))
                     .password(passwordEncoder.encode(DEFAULT_PASSWORD))
                     .role(Role.ROLE_USER)
+                    .created_at(LocalDateTime.now())
                     .build();
 
             return userRepository.save(user);

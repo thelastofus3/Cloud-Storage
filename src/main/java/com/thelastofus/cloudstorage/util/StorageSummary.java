@@ -3,6 +3,7 @@ package com.thelastofus.cloudstorage.util;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -17,8 +18,8 @@ public class StorageSummary {
     Integer countOfObjects;
 
     String currentPath;
-//
-//    String creationDate;
+
+    LocalDateTime creationDate;
 
 
 }

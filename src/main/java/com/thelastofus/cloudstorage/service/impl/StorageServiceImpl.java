@@ -1,5 +1,8 @@
 package com.thelastofus.cloudstorage.service.impl;
 
+import com.thelastofus.cloudstorage.model.User;
+import com.thelastofus.cloudstorage.repository.UserRepository;
+import com.thelastofus.cloudstorage.service.UserService;
 import com.thelastofus.cloudstorage.util.StorageObject;
 import com.thelastofus.cloudstorage.util.StorageSummary;
 import com.thelastofus.cloudstorage.exception.NoSuchFilesException;
@@ -13,8 +16,10 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.thelastofus.cloudstorage.util.StorageUtil.*;
 
@@ -24,6 +29,7 @@ import static com.thelastofus.cloudstorage.util.StorageUtil.*;
 public class StorageServiceImpl implements StorageService {
 
     StorageRepository storageRepository;
+    UserService userService;
 
     @Override
     public List<StorageObject> getAllStorageObjects(Principal principal, String currentPath) {
@@ -47,18 +53,30 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public StorageSummary getStorageSummary(Principal principal, String path) {
+
+        String userFolder = getUserMainFolder(principal);
+        LocalDateTime createdAt = userService.getCreatedAt(principal.getName());
+        int countOfObjects = getCountOfObjects(principal,userFolder);
+
+        return createStorageSummary(countOfObjects, path, createdAt);
+    }
+
+    private int getCountOfObjects(Principal principal, String userFolder) {
         int countOfObjects = 0;
-        String userFolder = getUserMainFolder(principal, path);
         try {
             Iterable<Result<Item>> results = storageRepository.getObjects(userFolder);
-            for (Result<Item> ignored : results) {
+            for (Result<Item> result : results) {
+                Item item = result.get();
                 countOfObjects++;
+                if (item.isDir()) {
+                    countOfObjects += getCountOfObjects(principal, item.objectName());
+                }
             }
         }catch (Exception e) {
             throw new NoSuchFilesException("Failed to get information about files for user: " + principal.getName() + ", error: " + e.getMessage());
         }
 
-        return createStorageSummary(countOfObjects, path);
+        return countOfObjects;
     }
 
 }

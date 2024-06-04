@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -28,5 +31,7 @@ public class User {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     Role role;
+    @Column(nullable = false)
+    LocalDateTime created_at;
 
 }

@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.Principal;
+import java.time.LocalDateTime;
 
 import static com.thelastofus.cloudstorage.util.TimeUtil.getTimePattern;
 
@@ -28,6 +29,10 @@ public class StorageUtil {
             userFolder = userFolder + currentPath + "/";
         }
         return userFolder;
+    }
+
+    public static String getUserMainFolder(Principal principal) {
+        return "user-" + principal.getName() + "-files/";
     }
 
     public static int getUserMainFolderLength(Principal principal) {
@@ -60,11 +65,11 @@ public class StorageUtil {
         );
     }
 
-    public static StorageSummary createStorageSummary(int countOfObjects, String path) {
+    public static StorageSummary createStorageSummary(int countOfObjects, String path, LocalDateTime localDateTime) {
         return StorageSummary.builder()
                 .countOfObjects(countOfObjects)
                 .currentPath(path)
-//                .creationDate()
+                .creationDate(localDateTime)
                 .build();
     }
     private BigDecimal convertFromBToKiB(Item item) {

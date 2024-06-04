@@ -19,5 +19,6 @@ public class MinioProperties {
     String url;
     String accessKey;
     String secretKey;
+    Long memoryLimit;
 
 }
