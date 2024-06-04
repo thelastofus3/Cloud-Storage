@@ -31,7 +31,7 @@ public class StorageServiceImpl implements StorageService {
         int userMainFolderLength = getUserMainFolderLength(principal);
         List<StorageObject> storageObjects = new ArrayList<>();
         try {
-            Iterable<Result<Item>> results = storageRepository.getObjects(principal, userMainFolder);
+            Iterable<Result<Item>> results = storageRepository.getObjects(userMainFolder);
             for (Result<Item> result : results) {
                 Item item = result.get();
 
@@ -50,7 +50,7 @@ public class StorageServiceImpl implements StorageService {
         int countOfObjects = 0;
         String userFolder = getUserMainFolder(principal, path);
         try {
-            Iterable<Result<Item>> results = storageRepository.getObjects(principal, userFolder);
+            Iterable<Result<Item>> results = storageRepository.getObjects(userFolder);
             for (Result<Item> ignored : results) {
                 countOfObjects++;
             }

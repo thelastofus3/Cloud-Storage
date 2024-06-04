@@ -78,7 +78,7 @@ public class FolderServiceImpl implements FolderService {
     @Override
     public void remove(FolderRemoveRequest folderRemoveRequest, Principal principal) {
         String path = getFolderPath(principal, folderRemoveRequest);
-        List<DeleteObject> objects = retrieveObjects(principal, path);
+        List<DeleteObject> objects = retrieveObjects(path);
 
         createDeleteObjects(objects);
     }
@@ -89,7 +89,7 @@ public class FolderServiceImpl implements FolderService {
         String folderName = folderDownloadRequest.getFolderName();
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              ZipOutputStream zos = new ZipOutputStream(baos)){
-            addFilesAndFoldersToZip(zos, path, folderName, principal);
+            addFilesAndFoldersToZip(zos, path, folderName);
             zos.close();
             return new ByteArrayResource(baos.toByteArray());
         } catch (Exception e) {
@@ -97,14 +97,14 @@ public class FolderServiceImpl implements FolderService {
         }
     }
 
-    private void addFilesAndFoldersToZip(ZipOutputStream zos, String path, String folderName, Principal principal) {
-        Iterable<Result<Item>> results = storageRepository.getObjects(principal, path);
+    private void addFilesAndFoldersToZip(ZipOutputStream zos, String path, String folderName) {
+        Iterable<Result<Item>> results = storageRepository.getObjects(path);
         try {
             for (Result<Item> result : results) {
                 Item item = result.get();
                 String objectName = item.objectName();
                 if (item.isDir()) {
-                    addFilesAndFoldersToZip(zos, objectName , folderName , principal);
+                    addFilesAndFoldersToZip(zos, objectName , folderName);
                 } else {
                     addFilesToZip(zos, objectName, folderName);
                 }
@@ -127,14 +127,14 @@ public class FolderServiceImpl implements FolderService {
 
     }
 
-    private List<DeleteObject> retrieveObjects(Principal principal, String path) {
+    private List<DeleteObject> retrieveObjects(String path) {
         List<DeleteObject> objects = new LinkedList<>();
         try {
-            Iterable<Result<Item>> results = storageRepository.getObjects(principal, path);
+            Iterable<Result<Item>> results = storageRepository.getObjects(path);
             for (Result<Item> result : results) {
                 Item item = result.get();
                 if (item.isDir()) {
-                    objects.addAll(retrieveObjects(principal, item.objectName()));
+                    objects.addAll(retrieveObjects(item.objectName()));
                 } else {
                     objects.add(StorageUtil.createDeleteObject(item));
                 }

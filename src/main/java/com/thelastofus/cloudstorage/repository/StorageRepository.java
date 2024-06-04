@@ -7,5 +7,5 @@ import java.security.Principal;
 
 public interface StorageRepository {
 
-    Iterable<Result<Item>> getObjects(Principal principal, String currentPath);
+    Iterable<Result<Item>> getObjects(String currentPath);
 }
