@@ -9,12 +9,13 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FolderDownloadRequest {
+public class FolderRenameRequest extends FolderRequest{
+
+    String from;
+
+    String to;
 
     String name;
 
-    String path;
-
     String owner;
-
 }

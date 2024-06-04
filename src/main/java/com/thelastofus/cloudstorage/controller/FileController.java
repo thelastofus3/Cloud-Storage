@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -63,7 +62,7 @@ public class FileController {
         return ResponseEntity.ok()
                 .contentLength(resource.contentLength())
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .header("Content-Disposition", "attachment; filename=" + fileDownloadRequest.getFileName())
+                .header("Content-Disposition", "attachment; filename=" + fileDownloadRequest.getName())
                 .body(resource);
         //TODO: Заменить "Content-Disposition" на CONTENT-DISPOSITION
     }

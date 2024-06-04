@@ -37,9 +37,7 @@ public class FolderController {
 
     @PostMapping(FOLDER_UPLOAD)
     public String uploadFolder(@Valid @ModelAttribute("folderUpload")FolderUploadRequest folderUploadRequest,
-                               Principal principal, BindingResult bindingResult) {
-        if (bindingResult.hasErrors())
-            return "redirect:/";
+                               Principal principal) {
 
         folderService.upload(folderUploadRequest, principal);
         log.info("Folder success save");
@@ -49,9 +47,7 @@ public class FolderController {
 
     @PostMapping(FOLDER_CREATE)
     public String createFolder(@Valid @ModelAttribute("folderCreate")FolderCreateRequest folderCreateRequest,
-                               Principal principal,BindingResult bindingResult) {
-        if (bindingResult.hasErrors())
-            return "redirect:/";
+                               Principal principal) {
 
         folderService.create(folderCreateRequest, principal);
         log.info("Folder success create");
@@ -77,7 +73,7 @@ public class FolderController {
         return ResponseEntity.ok()
                 .contentLength(resource.contentLength())
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .header("Content-Disposition", "attachment; filename=" + folderDownloadRequest.getFolderName() + ".zip")
+                .header("Content-Disposition", "attachment; filename=" + folderDownloadRequest.getName() + ".zip")
                 .body(resource);
     }
 }

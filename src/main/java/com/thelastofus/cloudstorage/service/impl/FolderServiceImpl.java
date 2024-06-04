@@ -85,11 +85,11 @@ public class FolderServiceImpl implements FolderService {
 
     @Override
     public ByteArrayResource download(FolderDownloadRequest folderDownloadRequest, Principal principal) {
-        String path = getUserMainFolder(principal, folderDownloadRequest.getPath().substring(0, folderDownloadRequest.getPath().length() - folderDownloadRequest.getFolderName().length() - 1));
-        String folderName = folderDownloadRequest.getFolderName();
+        String path = getUserMainFolder(principal, folderDownloadRequest.getPath().substring(0, folderDownloadRequest.getPath().length() - folderDownloadRequest.getName().length() - 1));
+        String name = folderDownloadRequest.getName();
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              ZipOutputStream zos = new ZipOutputStream(baos)){
-            addFilesAndFoldersToZip(zos, path, folderName);
+            addFilesAndFoldersToZip(zos, path, name);
             zos.close();
             return new ByteArrayResource(baos.toByteArray());
         } catch (Exception e) {

@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FileDownloadRequest extends FileRequest{
 
-    String fileName;
+    String name;
 
     String path;
 
