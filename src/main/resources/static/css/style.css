@@ -19,3 +19,7 @@
 .delete-rename {
     padding-left: 6.4rem !important;
 }
+
+.rename-input {
+    width: 155px;
+}

@@ -134,64 +134,26 @@
                             </form></li>
 
                             <li th:if="${storageObject.getLastModified() != null}">
-                                <button type="button" class="btn btn-link text-white text-decoration-none fst-italic" data-bs-toggle="modal" data-bs-target="#renameFileModal">
-                                    <i class="bi bi-pencil-fill"></i> Rename
-                                </button>
-
+                                <form th:method="PATCH" th:action="@{/file/rename}" th:object="${fileRename}">
+                                        <div class="input-group mb-3 px-1 pt-2 rename-input">
+                                            <input type="text" class="form-control" id="rename-file-name" name="to" th:field="*{to}" aria-describedby="button-addon2">
+                                            <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i class="bi bi-input-cursor"></i></button>
+                                        </div>
+                                    <input type="hidden" name="from" th:value="${storageObject.getPath() + '/' + storageObject.getName()}" th:if="${storageObject.getPath() != storageObject.getName()}">
+                                    <input type="hidden" name="from" th:value="${storageObject.getPath()}" th:unless="${storageObject.getPath() != storageObject.getName()}">
+                                </form>
                             </li>
+
                             <li th:unless="${storageObject.getLastModified() != null}">
-                                <button type="button" class="btn btn-link text-white text-decoration-none fst-italic" data-bs-toggle="modal" data-bs-target="#renameFolderModal">
-                                    <i class="bi bi-pencil-fill"></i> Rename
-                                </button>
+                                <form th:method="PATCH" th:action="@{/folder/rename}" th:object="${folderRename}">
+                                    <div class="input-group mb-3 px-1 pt-2 rename-input">
+                                        <input type="text" class="form-control" id="rename-folder-name" name="to" th:field="*{to}" aria-describedby="button-addon3">
+                                        <button class="btn btn-outline-secondary" type="submit" id="button-addon3"><i class="bi bi-input-cursor"></i></button>
+                                    </div>
+                                    <input type="hidden" name="from" th:value="${storageObject.getPath() + '/' + storageObject.getName()}">
+                                </form>
                             </li>
                         </ul>
-                        <div class="modal fade" id="renameFileModal" tabindex="-1" aria-labelledby="renameFileModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="renameFileModalLabel">Rename the file</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form id="renameFile" th:method="PATCH" th:action="@{/file/rename}" th:object="${fileRename}">
-                                            <div class="mb-4">
-                                                <label for="rename-file-name" class="col-form-label">Enter a new name:</label>
-                                                <input type="text" class="form-control" id="rename-file-name" name="to" th:field="*{to}">
-                                                <input type="hidden" name="from" th:value="${storageObject.getPath() + '/' + storageObject.getName()}" th:if="${storageObject.getPath() != storageObject.getName()}">
-                                                <input type="hidden" name="from" th:value="${storageObject.getPath()}" th:unless="${storageObject.getPath() != storageObject.getName()}">
-                                            </div>
-                                            <div class="modal-footer pe-0">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Rename</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal fade" id="renameFolderModal" tabindex="-1" aria-labelledby="renameFolderModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="renameFolderModalLabel">Rename the folder</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form id="renameFolder" th:method="PATCH" th:action="@{/folder/rename}" th:object="${folderRename}">
-                                            <div class="mb-4">
-                                                <label for="rename-folder-name" class="col-form-label">Enter a new name:</label>
-                                                <input type="text" class="form-control" id="rename-folder-name" name="to" th:field="*{to}">
-                                                <input type="hidden" name="from" th:value="${storageObject.getPath() + '/' + storageObject.getName()}">
-                                            </div>
-                                            <div class="modal-footer pe-0">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Rename</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
