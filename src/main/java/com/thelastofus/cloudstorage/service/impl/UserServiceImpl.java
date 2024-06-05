@@ -46,7 +46,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @SneakyThrows
     public LocalDateTime getCreatedAt(String username) {
         Optional<User> user = userRepository.findByUsername(username);
         return user.map(User::getCreated_at)

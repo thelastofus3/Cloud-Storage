@@ -9,11 +9,26 @@ const setTheme = theme => {
     if (theme === 'auto' || theme === null || theme === '') {
         document.documentElement.setAttribute('data-bs-theme', 'dark')
         localStorage.setItem('theme', 'auto')
+        updateTextColor('dark')
     } else {
         document.documentElement.setAttribute('data-bs-theme', theme)
         localStorage.setItem('theme', theme)
+        updateTextColor(theme)
     }
 }
+
+const updateTextColor = theme => {
+    const textElements = document.querySelectorAll('.text-white, .text-black');
+    textElements.forEach(element => {
+        if (theme === 'dark') {
+            element.classList.remove('text-black');
+            element.classList.add('text-white');
+        } else {
+            element.classList.remove('text-white');
+            element.classList.add('text-black');
+        }
+    });
+};
 
 setTheme(currentTheme)
 
@@ -33,7 +48,6 @@ links.forEach(link => {
 
         const theme = link.getAttribute('data-theme')
         link.classList.add('active')
-        // console.log(theme)
         setTheme(theme)
     })
 })

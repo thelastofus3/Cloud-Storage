@@ -2,9 +2,11 @@ package com.thelastofus.cloudstorage.service.impl;
 
 import com.thelastofus.cloudstorage.dto.file.FileDownloadRequest;
 import com.thelastofus.cloudstorage.dto.file.FileRemoveRequest;
+import com.thelastofus.cloudstorage.dto.file.FileRenameRequest;
 import com.thelastofus.cloudstorage.dto.file.FileUploadRequest;
 import com.thelastofus.cloudstorage.exception.FileDownloadException;
 import com.thelastofus.cloudstorage.exception.FileRemoveException;
+import com.thelastofus.cloudstorage.exception.FileRenameException;
 import com.thelastofus.cloudstorage.exception.FileUploadException;
 import com.thelastofus.cloudstorage.repository.FileRepository;
 import com.thelastofus.cloudstorage.service.FileService;
@@ -61,6 +63,23 @@ public class FileServiceImpl implements FileService {
             return new ByteArrayResource(inputStream.readAllBytes());
         } catch (Exception e) {
             throw new FileDownloadException("File download failed " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void rename(FileRenameRequest fileRenameRequest, Principal principal) {
+        String from = getFilePath(principal, fileRenameRequest.getFrom());
+        String to = getFilePath(principal, fileRenameRequest.getTo(), fileRenameRequest.getFrom());
+
+        renameFile(from, to);
+    }
+
+    private void renameFile(String from, String to) {
+        try {
+        fileRepository.copyFile(from, to);
+        fileRepository.removeFile(from);
+        } catch (Exception e) {
+            throw new FileRenameException("File rename failed " + e.getMessage());
         }
     }
 }

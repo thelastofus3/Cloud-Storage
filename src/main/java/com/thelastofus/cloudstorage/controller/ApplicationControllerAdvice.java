@@ -64,6 +64,24 @@ public class ApplicationControllerAdvice {
         return "redirect:/";
     }
 
+    @ExceptionHandler(FolderRenameException.class)
+    public String handleFolderRenameException(FolderRenameException e, RedirectAttributes attributes) {
+        attributes.addFlashAttribute("errorMessage",e.getMessage());
+        return "redirect:/";
+    }
+
+    @ExceptionHandler(DateTimeValueNotFoundException.class)
+    public String handleDateTimeValueNotFoundException(DateTimeValueNotFoundException e, RedirectAttributes attributes) {
+        attributes.addFlashAttribute("errorMessage",e.getMessage());
+        return "redirect:/";
+    }
+
+    @ExceptionHandler(FileRenameException.class)
+    public String handleFileRenameException(FileRenameException e, RedirectAttributes attributes) {
+        attributes.addFlashAttribute("errorMessage",e.getMessage());
+        return "redirect:/";
+    }
+
     @ExceptionHandler(NoSuchFilesException.class)
     public String handleNoSuchFilesException(NoSuchFilesException e, RedirectAttributes attributes) {
         attributes.addFlashAttribute("errorMessage",e.getMessage());
@@ -71,7 +89,7 @@ public class ApplicationControllerAdvice {
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public String handleMethodArgumentNotValidException(RedirectAttributes attributes) {
-        attributes.addFlashAttribute("errorMessage", "Empty name of folder");
+        attributes.addFlashAttribute("errorMessage", "Empty name");
         return "redirect:/";
     }
 }

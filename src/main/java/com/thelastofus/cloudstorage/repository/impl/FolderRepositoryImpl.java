@@ -35,12 +35,25 @@ public class FolderRepositoryImpl implements FolderRepository {
 
     @Override
     @SneakyThrows
-    public void createFolder(String path) {
+    public void createFolder(String name) {
         minioClient.putObject(PutObjectArgs.builder()
                 .stream(new ByteArrayInputStream(new byte[] {}), 0, -1)
                 .bucket(minioProperties.getBucket())
-                .object(path)
+                .object(name)
                 .build());
+    }
+
+    @Override
+    @SneakyThrows
+    public void copyFolder(String from, String to) {
+        minioClient.copyObject(CopyObjectArgs.builder()
+                .source(CopySource.builder()
+                        .bucket(minioProperties.getBucket())
+                        .object(from)
+                        .build())
+                .bucket(minioProperties.getBucket())
+                .object(to)
+        .build());
     }
 
     @Override
@@ -60,5 +73,7 @@ public class FolderRepositoryImpl implements FolderRepository {
                 .object(path)
                 .build());
     }
+
+
 
 }

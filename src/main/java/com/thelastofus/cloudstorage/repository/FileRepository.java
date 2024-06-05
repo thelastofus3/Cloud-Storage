@@ -1,17 +1,15 @@
 package com.thelastofus.cloudstorage.repository;
 
-import io.minio.Result;
-import io.minio.messages.Item;
-
 import java.io.InputStream;
 
 
 public interface FileRepository {
 
-    void saveFile(InputStream inputStream, String fileName);
+    void saveFile(InputStream inputStream, String name);
 
-    void removeFile(String fileName);
+    void removeFile(String name);
 
     InputStream downloadFile(String path);
 
+    void copyFile(String from, String to);
 }

@@ -11,7 +11,9 @@ import java.util.List;
 public interface FolderRepository {
     void saveFolder(List<SnowballObject> objects);
 
-    void createFolder(String folderName);
+    void createFolder(String name);
+
+    void copyFolder(String from, String to);
 
     Iterable<Result<DeleteError>> removeFolder(List<DeleteObject> objects);
 

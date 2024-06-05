@@ -1,9 +1,6 @@
 package com.thelastofus.cloudstorage.controller;
 
-import com.thelastofus.cloudstorage.dto.folder.FolderCreateRequest;
-import com.thelastofus.cloudstorage.dto.folder.FolderDownloadRequest;
-import com.thelastofus.cloudstorage.dto.folder.FolderRemoveRequest;
-import com.thelastofus.cloudstorage.dto.folder.FolderUploadRequest;
+import com.thelastofus.cloudstorage.dto.folder.*;
 import com.thelastofus.cloudstorage.service.FolderService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -32,11 +29,12 @@ public class FolderController {
     private static final String FOLDER_REMOVE = "/folder/remove";
 
     private static final String FOLDER_DOWNLOAD = "/folder/download";
+    private static final String FOLDER_RENAME = "/folder/rename";
 
     FolderService folderService;
 
     @PostMapping(FOLDER_UPLOAD)
-    public String uploadFolder(@Valid @ModelAttribute("folderUpload")FolderUploadRequest folderUploadRequest,
+    public String uploadFolder(@Valid @ModelAttribute("folderUpload") FolderUploadRequest folderUploadRequest,
                                Principal principal) {
 
         folderService.upload(folderUploadRequest, principal);
@@ -46,7 +44,7 @@ public class FolderController {
     }
 
     @PostMapping(FOLDER_CREATE)
-    public String createFolder(@Valid @ModelAttribute("folderCreate")FolderCreateRequest folderCreateRequest,
+    public String createFolder(@Valid @ModelAttribute("folderCreate") FolderCreateRequest folderCreateRequest,
                                Principal principal) {
 
         folderService.create(folderCreateRequest, principal);
@@ -56,7 +54,7 @@ public class FolderController {
     }
 
     @DeleteMapping(FOLDER_REMOVE)
-    public String removeFolder(@ModelAttribute("folderRemove")FolderRemoveRequest folderRemoveRequest,
+    public String removeFolder(@ModelAttribute("folderRemove") FolderRemoveRequest folderRemoveRequest,
                                Principal principal) {
         folderService.remove(folderRemoveRequest, principal);
         log.debug("Folder success remove from minio");
@@ -64,9 +62,19 @@ public class FolderController {
         return "redirect:/";
     }
 
+    @PatchMapping(FOLDER_RENAME)
+    public String renameFolder(@Valid @ModelAttribute("folderRename")FolderRenameRequest folderRenameRequest,
+                               Principal principal) {
+
+        folderService.rename(folderRenameRequest, principal);
+        log.debug("Folder success rename");
+
+        return "redirect:/";
+    }
+
     @ResponseBody
     @GetMapping(FOLDER_DOWNLOAD)
-    public ResponseEntity<ByteArrayResource> downloadFolder(@ModelAttribute("folderDownload")FolderDownloadRequest folderDownloadRequest,
+    public ResponseEntity<ByteArrayResource> downloadFolder(@ModelAttribute("folderDownload") FolderDownloadRequest folderDownloadRequest,
                                                             Principal principal) {
         ByteArrayResource resource = folderService.download(folderDownloadRequest, principal);
 

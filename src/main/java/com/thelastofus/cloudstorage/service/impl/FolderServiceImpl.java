@@ -1,13 +1,7 @@
 package com.thelastofus.cloudstorage.service.impl;
 
-import com.thelastofus.cloudstorage.dto.folder.FolderCreateRequest;
-import com.thelastofus.cloudstorage.dto.folder.FolderDownloadRequest;
-import com.thelastofus.cloudstorage.dto.folder.FolderRemoveRequest;
-import com.thelastofus.cloudstorage.dto.folder.FolderUploadRequest;
-import com.thelastofus.cloudstorage.exception.FolderCreateException;
-import com.thelastofus.cloudstorage.exception.FolderDownloadException;
-import com.thelastofus.cloudstorage.exception.FolderRemoveException;
-import com.thelastofus.cloudstorage.exception.FolderUploadException;
+import com.thelastofus.cloudstorage.dto.folder.*;
+import com.thelastofus.cloudstorage.exception.*;
 import com.thelastofus.cloudstorage.repository.FolderRepository;
 import com.thelastofus.cloudstorage.repository.StorageRepository;
 import com.thelastofus.cloudstorage.service.FolderService;
@@ -94,6 +88,22 @@ public class FolderServiceImpl implements FolderService {
             return new ByteArrayResource(baos.toByteArray());
         } catch (Exception e) {
             throw new FolderDownloadException("Folder download failed " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void rename(FolderRenameRequest folderRenameRequest, Principal principal) {
+        try {
+            String from = getFolderPath(principal, folderRenameRequest.getFrom());
+            String to = getFolderPath(principal, folderRenameRequest.getTo());
+
+            folderRepository.copyFolder(from,to);
+
+            List<DeleteObject> objects = retrieveObjects(from);
+
+            createDeleteObjects(objects);
+        } catch (Exception e) {
+            throw new FolderRenameException("Folder rename failed " + e.getMessage());
         }
     }
 

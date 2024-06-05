@@ -2,6 +2,7 @@ package com.thelastofus.cloudstorage.controller;
 
 import com.thelastofus.cloudstorage.dto.file.FileDownloadRequest;
 import com.thelastofus.cloudstorage.dto.file.FileRemoveRequest;
+import com.thelastofus.cloudstorage.dto.file.FileRenameRequest;
 import com.thelastofus.cloudstorage.dto.file.FileUploadRequest;
 import com.thelastofus.cloudstorage.service.FileService;
 import jakarta.validation.Valid;
@@ -26,16 +27,14 @@ public class FileController {
 
     private static final String FILE_UPLOAD = "/file/upload";
     private static final String FILE_REMOVE = "/file/remove";
-
     private static final String FILE_DOWNLOAD = "file/download";
+    private static final String FILE_RENAME = "file/rename";
 
     FileService fileService;
 
     @PostMapping(FILE_UPLOAD)
-    public String uploadFile(@Valid @ModelAttribute("fileUpload")  FileUploadRequest fileUploadRequest,
-                             Principal principal, BindingResult bindingResult) {
-        if (bindingResult.hasErrors())
-            return "redirect:/";
+    public String uploadFile(@Valid @ModelAttribute("fileUpload") FileUploadRequest fileUploadRequest,
+                             Principal principal) {
 
         fileService.upload(fileUploadRequest,principal);
         log.debug("File success save in minio");
@@ -44,7 +43,7 @@ public class FileController {
     }
 
     @DeleteMapping(FILE_REMOVE)
-    public String removeFile(@ModelAttribute("fileRemove")FileRemoveRequest fileRemoveRequest,
+    public String removeFile(@ModelAttribute("fileRemove") FileRemoveRequest fileRemoveRequest,
                              Principal principal) {
         fileService.remove(fileRemoveRequest, principal);
         log.debug("File success remove from minio");
@@ -52,9 +51,19 @@ public class FileController {
         return "redirect:/";
     }
 
+    @PatchMapping(FILE_RENAME)
+    public String renameFile(@Valid @ModelAttribute("fireRename")FileRenameRequest fileRenameRequest,
+                             Principal principal) {
+
+        fileService.rename(fileRenameRequest, principal);
+        log.debug("File success rename");
+
+        return "redirect:/";
+    }
+
     @ResponseBody
     @GetMapping(FILE_DOWNLOAD)
-    public ResponseEntity<ByteArrayResource> downloadFile(@ModelAttribute("fileDownload")FileDownloadRequest fileDownloadRequest,
+    public ResponseEntity<ByteArrayResource> downloadFile(@ModelAttribute("fileDownload") FileDownloadRequest fileDownloadRequest,
                                                           Principal principal) {
         ByteArrayResource resource = fileService.download(fileDownloadRequest, principal);
         log.debug("File success download from minio");
@@ -64,7 +73,7 @@ public class FileController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header("Content-Disposition", "attachment; filename=" + fileDownloadRequest.getName())
                 .body(resource);
-        //TODO: Заменить "Content-Disposition" на CONTENT-DISPOSITION
+
     }
 
 }

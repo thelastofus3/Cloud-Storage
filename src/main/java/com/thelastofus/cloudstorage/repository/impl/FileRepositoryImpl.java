@@ -1,5 +1,6 @@
 package com.thelastofus.cloudstorage.repository.impl;
 
+import com.thelastofus.cloudstorage.exception.FileRenameException;
 import com.thelastofus.cloudstorage.props.MinioProperties;
 import com.thelastofus.cloudstorage.repository.FileRepository;
 import io.minio.*;
@@ -22,20 +23,20 @@ public class FileRepositoryImpl implements FileRepository {
 
     @Override
     @SneakyThrows
-    public void saveFile(InputStream inputStream, String path) {
+    public void saveFile(InputStream inputStream, String name) {
         minioClient.putObject(PutObjectArgs.builder()
                 .stream(inputStream, inputStream.available(), -1)
                 .bucket(minioProperties.getBucket())
-                .object(path)
+                .object(name)
                 .build());
     }
 
     @Override
     @SneakyThrows
-    public void removeFile(String path) {
+    public void removeFile(String name) {
         minioClient.removeObject(RemoveObjectArgs.builder()
                 .bucket(minioProperties.getBucket())
-                .object(path)
+                .object(name)
                 .build());
     }
 
@@ -46,5 +47,18 @@ public class FileRepositoryImpl implements FileRepository {
                 .bucket(minioProperties.getBucket())
                 .object(path)
                 .build());
+    }
+
+    @Override
+    @SneakyThrows
+    public void copyFile(String from, String to) {
+            minioClient.copyObject(CopyObjectArgs.builder()
+                    .source(CopySource.builder()
+                            .bucket(minioProperties.getBucket())
+                            .object(from)
+                            .build())
+                    .bucket(minioProperties.getBucket())
+                    .object(to)
+            .build());
     }
 }

@@ -2,11 +2,9 @@ package com.thelastofus.cloudstorage.controller;
 
 import com.thelastofus.cloudstorage.dto.file.FileDownloadRequest;
 import com.thelastofus.cloudstorage.dto.file.FileRemoveRequest;
+import com.thelastofus.cloudstorage.dto.file.FileRenameRequest;
 import com.thelastofus.cloudstorage.dto.file.FileUploadRequest;
-import com.thelastofus.cloudstorage.dto.folder.FolderCreateRequest;
-import com.thelastofus.cloudstorage.dto.folder.FolderDownloadRequest;
-import com.thelastofus.cloudstorage.dto.folder.FolderRemoveRequest;
-import com.thelastofus.cloudstorage.dto.folder.FolderUploadRequest;
+import com.thelastofus.cloudstorage.dto.folder.*;
 import com.thelastofus.cloudstorage.service.StorageService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +41,8 @@ public class HomeController {
                               @ModelAttribute("folderRemove") FolderRemoveRequest folderRemoveRequest,
                               @ModelAttribute("fileDownload") FileDownloadRequest fileDownloadRequest,
                               @ModelAttribute("folderDownload") FolderDownloadRequest folderDownloadRequest,
+                              @ModelAttribute("fileRename") FileRenameRequest fileRenameRequest,
+                              @ModelAttribute("folderRename") FolderRenameRequest folderRenameRequest,
                               @RequestParam(value = "path",required = false,defaultValue = "") String currentPath,
                               Principal principal, Model model){
 
