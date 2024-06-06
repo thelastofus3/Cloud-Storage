@@ -93,17 +93,33 @@ public class FolderServiceImpl implements FolderService {
 
     @Override
     public void rename(FolderRenameRequest folderRenameRequest, Principal principal) {
+        String from = getFolderPath(principal, folderRenameRequest.getFrom());
+        String newPath = from.substring(0,from.lastIndexOf('/'));
+        String to = newPath.substring(0, newPath.lastIndexOf('/') + 1) + folderRenameRequest.getTo() + '/';
+        folderRepository.createFolder(to);
+
+        addFilesAndFoldersToNewFolder(from, to);
+
+        List<DeleteObject> objects = retrieveObjects(from);
+        createDeleteObjects(objects);
+    }
+
+    private void addFilesAndFoldersToNewFolder(String from, String to) {
         try {
-            String from = getFolderPath(principal, folderRenameRequest.getFrom());
-            String to = getFolderPath(principal, folderRenameRequest.getTo());
-
-            folderRepository.copyFolder(from,to);
-
-            List<DeleteObject> objects = retrieveObjects(from);
-
-            createDeleteObjects(objects);
+            Iterable<Result<Item>> results = storageRepository.getObjects(from);
+            for(Result<Item> result : results) {
+                Item item = result.get();
+                String objectName = item.objectName();
+                if (item.isDir()) {
+                    String newPath = objectName.substring(0, objectName.lastIndexOf('/'));
+                    addFilesAndFoldersToNewFolder(objectName, to + newPath.substring(newPath.lastIndexOf('/') + 1) + '/');
+                } else {
+                    String pathObjectToCopy = to + objectName.substring(objectName.lastIndexOf('/') + 1);
+                    folderRepository.copyFolder(objectName, pathObjectToCopy);
+                }
+            }
         } catch (Exception e) {
-            throw new FolderRenameException("Folder rename failed " + e.getMessage());
+            throw new FolderRenameException("Fail while adding object to new folder " + e.getMessage());
         }
     }
 

@@ -88,32 +88,32 @@ public class StorageUtil {
     }
 
     public static String getFolderPath(Principal principal, FolderRemoveRequest folderRemoveRequest) {
-        String path = getUserMainFolder(principal, folderRemoveRequest.getPath());
-        String rootFolderForDelete = path.substring(0, path.length() - 1);
+        String rootPath = getUserMainFolder(principal, folderRemoveRequest.getPath());
+        String rootFolderForDelete = rootPath.substring(0, rootPath.length() - 1);
         return rootFolderForDelete.substring(0, rootFolderForDelete.lastIndexOf('/') + 1);
     }
 
     public static String getFolderPath(Principal principal, String relativePath) {
-        String path = getUserMainFolder(principal, relativePath);
-        String rootFolderForDelete = path.substring(0, path.length() - 1);
+        String rootPath = getUserMainFolder(principal, relativePath);
+        String rootFolderForDelete = rootPath.substring(0, rootPath.length() - 1);
         return rootFolderForDelete.substring(0, rootFolderForDelete.lastIndexOf('/') + 1);
     }
 
     public static String getFilePath(Principal principal, FileRequest fileRequest) {
-        String path = getUserMainFolder(principal, fileRequest.getPath());
-        return path.substring(0, path.length() - 1);
+        String rootPath = getUserMainFolder(principal, fileRequest.getPath());
+        return rootPath.substring(0, rootPath.length() - 1);
     }
 
     public static String getFilePath(Principal principal, String relativePath) {
-        String path = getUserMainFolder(principal, relativePath);
-        return path.substring(0, path.length() - 1);
+        String rootPath = getUserMainFolder(principal, relativePath);
+        return rootPath.substring(0, rootPath.length() - 1);
     }
 
     public static String getFilePath(Principal principal, String relativePath, String fileType) {
         String folder = (fileType.lastIndexOf('/') != -1) ? fileType.substring(0, fileType.lastIndexOf('/')) : "";
-        String path = getUserMainFolder(principal, folder);
+        String rootPath = getUserMainFolder(principal, folder);
         String extension = fileType.substring(fileType.lastIndexOf('.'));
-        return path + relativePath + extension;
+        return rootPath + relativePath + extension;
     }
 
 }
