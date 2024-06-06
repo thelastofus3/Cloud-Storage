@@ -1,6 +1,5 @@
 package com.thelastofus.cloudstorage.security.handler;
 
-import com.thelastofus.cloudstorage.exception.UserAlreadyExistException;
 import com.thelastofus.cloudstorage.model.Role;
 import com.thelastofus.cloudstorage.model.User;
 import com.thelastofus.cloudstorage.repository.UserRepository;

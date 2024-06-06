@@ -1,7 +1,5 @@
 package com.thelastofus.cloudstorage.service.impl;
 
-import com.thelastofus.cloudstorage.model.User;
-import com.thelastofus.cloudstorage.repository.UserRepository;
 import com.thelastofus.cloudstorage.service.UserService;
 import com.thelastofus.cloudstorage.util.StorageObject;
 import com.thelastofus.cloudstorage.util.StorageSummary;
@@ -19,7 +17,6 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static com.thelastofus.cloudstorage.util.StorageUtil.*;
 

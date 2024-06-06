@@ -73,7 +73,4 @@ public class FolderRepositoryImpl implements FolderRepository {
                 .object(path)
                 .build());
     }
-
-
-
 }

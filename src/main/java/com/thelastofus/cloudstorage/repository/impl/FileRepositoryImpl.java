@@ -1,6 +1,5 @@
 package com.thelastofus.cloudstorage.repository.impl;
 
-import com.thelastofus.cloudstorage.exception.FileRenameException;
 import com.thelastofus.cloudstorage.props.MinioProperties;
 import com.thelastofus.cloudstorage.repository.FileRepository;
 import io.minio.*;

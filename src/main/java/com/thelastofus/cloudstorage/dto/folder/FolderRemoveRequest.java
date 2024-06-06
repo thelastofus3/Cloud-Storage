@@ -3,7 +3,6 @@ package com.thelastofus.cloudstorage.dto.folder;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
 
 @Getter
 @Setter

@@ -26,25 +26,23 @@ public class StorageUtil {
 
         String userFolder = "user-" + principal.getName() + "-files/" ;
         if (!currentPath.isEmpty()) {
-            userFolder = userFolder + currentPath + "/";
+            userFolder += currentPath + "/";
         }
         return userFolder;
     }
 
     public static String getUserMainFolder(Principal principal) {
-        return "user-" + principal.getName() + "-files/";
+        return getUserMainFolder(principal,"");
     }
 
     public static int getUserMainFolderLength(Principal principal) {
-        return ("user-" + principal.getName() + "-files/").length() ;
+        return getUserMainFolder(principal).length() ;
     }
 
     public static StorageObject createStorageObject(Item item, String userFolder, int userFolderLength) {
         String objectName = item.objectName();
         String name = extractNameFromPath(objectName, userFolder.length());
-
         String relativePath = extractNameFromPath(objectName, userFolderLength) ;
-
         String size = String.valueOf(convertFromBToKiB(item));
         String lastModified = item.isDir() ? null : item.lastModified().plusHours(GMT2_TIME).format(getTimePattern());
 
@@ -57,12 +55,7 @@ public class StorageUtil {
     }
 
     public static SnowballObject createSnowballObject(String path, InputStream inputStream, long folderSize) {
-        return new SnowballObject(
-                path,
-                inputStream,
-                folderSize,
-                null
-        );
+        return new SnowballObject(path, inputStream, folderSize, null);
     }
 
     public static StorageSummary createStorageSummary(int countOfObjects, String path, LocalDateTime localDateTime) {
@@ -72,6 +65,34 @@ public class StorageUtil {
                 .creationDate(localDateTime)
                 .build();
     }
+
+    public static DeleteObject createDeleteObject(Item item) {
+        return new DeleteObject(item.objectName());
+    }
+
+    public static String getFolderPath(Principal principal, FolderRemoveRequest folderRemoveRequest) {
+        return getFolderPath(principal, folderRemoveRequest.getPath());
+    }
+
+    public static String getFolderPath(Principal principal, String relativePath) {
+        return getParentFolder(getUserMainFolder(principal, relativePath));
+    }
+
+    public static String getFilePath(Principal principal, FileRequest fileRequest) {
+        return getFilePath(principal, fileRequest.getPath());
+    }
+
+    public static String getFilePath(Principal principal, String relativePath) {
+        return getUserMainFolder(principal, relativePath).substring(0, getUserMainFolder(principal, relativePath).length() - 1);
+    }
+
+    public static String getFilePath(Principal principal, String relativePath, String fileType) {
+        String folder = (fileType.lastIndexOf('/') != -1) ? fileType.substring(0, fileType.lastIndexOf('/')) : "";
+        String rootPath = getUserMainFolder(principal, folder);
+        String extension = fileType.substring(fileType.lastIndexOf('.'));
+        return rootPath + relativePath + extension;
+    }
+
     private BigDecimal convertFromBToKiB(Item item) {
         BigDecimal sizeInB = new BigDecimal(item.size());
         return sizeInB.divide(BToKiB_DIVIDER,1, RoundingMode.HALF_UP);
@@ -83,37 +104,9 @@ public class StorageUtil {
         return index != -1 ? path.substring(0,index) : path;
     }
 
-    public static DeleteObject createDeleteObject(Item item) {
-        return new DeleteObject(item.objectName());
-    }
-
-    public static String getFolderPath(Principal principal, FolderRemoveRequest folderRemoveRequest) {
-        String rootPath = getUserMainFolder(principal, folderRemoveRequest.getPath());
-        String rootFolderForDelete = rootPath.substring(0, rootPath.length() - 1);
+    private String getParentFolder(String path) {
+        String rootFolderForDelete = path.substring(0, path.length() - 1);
         return rootFolderForDelete.substring(0, rootFolderForDelete.lastIndexOf('/') + 1);
-    }
-
-    public static String getFolderPath(Principal principal, String relativePath) {
-        String rootPath = getUserMainFolder(principal, relativePath);
-        String rootFolderForDelete = rootPath.substring(0, rootPath.length() - 1);
-        return rootFolderForDelete.substring(0, rootFolderForDelete.lastIndexOf('/') + 1);
-    }
-
-    public static String getFilePath(Principal principal, FileRequest fileRequest) {
-        String rootPath = getUserMainFolder(principal, fileRequest.getPath());
-        return rootPath.substring(0, rootPath.length() - 1);
-    }
-
-    public static String getFilePath(Principal principal, String relativePath) {
-        String rootPath = getUserMainFolder(principal, relativePath);
-        return rootPath.substring(0, rootPath.length() - 1);
-    }
-
-    public static String getFilePath(Principal principal, String relativePath, String fileType) {
-        String folder = (fileType.lastIndexOf('/') != -1) ? fileType.substring(0, fileType.lastIndexOf('/')) : "";
-        String rootPath = getUserMainFolder(principal, folder);
-        String extension = fileType.substring(fileType.lastIndexOf('.'));
-        return rootPath + relativePath + extension;
     }
 
 }
