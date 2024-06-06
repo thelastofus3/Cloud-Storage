@@ -32,12 +32,12 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void upload(FileUploadRequest fileUploadRequest, Principal principal) {
-        MultipartFile file = fileUploadRequest.getFile();
-        if (file.isEmpty() || file.getOriginalFilename() == null || file.getSize() == 0)
-            throw new FileUploadException("File must have name and content");
-
         try {
-            String path = getUserMainFolder(principal, fileUploadRequest.getPath()) + file.getOriginalFilename();
+            MultipartFile file = fileUploadRequest.getFile();
+            if (file.isEmpty() || file.getOriginalFilename() == null || file.getSize() == 0)
+                throw new FileUploadException("File must have name and content");
+
+            String path = buildFilePath(principal, fileUploadRequest.getPath(), file.getOriginalFilename());
             InputStream inputStream = file.getInputStream();
             fileRepository.saveFile(inputStream, path);
         } catch (Exception e) {
@@ -47,22 +47,24 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void remove(FileRemoveRequest fileRemoveRequest, Principal principal) {
-        String path = getFilePath(principal, fileRemoveRequest);
         try {
+            String path = getFilePath(principal, fileRemoveRequest);
+
             fileRepository.removeFile(path);
         } catch (Exception e) {
-            throw new FileRemoveException("File remove failed " + e.getMessage());
+            throw new FileRemoveException("File remove failed: " + e.getMessage());
         }
     }
 
     @Override
     public ByteArrayResource download(FileDownloadRequest fileDownloadRequest, Principal principal) {
-        String path = getFilePath(principal, fileDownloadRequest);
         try {
+            String path = getFilePath(principal, fileDownloadRequest);
+
             InputStream inputStream = fileRepository.downloadFile(path);
             return new ByteArrayResource(inputStream.readAllBytes());
         } catch (Exception e) {
-            throw new FileDownloadException("File download failed " + e.getMessage());
+            throw new FileDownloadException("File download failed: " + e.getMessage());
         }
     }
 
@@ -76,10 +78,13 @@ public class FileServiceImpl implements FileService {
 
     private void renameFile(String from, String to) {
         try {
-        fileRepository.copyFile(from, to);
-        fileRepository.removeFile(from);
+            fileRepository.copyFile(from, to);
+            fileRepository.removeFile(from);
         } catch (Exception e) {
-            throw new FileRenameException("File rename failed " + e.getMessage());
+            throw new FileRenameException("File rename failed: " + e.getMessage());
         }
+    }
+    private String buildFilePath(Principal principal, String path, String fileName) {
+        return getUserMainFolder(principal, path) + fileName;
     }
 }

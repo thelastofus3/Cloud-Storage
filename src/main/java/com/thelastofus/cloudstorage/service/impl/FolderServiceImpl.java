@@ -181,4 +181,8 @@ public class FolderServiceImpl implements FolderService {
             }
         });
     }
+
+    private String buildFolderPath(Principal principal, String path, String name) {
+        return getUserMainFolder(principal, path) + name;
+    }
 }
