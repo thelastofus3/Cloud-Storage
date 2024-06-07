@@ -47,8 +47,8 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
-                                <li th:each="path, stat : ${#strings.arraySplit(storageSummary.getCurrentPath(),'/')}" class="breadcrumb-item" th:unless="${stat.last}">
-                                    <a th:href="@{'?path=' + ${path}}" th:text="${path}" aria-current="page">Home</a>
+                                <li th:each="path, stat : ${#strings.arraySplit(storageSummary.getCurrentPath(), '/')}" class="breadcrumb-item" th:unless="${stat.last}">
+                                    <a th:href="@{'?path=' + ${#strings.substringBefore(storageSummary.getCurrentPath(), path) + path}}" th:text="${path}" aria-current="page">Home</a>
                                 </li>
                                 <li th:each="path, stat : ${#strings.arraySplit(storageSummary.getCurrentPath(),'/')}" class="breadcrumb-item active" th:if="${stat.last}" th:text="${path}"></li>
                             </ol>
@@ -123,12 +123,12 @@
                         </button>
                         <ul class="dropdown-menu">
 
-                            <li th:if="${storageObject.getLastModified() != null}"><form th:method="DELETE" th:action="@{/file/remove}" th:object="${fileRemove}">
+                            <li th:if="${storageObject.getLastModified() != null}"><form th:method="DELETE" th:action="@{/file/remove}" th:object="${fileRemove}" class="d-flex justify-content-center">
                                 <input type="hidden" name="path" th:value="${storageObject.getPath() + '/' + storageObject.getName()}" th:if="${storageObject.getPath() != storageObject.getName()}">
                                 <input type="hidden" name="path" th:value="${storageObject.getPath()}" th:unless="${storageObject.getPath() != storageObject.getName()}">
                                 <button type="submit" class="btn btn-link text-white text-decoration-none"><i class="bi bi-trash"> Delete</i></button>
                             </form></li>
-                            <li th:unless="${storageObject.getLastModified() != null}"><form th:method="DELETE" th:action="@{/folder/remove}" th:object="${folderRemove}">
+                            <li th:unless="${storageObject.getLastModified() != null}"><form th:method="DELETE" th:action="@{/folder/remove}" th:object="${folderRemove}" class="d-flex justify-content-center">
                                 <input type="hidden" name="path" th:value="${storageObject.getPath() + '/' + storageObject.getName()}">
                                 <button type="submit" class="btn btn-link text-white text-decoration-none"><i class="bi bi-trash"> Delete</i></button>
                             </form></li>

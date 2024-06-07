@@ -22,11 +22,8 @@ import java.security.Principal;
 public class FolderController {
 
     private static final String FOLDER_UPLOAD = "/folder/upload";
-
     private static final String FOLDER_CREATE = "/folder/create";
-
     private static final String FOLDER_REMOVE = "/folder/remove";
-
     private static final String FOLDER_DOWNLOAD = "/folder/download";
     private static final String FOLDER_RENAME = "/folder/rename";
 

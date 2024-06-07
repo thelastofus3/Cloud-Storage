@@ -48,7 +48,7 @@ public class FolderServiceImpl implements FolderService {
                 throw new FolderUploadException("Folder must have name and content");
 
             try {
-                String folderName = getUserMainFolder(principal, folderUploadRequest.getPath()) + folder.getOriginalFilename();
+                String folderName = buildFolderPath(principal, folderUploadRequest.getPath(), folder.getOriginalFilename());
                 InputStream inputStream = folder.getInputStream();
                 long folderSize = folder.getSize();
                 objects.add(StorageUtil.createSnowballObject(folderName, inputStream, folderSize));
@@ -61,7 +61,7 @@ public class FolderServiceImpl implements FolderService {
 
     @Override
     public void create(FolderCreateRequest folderCreateRequest, Principal principal) {
-        String path = getUserMainFolder(principal, folderCreateRequest.getPath()) + folderCreateRequest.getName() + "/";
+        String path = buildFolderPath(principal, folderCreateRequest.getPath(), folderCreateRequest.getName()) + "/";
         try {
             folderRepository.createFolder(path);
         } catch (Exception e) {
@@ -73,13 +73,13 @@ public class FolderServiceImpl implements FolderService {
     public void remove(FolderRemoveRequest folderRemoveRequest, Principal principal) {
         String path = getFolderPath(principal, folderRemoveRequest);
         List<DeleteObject> objects = retrieveObjects(path);
-
         createDeleteObjects(objects);
     }
 
     @Override
     public ByteArrayResource download(FolderDownloadRequest folderDownloadRequest, Principal principal) {
-        String path = getUserMainFolder(principal, folderDownloadRequest.getPath().substring(0, folderDownloadRequest.getPath().length() - folderDownloadRequest.getName().length() - 1));
+        String path = getUserMainFolder(principal, folderDownloadRequest.getPath()
+                .substring(0, folderDownloadRequest.getPath().length() - folderDownloadRequest.getName().length() - 1));
         String name = folderDownloadRequest.getName();
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              ZipOutputStream zos = new ZipOutputStream(baos)){
@@ -94,12 +94,11 @@ public class FolderServiceImpl implements FolderService {
     @Override
     public void rename(FolderRenameRequest folderRenameRequest, Principal principal) {
         String from = getFolderPath(principal, folderRenameRequest.getFrom());
-        String newPath = from.substring(0,from.lastIndexOf('/'));
-        String to = newPath.substring(0, newPath.lastIndexOf('/') + 1) + folderRenameRequest.getTo() + '/';
+        String relativePath = from.substring(0,from.lastIndexOf('/'));
+        String to = relativePath.substring(0, relativePath.lastIndexOf('/') + 1) + folderRenameRequest.getTo() + '/';
         folderRepository.createFolder(to);
 
         addFilesAndFoldersToNewFolder(from, to);
-
         List<DeleteObject> objects = retrieveObjects(from);
         createDeleteObjects(objects);
     }
@@ -124,8 +123,8 @@ public class FolderServiceImpl implements FolderService {
     }
 
     private void addFilesAndFoldersToZip(ZipOutputStream zos, String path, String folderName) {
-        Iterable<Result<Item>> results = storageRepository.getObjects(path);
         try {
+            Iterable<Result<Item>> results = storageRepository.getObjects(path);
             for (Result<Item> result : results) {
                 Item item = result.get();
                 String objectName = item.objectName();
