@@ -29,7 +29,7 @@ public class StorageServiceImpl implements StorageService {
     UserService userService;
 
     @Override
-    public List<StorageObject> getAllStorageObjects(Principal principal, String currentPath) {
+    public List<StorageObject> getAllStorageObjects(String currentPath, Principal principal) {
         String userMainFolder = getUserMainFolder(principal, currentPath);
         int userMainFolderLength = getUserMainFolderLength(principal);
         List<StorageObject> storageObjects = new ArrayList<>();
@@ -49,25 +49,47 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public StorageSummary getStorageSummary(Principal principal, String path) {
-
-        String userFolder = getUserMainFolder(principal);
+    public StorageSummary getStorageSummary(String path, Principal principal) {
+        String userMainFolder = getUserMainFolder(principal);
         LocalDateTime createdAt = userService.getCreatedAt(principal.getName());
-        int countOfObjects = getCountOfObjects(principal,userFolder);
+        int countOfObjects = getCountOfObjects(userMainFolder, principal);
 
         return createStorageSummary(countOfObjects, path, createdAt);
     }
 
-    private int getCountOfObjects(Principal principal, String userFolder) {
+    @Override
+    public List<StorageObject> findObjects(String query, Principal principal) {
+        String userMainFolder = getUserMainFolder(principal);
+        int userMainFolderLength = getUserMainFolderLength(principal);
+        List<StorageObject> storageObjects = new ArrayList<>();
+        try {
+            Iterable<Result<Item>> results = storageRepository.getObjects(userMainFolder);
+            for(Result<Item> result : results) {
+                Item item = result.get();
+                String objectName = getFileOrFolderName(item.objectName(), item.isDir());
+
+                if (objectName.equals(query))
+                    storageObjects.add(createStorageObject(item, userMainFolder,userMainFolderLength));
+
+//                if (item.isDir())
+//                    findObjects(query, item.objectName(), principal);
+            }
+        } catch (Exception e) {
+            throw new NoSuchFilesException("Failed to get files for user: " + principal.getName() + ", error: " + e.getMessage());
+        }
+        return storageObjects;
+    }
+
+    private int getCountOfObjects(String userFolder, Principal principal) {
         int countOfObjects = 0;
         try {
             Iterable<Result<Item>> results = storageRepository.getObjects(userFolder);
             for (Result<Item> result : results) {
                 Item item = result.get();
                 countOfObjects++;
-                if (item.isDir()) {
-                    countOfObjects += getCountOfObjects(principal, item.objectName());
-                }
+                if (item.isDir())
+                    countOfObjects += getCountOfObjects(item.objectName(), principal);
+
             }
         }catch (Exception e) {
             throw new NoSuchFilesException("Failed to get information about files for user: " + principal.getName() + ", error: " + e.getMessage());

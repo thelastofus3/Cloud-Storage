@@ -8,8 +8,6 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    UserRegistration convertToDto(User user);
-
     User convertToUser(UserRegistration userRegistration);
 
     CustomUserDetails convertToUserDetails(User user);

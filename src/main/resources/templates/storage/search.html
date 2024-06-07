@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head th:insert="~{fragments/head :: head}"></head>
+<body class="min-vh-100 d-flex flex-column">
+<header th:insert="~{fragments/header :: header2}"></header>
+<section class="flex-grow-1">
+    <div th:insert="~{fragments/theme_changer :: changer}"></div>
+    <div class="container my-4">
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <p th:text="${errorMessage}" class="m-0 text-center"></p>
+        </div>
+    </div>
+    <div class="card m-5" style="width: 18rem;" th:each="storageSearchObject : ${storageSearchObjects}">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${'Name ' + storageSearchObject.getName()}">434.txt</h5>
+            <ul class="list-group list-group-flush" th:if="${storageSearchObject.lastModified != null}">
+                <li class="list-group-item" th:text="${'Size: ' + storageSearchObject.getSize() + ' KiB'}">Size: 0.0 KiB</li>
+                <li class="list-group-item" th:text="${'Path: Home/' + storageSearchObject.getPath()}">GGG/434.txt</li>
+                <li class="list-group-item" th:text="${'Last Modified: ' + storageSearchObject.getLastModified()}">22:34:55</li>
+            </ul>
+            <ul class="list-group list-group-flush" th:unless="${storageSearchObject.lastModified != null}">
+                <li class="list-group-item">Size: -</li>
+                <li class="list-group-item" th:text="${'Path: Home/' + storageSearchObject.getPath() + '/'}">GGG/434.txt</li>
+                <li class="list-group-item">Last Modified: -</li>
+            </ul>
+            <a th:href="@{/}" class="btn btn-primary">Go to folder</a>
+        </div>
+    </div>
+</section>
+<footer th:insert="~{fragments/footer :: footer}"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="../../static/js/change_theme.js"></script>
+<script src="../../static/js/upload.js"></script>
+</body>
+</html>

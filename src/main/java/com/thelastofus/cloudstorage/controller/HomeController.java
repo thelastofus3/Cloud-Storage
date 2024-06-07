@@ -43,11 +43,11 @@ public class HomeController {
                               @ModelAttribute("folderDownload") FolderDownloadRequest folderDownloadRequest,
                               @ModelAttribute("fileRename") FileRenameRequest fileRenameRequest,
                               @ModelAttribute("folderRename") FolderRenameRequest folderRenameRequest,
-                              @RequestParam(value = "path",required = false,defaultValue = "") String currentPath,
+                              @RequestParam(value = "path", required = false, defaultValue = "") String currentPath,
                               Principal principal, Model model){
 
-        model.addAttribute("storageObjects",storageService.getAllStorageObjects(principal, currentPath));
-        model.addAttribute("storageSummary",storageService.getStorageSummary(principal, currentPath));
+        model.addAttribute("storageObjects",storageService.getAllStorageObjects(currentPath, principal));
+        model.addAttribute("storageSummary",storageService.getStorageSummary(currentPath, principal));
 
         return "storage/upload";
     }

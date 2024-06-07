@@ -6,6 +6,7 @@ import io.minio.SnowballObject;
 import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
 import lombok.experimental.UtilityClass;
+import org.springframework.security.core.parameters.P;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -91,6 +92,16 @@ public class StorageUtil {
         String rootPath = getUserMainFolder(principal, folder);
         String extension = fileType.substring(fileType.lastIndexOf('.'));
         return rootPath + relativePath + extension;
+    }
+
+    public static String getFileOrFolderName(String path, boolean isDir) {
+        if (!isDir) {
+            String file = path.substring(path.lastIndexOf('/') + 1);
+            return file.lastIndexOf('.') != -1 ? file.substring(0, file.lastIndexOf('.')) : file;
+        } else {
+            String folder = path.substring(0, path.lastIndexOf('/'));
+            return folder.substring(folder.lastIndexOf('/') + 1);
+        }
     }
 
     private BigDecimal convertFromBToKiB(Item item) {

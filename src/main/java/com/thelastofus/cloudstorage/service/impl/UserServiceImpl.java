@@ -41,7 +41,6 @@ public class UserServiceImpl implements UserService {
         user.setCreated_at(LocalDateTime.now());
 
         userRepository.save(user);
-
     }
 
     @Override
