@@ -83,7 +83,7 @@ public class ApplicationControllerAdvice {
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public String handleMethodArgumentNotValidException(RedirectAttributes attributes) {
-        attributes.addFlashAttribute("errorMessage", "Empty name");
+        attributes.addFlashAttribute("errorMessage", "Please provide a non-empty folder(file) name");
         return "redirect:/";
     }
 }

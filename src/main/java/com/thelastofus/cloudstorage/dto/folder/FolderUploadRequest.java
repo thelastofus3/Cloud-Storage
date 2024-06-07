@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FolderUploadRequest extends FolderRequest{
+public class FolderUploadRequest extends FolderRequest {
 
     @NotNull(message = "Name of the folder should not be empty")
     List<MultipartFile> folder;

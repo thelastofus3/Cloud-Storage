@@ -11,6 +11,8 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -31,7 +33,8 @@ public class FolderController {
 
     @PostMapping(FOLDER_UPLOAD)
     public String uploadFolder(@Valid @ModelAttribute("folderUpload") FolderUploadRequest folderUploadRequest,
-                               Principal principal) {
+                               Principal principal, BindingResult bindingResult, Model model) {
+        handleBindingResultErrors(bindingResult, model);
 
         folderService.upload(folderUploadRequest, principal);
         log.info("Folder success save");
@@ -41,7 +44,8 @@ public class FolderController {
 
     @PostMapping(FOLDER_CREATE)
     public String createFolder(@Valid @ModelAttribute("folderCreate") FolderCreateRequest folderCreateRequest,
-                               Principal principal) {
+                               Principal principal, BindingResult bindingResult, Model model) {
+        handleBindingResultErrors(bindingResult, model);
 
         folderService.create(folderCreateRequest, principal);
         log.info("Folder success create");
@@ -50,8 +54,10 @@ public class FolderController {
     }
 
     @DeleteMapping(FOLDER_REMOVE)
-    public String removeFolder(@ModelAttribute("folderRemove") FolderRemoveRequest folderRemoveRequest,
-                               Principal principal) {
+    public String removeFolder(@Valid @ModelAttribute("folderRemove") FolderRemoveRequest folderRemoveRequest,
+                               Principal principal, BindingResult bindingResult, Model model) {
+        handleBindingResultErrors(bindingResult, model);
+
         folderService.remove(folderRemoveRequest, principal);
         log.debug("Folder success remove from minio");
 
@@ -60,7 +66,8 @@ public class FolderController {
 
     @PatchMapping(FOLDER_RENAME)
     public String renameFolder(@Valid @ModelAttribute("folderRename")FolderRenameRequest folderRenameRequest,
-                               Principal principal) {
+                               Principal principal, BindingResult bindingResult, Model model) {
+        handleBindingResultErrors(bindingResult, model);
 
         folderService.rename(folderRenameRequest, principal);
         log.debug("Folder success rename");
@@ -70,8 +77,10 @@ public class FolderController {
 
     @ResponseBody
     @GetMapping(FOLDER_DOWNLOAD)
-    public ResponseEntity<ByteArrayResource> downloadFolder(@ModelAttribute("folderDownload") FolderDownloadRequest folderDownloadRequest,
-                                                            Principal principal) {
+    public ResponseEntity<ByteArrayResource> downloadFolder(@Valid @ModelAttribute("folderDownload") FolderDownloadRequest folderDownloadRequest,
+                                                            Principal principal, BindingResult bindingResult, Model model) {
+        handleBindingResultErrors(bindingResult, model);
+
         ByteArrayResource resource = folderService.download(folderDownloadRequest, principal);
 
         return ResponseEntity.ok()
@@ -79,5 +88,10 @@ public class FolderController {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header("Content-Disposition", "attachment; filename=" + folderDownloadRequest.getName() + ".zip")
                 .body(resource);
+    }
+
+    private void handleBindingResultErrors(BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors())
+            model.addAttribute("errorMessages", bindingResult.getAllErrors());
     }
 }

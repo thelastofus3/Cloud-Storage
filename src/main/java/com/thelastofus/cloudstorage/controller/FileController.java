@@ -14,6 +14,8 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -33,7 +35,8 @@ public class FileController {
 
     @PostMapping(FILE_UPLOAD)
     public String uploadFile(@Valid @ModelAttribute("fileUpload") FileUploadRequest fileUploadRequest,
-                             Principal principal) {
+                             Principal principal, BindingResult bindingResult, Model model) {
+        handleBindingResultErrors(bindingResult, model);
 
         fileService.upload(fileUploadRequest,principal);
         log.debug("File success save in minio");
@@ -42,8 +45,10 @@ public class FileController {
     }
 
     @DeleteMapping(FILE_REMOVE)
-    public String removeFile(@ModelAttribute("fileRemove") FileRemoveRequest fileRemoveRequest,
-                             Principal principal) {
+    public String removeFile(@Valid @ModelAttribute("fileRemove") FileRemoveRequest fileRemoveRequest,
+                             Principal principal, BindingResult bindingResult, Model model) {
+        handleBindingResultErrors(bindingResult, model);
+
         fileService.remove(fileRemoveRequest, principal);
         log.debug("File success remove from minio");
 
@@ -51,8 +56,9 @@ public class FileController {
     }
 
     @PatchMapping(FILE_RENAME)
-    public String renameFile(@Valid @ModelAttribute("fireRename")FileRenameRequest fileRenameRequest,
-                             Principal principal) {
+    public String renameFile(@Valid @ModelAttribute("fileRename")FileRenameRequest fileRenameRequest,
+                             Principal principal, BindingResult bindingResult, Model model) {
+        handleBindingResultErrors(bindingResult, model);
 
         fileService.rename(fileRenameRequest, principal);
         log.debug("File success rename");
@@ -62,8 +68,10 @@ public class FileController {
 
     @ResponseBody
     @GetMapping(FILE_DOWNLOAD)
-    public ResponseEntity<ByteArrayResource> downloadFile(@ModelAttribute("fileDownload") FileDownloadRequest fileDownloadRequest,
-                                                          Principal principal) {
+    public ResponseEntity<ByteArrayResource> downloadFile(@Valid @ModelAttribute("fileDownload") FileDownloadRequest fileDownloadRequest,
+                                                          Principal principal, BindingResult bindingResult, Model model) {
+        handleBindingResultErrors(bindingResult, model);
+
         ByteArrayResource resource = fileService.download(fileDownloadRequest, principal);
         log.debug("File success download from minio");
 
@@ -74,5 +82,8 @@ public class FileController {
                 .body(resource);
 
     }
-
+    private void handleBindingResultErrors(BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors())
+            model.addAttribute("errorMessages", bindingResult.getAllErrors());
+    }
 }

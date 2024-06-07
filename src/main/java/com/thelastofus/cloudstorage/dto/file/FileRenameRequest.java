@@ -1,6 +1,7 @@
 package com.thelastofus.cloudstorage.dto.file;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -10,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FileRenameRequest extends FileRequest{
+public class FileRenameRequest extends FileRequest {
 
     String from;
     @NotBlank(message = "Name of file should not be blank")

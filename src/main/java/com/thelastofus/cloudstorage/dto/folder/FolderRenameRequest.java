@@ -1,6 +1,7 @@
 package com.thelastofus.cloudstorage.dto.folder;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 public class FolderRenameRequest extends FolderRequest{
 
     String from;
-    @NotBlank(message = "Name of folder should not be blank")
+    @NotBlank(message = "Name of the folder should not be empty")
     String to;
 
     String name;
