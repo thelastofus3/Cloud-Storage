@@ -28,8 +28,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static com.thelastofus.cloudstorage.util.StorageUtil.getFolderPath;
-import static com.thelastofus.cloudstorage.util.StorageUtil.getUserMainFolder;
+import static com.thelastofus.cloudstorage.util.StorageUtil.*;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +36,6 @@ import static com.thelastofus.cloudstorage.util.StorageUtil.getUserMainFolder;
 public class FolderServiceImpl implements FolderService {
 
     FolderRepository folderRepository;
-
     StorageRepository storageRepository;
 
     @Override
@@ -109,7 +107,7 @@ public class FolderServiceImpl implements FolderService {
             for(Result<Item> result : results) {
                 Item item = result.get();
                 String objectName = item.objectName();
-                if (!item.isDir()) {
+                if (item.isDir()) {
                     String newPath = objectName.substring(0, objectName.lastIndexOf('/'));
                     addFilesAndFoldersToNewFolder(objectName, to + newPath.substring(newPath.lastIndexOf('/') + 1) + '/');
                 } else {
@@ -152,14 +150,11 @@ public class FolderServiceImpl implements FolderService {
     private List<DeleteObject> retrieveObjects(String path) {
         List<DeleteObject> objects = new LinkedList<>();
         try {
-            Iterable<Result<Item>> results = storageRepository.getObjects(path, false);
+            Iterable<Result<Item>> results = storageRepository.getObjects(path, true);
             for (Result<Item> result : results) {
                 Item item = result.get();
-                if (item.isDir()) {
-                    objects.addAll(retrieveObjects(item.objectName()));
-                } else {
-                    objects.add(StorageUtil.createDeleteObject(item));
-                }
+                objects.add(StorageUtil.createDeleteObject(item));
+
             }
         } catch (Exception e) {
             throw new FolderRemoveException("Failed to retrieve objects: " + e.getMessage());
@@ -176,9 +171,5 @@ public class FolderServiceImpl implements FolderService {
                 throw new FolderRemoveException("Failed to remove folder " + e.getMessage());
             }
         });
-    }
-
-    private String buildFolderPath(Principal principal, String path, String name) {
-        return getUserMainFolder(principal, path) + name;
     }
 }

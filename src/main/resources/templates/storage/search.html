@@ -25,12 +25,10 @@
                     <li class="list-group-item">Last Modified: -</li>
                 </ul>
                 <form id="createFolder" th:method="GET" th:action="@{/}">
-                    <p th:text="${storageSearchObject.getPath().lastIndexOf('/')}"></p>
                     <input type="hidden" th:value="${#strings.substring(storageSearchObject.getPath(), 1, #strings.length(storageSearchObject.getPath()) - 1)}" name="path" th:unless="${storageSearchObject.lastModified != null}">
                     <input type="hidden" th:value="${storageSearchObject.getPath().lastIndexOf('/') != 0 ? #strings.substring(storageSearchObject.getPath(), 1, storageSearchObject.getPath().lastIndexOf('/')) : ''}" name="path" th:if="${storageSearchObject.lastModified != null}">
                     <button type="submit" class="btn btn-primary">Go to folder</button>
                 </form>
-<!--                <a th:href="@{'?path=' + ${storageSearchObject.getPath()}}" class="btn btn-primary">Go to folder</a>-->
             </div>
         </div>
     </div>

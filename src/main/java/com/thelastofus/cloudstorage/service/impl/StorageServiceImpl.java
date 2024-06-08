@@ -96,5 +96,4 @@ public class StorageServiceImpl implements StorageService {
 
         return countOfObjects;
     }
-
 }

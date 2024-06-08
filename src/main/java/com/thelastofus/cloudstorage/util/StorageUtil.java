@@ -30,6 +30,9 @@ public class StorageUtil {
         }
         return userFolder;
     }
+    public static String buildFolderPath(Principal principal, String path, String name) {
+        return getUserMainFolder(principal, path) + name;
+    }
 
     public static String getUserMainFolder(Principal principal) {
         return getUserMainFolder(principal,"");
@@ -55,25 +58,6 @@ public class StorageUtil {
         StorageObject storageObject = createStorageObjectBase(item);
 
         return storageObjectBuild(storageObject, name, path);
-    }
-
-    private static StorageObject createStorageObjectBase(Item item) {
-        String size = String.valueOf(convertFromBToKiB(item));
-        String lastModified = item.isDir() ? null : item.lastModified().plusHours(GMT2_TIME).format(getTimePattern());
-
-        return StorageObject.builder()
-                .size(size)
-                .lastModified(lastModified)
-                .build();
-    }
-
-    private static StorageObject storageObjectBuild(StorageObject storageObject, String name, String path) {
-        return StorageObject.builder()
-                .name(name)
-                .path(path)
-                .size(storageObject.getSize())
-                .lastModified(storageObject.getLastModified())
-                .build();
     }
 
     public static SnowballObject createSnowballObject(String path, InputStream inputStream, long folderSize) {
@@ -125,6 +109,25 @@ public class StorageUtil {
         }
     }
 
+    private static StorageObject createStorageObjectBase(Item item) {
+        String size = String.valueOf(convertFromBToKiB(item));
+        String lastModified = item.isDir() ? null : item.lastModified().plusHours(GMT2_TIME).format(getTimePattern());
+
+        return StorageObject.builder()
+                .size(size)
+                .lastModified(lastModified)
+                .build();
+    }
+
+    private static StorageObject storageObjectBuild(StorageObject storageObject, String name, String path) {
+        return StorageObject.builder()
+                .name(name)
+                .path(path)
+                .size(storageObject.getSize())
+                .lastModified(storageObject.getLastModified())
+                .build();
+    }
+
     private BigDecimal convertFromBToKiB(Item item) {
         BigDecimal sizeInB = new BigDecimal(item.size());
         return sizeInB.divide(BToKiB_DIVIDER,1, RoundingMode.HALF_UP);
@@ -140,5 +143,4 @@ public class StorageUtil {
         String rootFolderForDelete = path.substring(0, path.length() - 1);
         return rootFolderForDelete.substring(0, rootFolderForDelete.lastIndexOf('/') + 1);
     }
-
 }

@@ -121,19 +121,19 @@
                         <button class="btn btn-secondary mx-2" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-three-dots"></i>
                         </button>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" style="width: 270px">
 
-                            <li th:if="${storageObject.getLastModified() != null}"><form th:method="DELETE" th:action="@{/file/remove}" th:object="${fileRemove}" class="d-flex justify-content-center">
+                            <li th:if="${storageObject.getLastModified() != null}" class="d-inline-block"><form th:method="DELETE" th:action="@{/file/remove}" th:object="${fileRemove}" class="d-flex justify-content-center">
                                 <input type="hidden" name="path" th:value="${storageObject.getPath() + '/' + storageObject.getName()}" th:if="${storageObject.getPath() != storageObject.getName()}">
                                 <input type="hidden" name="path" th:value="${storageObject.getPath()}" th:unless="${storageObject.getPath() != storageObject.getName()}">
                                 <button type="submit" class="btn btn-link text-white text-decoration-none"><i class="bi bi-trash"> Delete</i></button>
                             </form></li>
-                            <li th:unless="${storageObject.getLastModified() != null}"><form th:method="DELETE" th:action="@{/folder/remove}" th:object="${folderRemove}" class="d-flex justify-content-center">
+                            <li th:unless="${storageObject.getLastModified() != null}" class="d-inline-block"><form th:method="DELETE" th:action="@{/folder/remove}" th:object="${folderRemove}" class="d-flex justify-content-center">
                                 <input type="hidden" name="path" th:value="${storageObject.getPath() + '/' + storageObject.getName()}">
                                 <button type="submit" class="btn btn-link text-white text-decoration-none"><i class="bi bi-trash"> Delete</i></button>
                             </form></li>
 
-                            <li th:if="${storageObject.getLastModified() != null}">
+                            <li th:if="${storageObject.getLastModified() != null}" class="d-inline-block">
                                 <form th:method="PATCH" th:action="@{/file/rename}" th:object="${fileRename}">
                                         <div class="input-group mb-3 px-1 pt-2 rename-input">
                                             <input type="text" class="form-control" id="rename-file-name" name="to" th:field="*{to}" aria-describedby="button-addon2">
@@ -143,8 +143,7 @@
                                     <input type="hidden" name="from" th:value="${storageObject.getPath()}" th:unless="${storageObject.getPath() != storageObject.getName()}">
                                 </form>
                             </li>
-
-                            <li th:unless="${storageObject.getLastModified() != null}">
+                            <li th:unless="${storageObject.getLastModified() != null}" class="d-inline-block">
                                 <form th:method="PATCH" th:action="@{/folder/rename}" th:object="${folderRename}">
                                     <div class="input-group mb-3 px-1 pt-2 rename-input">
                                         <input type="text" class="form-control" id="rename-folder-name" name="to" th:field="*{to}" aria-describedby="button-addon3">
@@ -153,6 +152,7 @@
                                     <input type="hidden" name="from" th:value="${storageObject.getPath() + '/' + storageObject.getName()}">
                                 </form>
                             </li>
+
                         </ul>
                     </div>
                 </div>

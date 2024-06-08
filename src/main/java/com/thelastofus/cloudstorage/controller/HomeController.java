@@ -49,6 +49,6 @@ public class HomeController {
         model.addAttribute("storageObjects",storageService.getStorageObjects(currentPath, principal));
         model.addAttribute("storageSummary",storageService.getStorageSummary(currentPath, principal));
 
-        return "storage/upload";
+        return "storage/home";
     }
 }
