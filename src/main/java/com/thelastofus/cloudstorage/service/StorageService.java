@@ -12,5 +12,5 @@ public interface StorageService {
 
     StorageSummary getStorageSummary(String currentPath, Principal principal);
 
-    List<StorageObject> findObjects(String query, Principal principal);
+    List<StorageObject> search(String query, Principal principal);
 }

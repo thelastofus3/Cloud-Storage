@@ -6,7 +6,6 @@ import io.minio.SnowballObject;
 import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
 import lombok.experimental.UtilityClass;
-import org.springframework.security.core.parameters.P;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -43,15 +42,37 @@ public class StorageUtil {
     public static StorageObject createStorageObject(Item item, String userFolder, int userFolderLength) {
         String objectName = item.objectName();
         String name = extractNameFromPath(objectName, userFolder.length());
-        String relativePath = extractNameFromPath(objectName, userFolderLength) ;
+        String relativePath = extractNameFromPath(objectName, userFolderLength);
+        StorageObject storageObject = createStorageObjectBase(item);
+
+        return storageObjectBuild(storageObject, name, relativePath);
+    }
+
+    public static StorageObject createStorageSearchObject(Item item, boolean isDir) {
+        String objectName = item.objectName();
+        String name = getFileOrFolderName(objectName, isDir);
+        String path = objectName.substring(objectName.indexOf('/'));
+        StorageObject storageObject = createStorageObjectBase(item);
+
+        return storageObjectBuild(storageObject, name, path);
+    }
+
+    private static StorageObject createStorageObjectBase(Item item) {
         String size = String.valueOf(convertFromBToKiB(item));
         String lastModified = item.isDir() ? null : item.lastModified().plusHours(GMT2_TIME).format(getTimePattern());
 
         return StorageObject.builder()
-                .name(name)
-                .path(relativePath)
                 .size(size)
                 .lastModified(lastModified)
+                .build();
+    }
+
+    private static StorageObject storageObjectBuild(StorageObject storageObject, String name, String path) {
+        return StorageObject.builder()
+                .name(name)
+                .path(path)
+                .size(storageObject.getSize())
+                .lastModified(storageObject.getLastModified())
                 .build();
     }
 
@@ -111,8 +132,8 @@ public class StorageUtil {
 
     private String extractNameFromPath(String fullPath, int userFolderLength) {
         String path = fullPath.substring(userFolderLength);
-        int index = path.lastIndexOf('/');
-        return index != -1 ? path.substring(0,index) : path;
+        int lastSlashIndex = path.lastIndexOf('/');
+        return lastSlashIndex != -1 ? path.substring(0,lastSlashIndex) : path;
     }
 
     private String getParentFolder(String path) {

@@ -1,20 +1,17 @@
 package com.thelastofus.cloudstorage.controller;
 
 import com.thelastofus.cloudstorage.service.StorageService;
-import com.thelastofus.cloudstorage.util.StorageObject;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -35,8 +32,7 @@ public class SearchController {
     @GetMapping(SEARCH)
     public String searchObjects(@RequestParam(value = "query", required = false, defaultValue = "") String query,
                                 Principal principal, Model model) {
-        List<StorageObject> s = storageService.findObjects(query, principal);
-        model.addAttribute("storageSearchObjects", s);
+        model.addAttribute("storageSearchObjects", storageService.search(query, principal));
         log.debug("files and folders successfully find");
 
         return "storage/search";

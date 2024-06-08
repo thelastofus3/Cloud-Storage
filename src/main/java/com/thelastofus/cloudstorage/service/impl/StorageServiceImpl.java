@@ -58,26 +58,29 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public List<StorageObject> findObjects(String query, Principal principal) {
+    public List<StorageObject> search(String query, Principal principal) {
         String userMainFolder = getUserMainFolder(principal);
-        int userMainFolderLength = getUserMainFolderLength(principal);
         List<StorageObject> storageObjects = new ArrayList<>();
+        findObjectsRecursively(query, userMainFolder, storageObjects, principal);
+        return storageObjects;
+    }
+
+    private void findObjectsRecursively(String query, String currentPath, List<StorageObject> storageObjects, Principal principal) {
         try {
-            Iterable<Result<Item>> results = storageRepository.getObjects(userMainFolder);
+            Iterable<Result<Item>> results = storageRepository.getObjects(currentPath);
             for(Result<Item> result : results) {
                 Item item = result.get();
                 String objectName = getFileOrFolderName(item.objectName(), item.isDir());
 
                 if (objectName.equals(query))
-                    storageObjects.add(createStorageObject(item, userMainFolder,userMainFolderLength));
+                    storageObjects.add(createStorageSearchObject(item, item.isDir()));
 
-//                if (item.isDir())
-//                    findObjects(query, item.objectName(), principal);
+                if (item.isDir())
+                    findObjectsRecursively(query, item.objectName(), storageObjects, principal);
             }
         } catch (Exception e) {
             throw new NoSuchFilesException("Failed to get files for user: " + principal.getName() + ", error: " + e.getMessage());
         }
-        return storageObjects;
     }
 
     private int getCountOfObjects(String userFolder, Principal principal) {

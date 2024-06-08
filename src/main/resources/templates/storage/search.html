@@ -10,20 +10,28 @@
             <p th:text="${errorMessage}" class="m-0 text-center"></p>
         </div>
     </div>
-    <div class="card m-5" style="width: 18rem;" th:each="storageSearchObject : ${storageSearchObjects}">
-        <div class="card-body">
-            <h5 class="card-title" th:text="${'Name ' + storageSearchObject.getName()}">434.txt</h5>
-            <ul class="list-group list-group-flush" th:if="${storageSearchObject.lastModified != null}">
-                <li class="list-group-item" th:text="${'Size: ' + storageSearchObject.getSize() + ' KiB'}">Size: 0.0 KiB</li>
-                <li class="list-group-item" th:text="${'Path: Home/' + storageSearchObject.getPath()}">GGG/434.txt</li>
-                <li class="list-group-item" th:text="${'Last Modified: ' + storageSearchObject.getLastModified()}">22:34:55</li>
-            </ul>
-            <ul class="list-group list-group-flush" th:unless="${storageSearchObject.lastModified != null}">
-                <li class="list-group-item">Size: -</li>
-                <li class="list-group-item" th:text="${'Path: Home/' + storageSearchObject.getPath() + '/'}">GGG/434.txt</li>
-                <li class="list-group-item">Last Modified: -</li>
-            </ul>
-            <a th:href="@{/}" class="btn btn-primary">Go to folder</a>
+    <div class="row">
+        <div class="card m-5" style="width: 18rem;" th:each="storageSearchObject : ${storageSearchObjects}">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${'Name: ' + storageSearchObject.getName()}">434.txt</h5>
+                <ul class="list-group list-group-flush" th:if="${storageSearchObject.lastModified != null}">
+                    <li class="list-group-item" th:text="${'Size: ' + storageSearchObject.getSize() + ' KiB'}">Size: 0.0 KiB</li>
+                    <li class="list-group-item" th:text="${'Path: Home' + storageSearchObject.getPath()}">GGG/434.txt</li>
+                    <li class="list-group-item" th:text="${'Last Modified: ' + storageSearchObject.getLastModified()}">22:34:55</li>
+                </ul>
+                <ul class="list-group list-group-flush" th:unless="${storageSearchObject.lastModified != null}">
+                    <li class="list-group-item">Size: -</li>
+                    <li class="list-group-item" th:text="${'Path: Home' + storageSearchObject.getPath()}">GGG/434.txt</li>
+                    <li class="list-group-item">Last Modified: -</li>
+                </ul>
+                <form id="createFolder" th:method="GET" th:action="@{/}">
+                    <p th:text="${storageSearchObject.getPath().lastIndexOf('/')}"></p>
+                    <input type="hidden" th:value="${#strings.substring(storageSearchObject.getPath(), 1, #strings.length(storageSearchObject.getPath()) - 1)}" name="path" th:unless="${storageSearchObject.lastModified != null}">
+                    <input type="hidden" th:value="${storageSearchObject.getPath().lastIndexOf('/') != 0 ? #strings.substring(storageSearchObject.getPath(), 1, storageSearchObject.getPath().lastIndexOf('/')) : ''}" name="path" th:if="${storageSearchObject.lastModified != null}">
+                    <button type="submit" class="btn btn-primary">Go to folder</button>
+                </form>
+<!--                <a th:href="@{'?path=' + ${storageSearchObject.getPath()}}" class="btn btn-primary">Go to folder</a>-->
+            </div>
         </div>
     </div>
 </section>
