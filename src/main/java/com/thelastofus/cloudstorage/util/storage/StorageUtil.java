@@ -1,4 +1,4 @@
-package com.thelastofus.cloudstorage.util;
+package com.thelastofus.cloudstorage.util.storage;
 
 import com.thelastofus.cloudstorage.dto.file.FileRequest;
 import com.thelastofus.cloudstorage.dto.folder.FolderRemoveRequest;
@@ -13,14 +13,13 @@ import java.math.RoundingMode;
 import java.security.Principal;
 import java.time.LocalDateTime;
 
-import static com.thelastofus.cloudstorage.util.TimeUtil.getTimePattern;
+import static com.thelastofus.cloudstorage.util.size.SizeUtil.convertFromB;
+import static com.thelastofus.cloudstorage.util.time.TimeUtil.getTimePattern;
 
 @UtilityClass
 public class StorageUtil {
 
     private static final int GMT2_TIME = 2;
-
-    private static final BigDecimal BToKiB_DIVIDER = new BigDecimal("1024");
 
     public static String getUserMainFolder(Principal principal, String currentPath) {
 
@@ -110,7 +109,7 @@ public class StorageUtil {
     }
 
     private static StorageObject createStorageObjectBase(Item item) {
-        String size = String.valueOf(convertFromBToKiB(item));
+        String size = convertFromB(item.size());
         String lastModified = item.isDir() ? null : item.lastModified().plusHours(GMT2_TIME).format(getTimePattern());
 
         return StorageObject.builder()
@@ -126,11 +125,6 @@ public class StorageUtil {
                 .size(storageObject.getSize())
                 .lastModified(storageObject.getLastModified())
                 .build();
-    }
-
-    private BigDecimal convertFromBToKiB(Item item) {
-        BigDecimal sizeInB = new BigDecimal(item.size());
-        return sizeInB.divide(BToKiB_DIVIDER,1, RoundingMode.HALF_UP);
     }
 
     private String extractNameFromPath(String fullPath, int userFolderLength) {

@@ -1,4 +1,4 @@
-package com.thelastofus.cloudstorage.util;
+package com.thelastofus.cloudstorage.util.password;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

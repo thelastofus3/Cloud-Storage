@@ -1,6 +1,6 @@
 package com.thelastofus.cloudstorage.dto.user;
 
-import com.thelastofus.cloudstorage.util.PasswordMatches;
+import com.thelastofus.cloudstorage.util.password.PasswordMatches;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

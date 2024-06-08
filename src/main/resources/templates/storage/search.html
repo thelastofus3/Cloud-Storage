@@ -15,7 +15,7 @@
             <div class="card-body">
                 <h5 class="card-title" th:text="${'Name: ' + storageSearchObject.getName()}">434.txt</h5>
                 <ul class="list-group list-group-flush" th:if="${storageSearchObject.lastModified != null}">
-                    <li class="list-group-item" th:text="${'Size: ' + storageSearchObject.getSize() + ' KiB'}">Size: 0.0 KiB</li>
+                    <li class="list-group-item" th:text="${'Size: ' + storageSearchObject.getSize()}">Size: 0.0 KiB</li>
                     <li class="list-group-item" th:text="${'Path: Home' + storageSearchObject.getPath()}">GGG/434.txt</li>
                     <li class="list-group-item" th:text="${'Last Modified: ' + storageSearchObject.getLastModified()}">22:34:55</li>
                 </ul>

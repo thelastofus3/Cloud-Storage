@@ -1,7 +1,7 @@
 package com.thelastofus.cloudstorage.service;
 
-import com.thelastofus.cloudstorage.util.StorageObject;
-import com.thelastofus.cloudstorage.util.StorageSummary;
+import com.thelastofus.cloudstorage.util.storage.StorageObject;
+import com.thelastofus.cloudstorage.util.storage.StorageSummary;
 
 import java.security.Principal;
 import java.util.List;

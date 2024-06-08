@@ -5,7 +5,7 @@ import com.thelastofus.cloudstorage.exception.*;
 import com.thelastofus.cloudstorage.repository.FolderRepository;
 import com.thelastofus.cloudstorage.repository.StorageRepository;
 import com.thelastofus.cloudstorage.service.FolderService;
-import com.thelastofus.cloudstorage.util.StorageUtil;
+import com.thelastofus.cloudstorage.util.storage.StorageUtil;
 import io.minio.Result;
 import io.minio.SnowballObject;
 import io.minio.messages.DeleteError;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static com.thelastofus.cloudstorage.util.StorageUtil.*;
+import static com.thelastofus.cloudstorage.util.storage.StorageUtil.*;
 
 @Service
 @RequiredArgsConstructor

@@ -1,8 +1,8 @@
 package com.thelastofus.cloudstorage.service.impl;
 
 import com.thelastofus.cloudstorage.service.UserService;
-import com.thelastofus.cloudstorage.util.StorageObject;
-import com.thelastofus.cloudstorage.util.StorageSummary;
+import com.thelastofus.cloudstorage.util.storage.StorageObject;
+import com.thelastofus.cloudstorage.util.storage.StorageSummary;
 import com.thelastofus.cloudstorage.exception.NoSuchFilesException;
 import com.thelastofus.cloudstorage.repository.StorageRepository;
 import com.thelastofus.cloudstorage.service.StorageService;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.thelastofus.cloudstorage.util.StorageUtil.*;
+import static com.thelastofus.cloudstorage.util.storage.StorageUtil.*;
 
 @Service
 @RequiredArgsConstructor

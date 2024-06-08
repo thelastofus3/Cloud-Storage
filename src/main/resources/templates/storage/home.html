@@ -101,7 +101,7 @@
                         <p class="p-0 m-0" th:utext="'&lt;i class=&quot;bi bi-file-earmark&quot;&gt;&lt;/i&gt;' + ${' ' +storageObject.getName()}" th:unless="${storageObject.getLastModified() == null}">File1.txt</p>
                     </div>
                     <div class="col-4 mt-2"><p class="p-0 m-0" th:text="${storageObject.getLastModified()}">Modified: 2024-04-19</p></div>
-                    <div class="col-2 mt-2"><p class="p-0 m-0" th:text="${storageObject.getSize() + ' KiB'}">Size: 1MB</p></div>
+                    <div class="col-2 mt-2"><p class="p-0 m-0" th:text="${storageObject.getSize()}">Size: 1MB</p></div>
                     <div class="col-2 p-0 delete-rename dropdown d-inline-flex">
                         <form class="d-inline-flex" th:if="${storageObject.getLastModified() != null}" th:method="GET" th:action="@{/file/download}" th:object="${fileDownload}">
                             <input type="hidden" name="path" th:value="${storageObject.getPath() + '/' + storageObject.getName()}" th:if="${storageObject.getPath() != storageObject.getName()}">

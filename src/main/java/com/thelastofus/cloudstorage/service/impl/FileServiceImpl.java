@@ -20,8 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.security.Principal;
 
-import static com.thelastofus.cloudstorage.util.StorageUtil.getFilePath;
-import static com.thelastofus.cloudstorage.util.StorageUtil.getUserMainFolder;
+import static com.thelastofus.cloudstorage.util.storage.StorageUtil.getFilePath;
+import static com.thelastofus.cloudstorage.util.storage.StorageUtil.getUserMainFolder;
 
 @Service
 @RequiredArgsConstructor
