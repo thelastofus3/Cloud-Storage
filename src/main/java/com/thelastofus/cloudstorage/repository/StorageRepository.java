@@ -6,5 +6,5 @@ import io.minio.messages.Item;
 
 public interface StorageRepository {
 
-    Iterable<Result<Item>> getObjects(String currentPath);
+    Iterable<Result<Item>> getObjects(String currentPath, boolean recursive);
 }

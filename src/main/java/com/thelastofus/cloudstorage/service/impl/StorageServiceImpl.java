@@ -29,12 +29,12 @@ public class StorageServiceImpl implements StorageService {
     UserService userService;
 
     @Override
-    public List<StorageObject> getAllStorageObjects(String currentPath, Principal principal) {
+    public List<StorageObject> getStorageObjects(String currentPath, Principal principal) {
         String userMainFolder = getUserMainFolder(principal, currentPath);
         int userMainFolderLength = getUserMainFolderLength(principal);
         List<StorageObject> storageObjects = new ArrayList<>();
         try {
-            Iterable<Result<Item>> results = storageRepository.getObjects(userMainFolder);
+            Iterable<Result<Item>> results = storageRepository.getObjects(userMainFolder, false);
             for (Result<Item> result : results) {
                 Item item = result.get();
 
@@ -67,7 +67,7 @@ public class StorageServiceImpl implements StorageService {
 
     private void findObjectsRecursively(String query, String currentPath, List<StorageObject> storageObjects, Principal principal) {
         try {
-            Iterable<Result<Item>> results = storageRepository.getObjects(currentPath);
+            Iterable<Result<Item>> results = storageRepository.getObjects(currentPath, false);
             for(Result<Item> result : results) {
                 Item item = result.get();
                 String objectName = getFileOrFolderName(item.objectName(), item.isDir());
@@ -86,13 +86,9 @@ public class StorageServiceImpl implements StorageService {
     private int getCountOfObjects(String userFolder, Principal principal) {
         int countOfObjects = 0;
         try {
-            Iterable<Result<Item>> results = storageRepository.getObjects(userFolder);
-            for (Result<Item> result : results) {
-                Item item = result.get();
+            Iterable<Result<Item>> results = storageRepository.getObjects(userFolder, true);
+            for (Result<Item> ignored : results) {
                 countOfObjects++;
-                if (item.isDir())
-                    countOfObjects += getCountOfObjects(item.objectName(), principal);
-
             }
         }catch (Exception e) {
             throw new NoSuchFilesException("Failed to get information about files for user: " + principal.getName() + ", error: " + e.getMessage());

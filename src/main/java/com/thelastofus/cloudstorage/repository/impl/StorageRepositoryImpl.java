@@ -22,10 +22,11 @@ public class StorageRepositoryImpl implements StorageRepository {
     MinioClient minioClient;
 
     @Override
-    public Iterable<Result<Item>> getObjects(String currentPath) {
+    public Iterable<Result<Item>> getObjects(String currentPath, boolean recursive) {
         ListObjectsArgs listObjectsArgs = ListObjectsArgs.builder()
                 .bucket(minioProperties.getBucket())
                 .prefix(currentPath)
+                .recursive(recursive)
                 .build();
 
         return minioClient.listObjects(listObjectsArgs);

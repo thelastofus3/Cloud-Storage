@@ -105,11 +105,11 @@ public class FolderServiceImpl implements FolderService {
 
     private void addFilesAndFoldersToNewFolder(String from, String to) {
         try {
-            Iterable<Result<Item>> results = storageRepository.getObjects(from);
+            Iterable<Result<Item>> results = storageRepository.getObjects(from, false);
             for(Result<Item> result : results) {
                 Item item = result.get();
                 String objectName = item.objectName();
-                if (item.isDir()) {
+                if (!item.isDir()) {
                     String newPath = objectName.substring(0, objectName.lastIndexOf('/'));
                     addFilesAndFoldersToNewFolder(objectName, to + newPath.substring(newPath.lastIndexOf('/') + 1) + '/');
                 } else {
@@ -118,21 +118,18 @@ public class FolderServiceImpl implements FolderService {
                 }
             }
         } catch (Exception e) {
-            throw new FolderRenameException("Fail while adding object to new folder " + e.getMessage());
+            throw new FolderRenameException("Fail while adding object to a new folder");
         }
     }
 
     private void addFilesAndFoldersToZip(ZipOutputStream zos, String path, String folderName) {
         try {
-            Iterable<Result<Item>> results = storageRepository.getObjects(path);
+            Iterable<Result<Item>> results = storageRepository.getObjects(path, true);
             for (Result<Item> result : results) {
                 Item item = result.get();
                 String objectName = item.objectName();
-                if (item.isDir()) {
-                    addFilesAndFoldersToZip(zos, objectName , folderName);
-                } else {
+                if (!item.isDir())
                     addFilesToZip(zos, objectName, folderName);
-                }
             }
         } catch (Exception e) {
             throw new FolderDownloadException("Folder download exception " + e.getMessage());
@@ -155,7 +152,7 @@ public class FolderServiceImpl implements FolderService {
     private List<DeleteObject> retrieveObjects(String path) {
         List<DeleteObject> objects = new LinkedList<>();
         try {
-            Iterable<Result<Item>> results = storageRepository.getObjects(path);
+            Iterable<Result<Item>> results = storageRepository.getObjects(path, false);
             for (Result<Item> result : results) {
                 Item item = result.get();
                 if (item.isDir()) {
