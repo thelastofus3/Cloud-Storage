@@ -18,7 +18,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 
 @Slf4j
 @Controller
@@ -35,10 +38,10 @@ public class FileController {
 
     @PostMapping(FILE_UPLOAD)
     public String uploadFile(@Valid @ModelAttribute("fileUpload") FileUploadRequest fileUploadRequest,
-                             Principal principal, BindingResult bindingResult, Model model) {
+                             BindingResult bindingResult, Model model) {
         handleBindingResultErrors(bindingResult, model);
 
-        fileService.upload(fileUploadRequest,principal);
+        fileService.upload(fileUploadRequest);
         log.debug("File success save in minio");
 
         return "redirect:/";
@@ -46,10 +49,10 @@ public class FileController {
 
     @DeleteMapping(FILE_REMOVE)
     public String removeFile(@Valid @ModelAttribute("fileRemove") FileRemoveRequest fileRemoveRequest,
-                             Principal principal, BindingResult bindingResult, Model model) {
+                             BindingResult bindingResult, Model model) {
         handleBindingResultErrors(bindingResult, model);
 
-        fileService.remove(fileRemoveRequest, principal);
+        fileService.remove(fileRemoveRequest);
         log.debug("File success remove from minio");
 
         return "redirect:/";
@@ -57,10 +60,10 @@ public class FileController {
 
     @PatchMapping(FILE_RENAME)
     public String renameFile(@Valid @ModelAttribute("fileRename")FileRenameRequest fileRenameRequest,
-                             Principal principal, BindingResult bindingResult, Model model) {
+                             BindingResult bindingResult, Model model) {
         handleBindingResultErrors(bindingResult, model);
 
-        fileService.rename(fileRenameRequest, principal);
+        fileService.rename(fileRenameRequest);
         log.debug("File success rename");
 
         return "redirect:/";
@@ -69,16 +72,16 @@ public class FileController {
     @ResponseBody
     @GetMapping(FILE_DOWNLOAD)
     public ResponseEntity<ByteArrayResource> downloadFile(@Valid @ModelAttribute("fileDownload") FileDownloadRequest fileDownloadRequest,
-                                                          Principal principal, BindingResult bindingResult, Model model) {
+                                                          BindingResult bindingResult, Model model) {
         handleBindingResultErrors(bindingResult, model);
 
-        ByteArrayResource resource = fileService.download(fileDownloadRequest, principal);
+        ByteArrayResource resource = fileService.download(fileDownloadRequest);
         log.debug("File success download from minio");
 
         return ResponseEntity.ok()
                 .contentLength(resource.contentLength())
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .header("Content-Disposition", "attachment; filename=" + fileDownloadRequest.getName())
+                .header("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileDownloadRequest.getName(), StandardCharsets.UTF_8).replace("+", "%20"))
                 .body(resource);
 
     }

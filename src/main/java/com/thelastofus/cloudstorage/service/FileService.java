@@ -11,12 +11,12 @@ import java.security.Principal;
 
 @Service
 public interface FileService {
-    void upload(FileUploadRequest fileUploadRequest, Principal principal);
+    void upload(FileUploadRequest fileUploadRequest);
 
-    void remove(FileRemoveRequest fileRemoveRequest, Principal principal);
+    void remove(FileRemoveRequest fileRemoveRequest);
 
-    ByteArrayResource download(FileDownloadRequest fileDownloadRequest, Principal principal);
+    ByteArrayResource download(FileDownloadRequest fileDownloadRequest);
 
-    void rename(FileRenameRequest fileRenameRequest, Principal principal);
+    void rename(FileRenameRequest fileRenameRequest);
 
 }

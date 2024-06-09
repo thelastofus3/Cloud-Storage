@@ -14,14 +14,12 @@ import io.minio.messages.Item;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,14 +37,14 @@ public class FolderServiceImpl implements FolderService {
     StorageRepository storageRepository;
 
     @Override
-    public void upload(FolderUploadRequest folderUploadRequest, Principal principal) {
+    public void upload(FolderUploadRequest folderUploadRequest) {
         List<SnowballObject> objects = new ArrayList<>();
         for (MultipartFile folder : folderUploadRequest.getFolder()) {
             if (folder.isEmpty() || folder.getOriginalFilename() == null)
                 throw new FolderUploadException("Folder must have name and content");
 
             try {
-                String folderName = buildFolderPath(principal, folderUploadRequest.getPath(), folder.getOriginalFilename());
+                String folderName = buildPath(folderUploadRequest.getOwner(), folderUploadRequest.getPath(), folder.getOriginalFilename());
                 InputStream inputStream = folder.getInputStream();
                 long folderSize = folder.getSize();
                 objects.add(StorageUtil.createSnowballObject(folderName, inputStream, folderSize));
@@ -58,8 +56,8 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public void create(FolderCreateRequest folderCreateRequest, Principal principal) {
-        String path = buildFolderPath(principal, folderCreateRequest.getPath(), folderCreateRequest.getName()) + "/";
+    public void create(FolderCreateRequest folderCreateRequest) {
+        String path = buildPath(folderCreateRequest.getOwner(), folderCreateRequest.getPath(), folderCreateRequest.getName()) + "/";
         try {
             folderRepository.createFolder(path);
         } catch (Exception e) {
@@ -68,16 +66,14 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public void remove(FolderRemoveRequest folderRemoveRequest, Principal principal) {
-        String path = getFolderPath(principal, folderRemoveRequest);
-        List<DeleteObject> objects = retrieveObjects(path);
-        createDeleteObjects(objects);
+    public void remove(FolderRemoveRequest folderRemoveRequest) {
+        String path = getFolderPath(folderRemoveRequest.getOwner(), folderRemoveRequest.getPath());
+        createDeleteObjects(retrieveObjects(path));
     }
 
     @Override
-    public ByteArrayResource download(FolderDownloadRequest folderDownloadRequest, Principal principal) {
-        String path = getUserMainFolder(principal, folderDownloadRequest.getPath()
-                .substring(0, folderDownloadRequest.getPath().length() - folderDownloadRequest.getName().length() - 1));
+    public ByteArrayResource download(FolderDownloadRequest folderDownloadRequest) {
+        String path = getFolderPath(folderDownloadRequest.getOwner(), folderDownloadRequest.getPath());
         String name = folderDownloadRequest.getName();
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              ZipOutputStream zos = new ZipOutputStream(baos)){
@@ -90,15 +86,13 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public void rename(FolderRenameRequest folderRenameRequest, Principal principal) {
-        String from = getFolderPath(principal, folderRenameRequest.getFrom());
-        String relativePath = from.substring(0,from.lastIndexOf('/'));
-        String to = relativePath.substring(0, relativePath.lastIndexOf('/') + 1) + folderRenameRequest.getTo() + '/';
+    public void rename(FolderRenameRequest folderRenameRequest) {
+        String from = getFolderPath(folderRenameRequest.getOwner(), folderRenameRequest.getFrom());
+        String to = getFilePathForCopy(from, folderRenameRequest.getTo());
         folderRepository.createFolder(to);
 
         addFilesAndFoldersToNewFolder(from, to);
-        List<DeleteObject> objects = retrieveObjects(from);
-        createDeleteObjects(objects);
+        createDeleteObjects(retrieveObjects(from));
     }
 
     private void addFilesAndFoldersToNewFolder(String from, String to) {
@@ -107,12 +101,10 @@ public class FolderServiceImpl implements FolderService {
             for(Result<Item> result : results) {
                 Item item = result.get();
                 String objectName = item.objectName();
-                if (item.isDir()) {
-                    String newPath = objectName.substring(0, objectName.lastIndexOf('/'));
-                    addFilesAndFoldersToNewFolder(objectName, to + newPath.substring(newPath.lastIndexOf('/') + 1) + '/');
+                if (item.isDir()){
+                    addFilesAndFoldersToNewFolder(objectName, getNewFolderPath(objectName, to));
                 } else {
-                    String pathObjectToCopy = to + objectName.substring(objectName.lastIndexOf('/') + 1);
-                    folderRepository.copyFolder(objectName, pathObjectToCopy);
+                    folderRepository.copyFolder(objectName, getNewFilePath(objectName, to));
                 }
             }
         } catch (Exception e) {
@@ -126,25 +118,15 @@ public class FolderServiceImpl implements FolderService {
             for (Result<Item> result : results) {
                 Item item = result.get();
                 String objectName = item.objectName();
-                if (!item.isDir())
-                    addFilesToZip(zos, objectName, folderName);
+                if (!item.isDir()) {
+                    String fileName = objectName.substring(objectName.indexOf(folderName));
+                    zos.putNextEntry(new ZipEntry(fileName));
+                    zos.closeEntry();
+                }
             }
         } catch (Exception e) {
             throw new FolderDownloadException("Folder download exception " + e.getMessage());
         }
-    }
-
-    private void addFilesToZip(ZipOutputStream zos, String objectName, String folderName) {
-        try (InputStream inputStream = folderRepository.downloadFolder(objectName)) {
-            int folderNameIndex = objectName.indexOf(folderName);
-            String fileName = objectName.substring(folderNameIndex);
-            zos.putNextEntry(new ZipEntry(fileName));
-            IOUtils.copy(inputStream, zos);
-            zos.closeEntry();
-        }catch (Exception e) {
-            throw new FolderDownloadException("Error while adding file to zip " + e.getMessage());
-        }
-
     }
 
     private List<DeleteObject> retrieveObjects(String path) {
@@ -152,24 +134,22 @@ public class FolderServiceImpl implements FolderService {
         try {
             Iterable<Result<Item>> results = storageRepository.getObjects(path, true);
             for (Result<Item> result : results) {
-                Item item = result.get();
-                objects.add(StorageUtil.createDeleteObject(item));
-
+                objects.add(StorageUtil.createDeleteObject(result.get()));
             }
         } catch (Exception e) {
             throw new FolderRemoveException("Failed to retrieve objects: " + e.getMessage());
         }
         return objects;
     }
+
     private void createDeleteObjects(List<DeleteObject> objects) {
         Iterable<Result<DeleteError>> results = folderRepository.removeFolder(objects);
-        results.forEach(deleteErrorResult -> {
-            try {
-                deleteErrorResult.get();
+        try {
+            for (Result<DeleteError> result : results) {
+                result.get();
             }
-            catch (Exception e) {
-                throw new FolderRemoveException("Failed to remove folder " + e.getMessage());
-            }
-        });
+        } catch (Exception e) {
+            throw new FolderRemoveException("Failed to remove folder " + e.getMessage());
+        }
     }
 }

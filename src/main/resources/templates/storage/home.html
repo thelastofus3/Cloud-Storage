@@ -24,17 +24,19 @@
                 <div class="col-3 text-center mt-2">
                     <p class="text-center mt-2" th:text="${'Created: ' + storageSummary.getCreationDate()}">Created: 2024-04-20</p>
                 </div>
-                <div class="col-1" >
+                <div class="col-1">
                     <form id="uploadFolder" th:method="POST" th:action="@{/folder/upload}" enctype="multipart/form-data" th:object="${folderUpload}">
                         <input type="file" id="folder" th:field="*{folder}" class="input-storage-object" name="folder" webkitdirectory>
                         <input type="text" id="pathFolder" th:field="*{path}" th:value="${storageSummary.getCurrentPath()}" class="input-storage-object" name="path">
+                        <input th:name="owner" th:value="${#authentication.name}" type="hidden">
                         <label for="folder" class="btn btn-secondary"><i class="bi bi-folder"></i>Upload</label>
                     </form>
                 </div>
-                <div class="col-1" >
+                <div class="col-1">
                     <form id="uploadFile" th:method="POST" th:action="@{/file/upload}" enctype="multipart/form-data" th:object="${fileUpload}">
                         <input type="file" id="file" th:field="*{file}" class="input-storage-object" name="file">
                         <input type="text" id="pathFile" th:field="*{path}" th:value="${storageSummary.getCurrentPath()}" class="input-storage-object" name="path">
+                        <input th:name="owner" th:value="${#authentication.name}" type="hidden">
                         <label for="file" class="btn btn-secondary"><i class="bi bi-file-earmark"></i>Upload</label>
                     </form>
                 </div>
@@ -79,6 +81,7 @@
                                                 <label for="recipient-name" class="col-form-label">Enter a name:</label>
                                                 <input type="text" class="form-control" id="recipient-name" name="name" th:field="*{name}">
                                                 <input type="hidden" id="pathCreateFolder" th:field="*{path}" th:value="${storageSummary.getCurrentPath()}" name="path">
+                                                <input th:name="owner" th:value="${#authentication.name}" type="hidden">
                                             </div>
                                             <div class="modal-footer pe-0">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -95,25 +98,27 @@
             <div id="file-list">
                 <div class="row border-bottom py-2" th:each="storageObject : ${storageObjects}" th:if="${!storageObject.getName().isEmpty()}">
                     <div class="col-4 mt-2">
-                        <a class="link-body-emphasis link-offset-2 link-underline-opacity-0" th:href="@{'?path=' + ${storageObject.getPath()}}" th:if="${storageObject.getLastModified() == null}">
+                        <a class="link-body-emphasis link-offset-2 link-underline-opacity-0" th:href="@{'?path=' + ${storageObject.getPath()}}" th:if="${storageObject.getLastModified().isEmpty()}">
                             <p class="p-0 m-0" th:utext="'&lt;i class=&quot;bi bi-folder&quot;&gt;&lt;/i&gt;' + ${' ' + storageObject.getName()}">File1.txt</p>
                         </a>
-                        <p class="p-0 m-0" th:utext="'&lt;i class=&quot;bi bi-file-earmark&quot;&gt;&lt;/i&gt;' + ${' ' +storageObject.getName()}" th:unless="${storageObject.getLastModified() == null}">File1.txt</p>
+                        <p class="p-0 m-0" th:utext="'&lt;i class=&quot;bi bi-file-earmark&quot;&gt;&lt;/i&gt;' + ${' ' +storageObject.getName()}" th:unless="${storageObject.getLastModified().isEmpty()}">File1.txt</p>
                     </div>
                     <div class="col-4 mt-2"><p class="p-0 m-0" th:text="${storageObject.getLastModified()}">Modified: 2024-04-19</p></div>
                     <div class="col-2 mt-2"><p class="p-0 m-0" th:text="${storageObject.getSize()}">Size: 1MB</p></div>
                     <div class="col-2 p-0 delete-rename dropdown d-inline-flex">
-                        <form class="d-inline-flex" th:if="${storageObject.getLastModified() != null}" th:method="GET" th:action="@{/file/download}" th:object="${fileDownload}">
+                        <form class="d-inline-flex" th:unless="${storageObject.getLastModified().isEmpty()}" th:method="GET" th:action="@{/file/download}" th:object="${fileDownload}">
                             <input type="hidden" name="path" th:value="${storageObject.getPath() + '/' + storageObject.getName()}" th:if="${storageObject.getPath() != storageObject.getName()}">
                             <input type="hidden" name="path" th:value="${storageObject.getPath()}" th:unless="${storageObject.getPath() != storageObject.getName()}">
                             <input type="hidden" name="name" th:value="${storageObject.getName()}">
+                            <input th:name="owner" th:value="${#authentication.name}" type="hidden">
                             <button class="btn btn-secondary">
                                 <i class="bi bi-download"></i>
                             </button>
                         </form>
-                        <form class="d-inline-flex" th:unless="${storageObject.getLastModified() != null}" th:method="GET" th:action="@{/folder/download}" th:object="${folderDownload}">
+                        <form class="d-inline-flex" th:if="${storageObject.getLastModified().isEmpty()}" th:method="GET" th:action="@{/folder/download}" th:object="${folderDownload}">
                             <input type="hidden" name="path" th:value="${storageObject.getPath() + '/' + storageObject.getName()}">
                             <input type="hidden" name="name" th:value="${storageObject.getName()}">
+                            <input th:name="owner" th:value="${#authentication.name}" type="hidden">
                             <button class="btn btn-secondary">
                                 <i class="bi bi-download"></i>
                             </button>
@@ -123,30 +128,34 @@
                         </button>
                         <ul class="dropdown-menu" style="width: 270px">
 
-                            <li th:if="${storageObject.getLastModified() != null}" class="d-inline-block"><form th:method="DELETE" th:action="@{/file/remove}" th:object="${fileRemove}" class="d-flex justify-content-center">
+                            <li th:unless="${storageObject.getLastModified().isEmpty()}" class="d-inline-block"><form th:method="DELETE" th:action="@{/file/remove}" th:object="${fileRemove}" class="d-flex justify-content-center">
                                 <input type="hidden" name="path" th:value="${storageObject.getPath() + '/' + storageObject.getName()}" th:if="${storageObject.getPath() != storageObject.getName()}">
                                 <input type="hidden" name="path" th:value="${storageObject.getPath()}" th:unless="${storageObject.getPath() != storageObject.getName()}">
+                                <input th:name="owner" th:value="${#authentication.name}" type="hidden">
                                 <button type="submit" class="btn btn-link text-white text-decoration-none"><i class="bi bi-trash"> Delete</i></button>
                             </form></li>
-                            <li th:unless="${storageObject.getLastModified() != null}" class="d-inline-block"><form th:method="DELETE" th:action="@{/folder/remove}" th:object="${folderRemove}" class="d-flex justify-content-center">
+                            <li th:if="${storageObject.getLastModified().isEmpty()}" class="d-inline-block"><form th:method="DELETE" th:action="@{/folder/remove}" th:object="${folderRemove}" class="d-flex justify-content-center">
                                 <input type="hidden" name="path" th:value="${storageObject.getPath() + '/' + storageObject.getName()}">
+                                <input th:name="owner" th:value="${#authentication.name}" type="hidden">
                                 <button type="submit" class="btn btn-link text-white text-decoration-none"><i class="bi bi-trash"> Delete</i></button>
                             </form></li>
 
-                            <li th:if="${storageObject.getLastModified() != null}" class="d-inline-block">
+                            <li th:unless="${storageObject.getLastModified().isEmpty()}" class="d-inline-block">
                                 <form th:method="PATCH" th:action="@{/file/rename}" th:object="${fileRename}">
                                         <div class="input-group mb-3 px-1 pt-2 rename-input">
                                             <input type="text" class="form-control" id="rename-file-name" name="to" th:field="*{to}" aria-describedby="button-addon2">
+                                            <input th:name="owner" th:value="${#authentication.name}" type="hidden">
                                             <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i class="bi bi-input-cursor"></i></button>
                                         </div>
                                     <input type="hidden" name="from" th:value="${storageObject.getPath() + '/' + storageObject.getName()}" th:if="${storageObject.getPath() != storageObject.getName()}">
                                     <input type="hidden" name="from" th:value="${storageObject.getPath()}" th:unless="${storageObject.getPath() != storageObject.getName()}">
                                 </form>
                             </li>
-                            <li th:unless="${storageObject.getLastModified() != null}" class="d-inline-block">
+                            <li th:if="${storageObject.getLastModified().isEmpty()}" class="d-inline-block">
                                 <form th:method="PATCH" th:action="@{/folder/rename}" th:object="${folderRename}">
                                     <div class="input-group mb-3 px-1 pt-2 rename-input">
                                         <input type="text" class="form-control" id="rename-folder-name" name="to" th:field="*{to}" aria-describedby="button-addon3">
+                                        <input th:name="owner" th:value="${#authentication.name}" type="hidden">
                                         <button class="btn btn-outline-secondary" type="submit" id="button-addon3"><i class="bi bi-input-cursor"></i></button>
                                     </div>
                                     <input type="hidden" name="from" th:value="${storageObject.getPath() + '/' + storageObject.getName()}">

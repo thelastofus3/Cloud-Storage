@@ -14,12 +14,9 @@ import lombok.experimental.FieldDefaults;
 public class StorageObject {
 
     String name;
-
     String path;
-    @Builder.Default
-    String lastModified = " ";
-
+    String lastModified;
     String size;
-
+    Boolean isDir;
 
 }

@@ -1,16 +1,11 @@
 package com.thelastofus.cloudstorage.util.storage;
 
-import com.thelastofus.cloudstorage.dto.file.FileRequest;
-import com.thelastofus.cloudstorage.dto.folder.FolderRemoveRequest;
 import io.minio.SnowballObject;
 import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
 import lombok.experimental.UtilityClass;
 
 import java.io.InputStream;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.security.Principal;
 import java.time.LocalDateTime;
 
 import static com.thelastofus.cloudstorage.util.size.SizeUtil.convertFromB;
@@ -21,38 +16,30 @@ public class StorageUtil {
 
     private static final int GMT2_TIME = 2;
 
-    public static String getUserMainFolder(Principal principal, String currentPath) {
-
-        String userFolder = "user-" + principal.getName() + "-files/" ;
-        if (!currentPath.isEmpty()) {
-            userFolder += currentPath + "/";
-        }
-        return userFolder;
-    }
-    public static String buildFolderPath(Principal principal, String path, String name) {
-        return getUserMainFolder(principal, path) + name;
+    public static String getUserMainFolder(String owner, String relativePath) {
+        return "user-" + owner + "-files/" + (relativePath.isEmpty() ? "" : relativePath + "/");
     }
 
-    public static String getUserMainFolder(Principal principal) {
-        return getUserMainFolder(principal,"");
+    public static String buildPath(String owner, String relativePath, String name) {
+        return getUserMainFolder(owner, relativePath) + name;
     }
 
-    public static int getUserMainFolderLength(Principal principal) {
-        return getUserMainFolder(principal).length() ;
+    public static String getUserMainFolder(String owner) {
+        return getUserMainFolder(owner,"");
     }
 
-    public static StorageObject createStorageObject(Item item, String userFolder, int userFolderLength) {
+    public static StorageObject createStorageObject(Item item, String userFolder, String owner) {
         String objectName = item.objectName();
-        String name = extractNameFromPath(objectName, userFolder.length());
-        String relativePath = extractNameFromPath(objectName, userFolderLength);
+        String name = extractRelativePath(objectName, userFolder.length());
+        String relativePath = extractRelativePath(objectName, getUserMainFolder(owner).length());
         StorageObject storageObject = createStorageObjectBase(item);
 
         return storageObjectBuild(storageObject, name, relativePath);
     }
 
-    public static StorageObject createStorageSearchObject(Item item, boolean isDir) {
+    public static StorageObject createStorageSearchObject(Item item) {
         String objectName = item.objectName();
-        String name = getFileOrFolderName(objectName, isDir);
+        String name = getFileOrFolderName(objectName, item.isDir());
         String path = objectName.substring(objectName.indexOf('/'));
         StorageObject storageObject = createStorageObjectBase(item);
 
@@ -75,27 +62,26 @@ public class StorageUtil {
         return new DeleteObject(item.objectName());
     }
 
-    public static String getFolderPath(Principal principal, FolderRemoveRequest folderRemoveRequest) {
-        return getFolderPath(principal, folderRemoveRequest.getPath());
+    public static String getFolderPath(String owner, String relativePath) {
+        String pathWithUserMainFolder = getUserMainFolder(owner, relativePath);
+        String rootPathWithoutLastSlash = pathWithUserMainFolder.substring(0, pathWithUserMainFolder.length() - 1);
+        return rootPathWithoutLastSlash.substring(0, rootPathWithoutLastSlash.lastIndexOf('/') + 1);
     }
 
-    public static String getFolderPath(Principal principal, String relativePath) {
-        return getParentFolder(getUserMainFolder(principal, relativePath));
+    public static String getFilePath(String owner, String relativePath) {
+        return getUserMainFolder(owner, relativePath).substring(0, getUserMainFolder(owner, relativePath).length() - 1);
     }
 
-    public static String getFilePath(Principal principal, FileRequest fileRequest) {
-        return getFilePath(principal, fileRequest.getPath());
-    }
-
-    public static String getFilePath(Principal principal, String relativePath) {
-        return getUserMainFolder(principal, relativePath).substring(0, getUserMainFolder(principal, relativePath).length() - 1);
-    }
-
-    public static String getFilePath(Principal principal, String relativePath, String fileType) {
+    public static String getFilePath(String owner, String relativePath, String fileType) {
         String folder = (fileType.lastIndexOf('/') != -1) ? fileType.substring(0, fileType.lastIndexOf('/')) : "";
-        String rootPath = getUserMainFolder(principal, folder);
+        String rootPath = getUserMainFolder(owner, folder);
         String extension = fileType.substring(fileType.lastIndexOf('.'));
         return rootPath + relativePath + extension;
+    }
+
+    public static String getFilePathForCopy(String from, String to) {
+        String rootPathWithoutLastSlash = from.substring(0,from.lastIndexOf('/'));
+        return rootPathWithoutLastSlash.substring(0, rootPathWithoutLastSlash.lastIndexOf('/') + 1) + to + '/';
     }
 
     public static String getFileOrFolderName(String path, boolean isDir) {
@@ -108,13 +94,24 @@ public class StorageUtil {
         }
     }
 
+    public static String getNewFolderPath(String from, String to) {
+        String newPath = from.substring(0, from.lastIndexOf('/'));
+        return to + newPath.substring(newPath.lastIndexOf('/') + 1) + '/';
+    }
+
+    public static String getNewFilePath(String from, String to) {
+        return to + from.substring(from.lastIndexOf('/') + 1);
+    }
+
     private static StorageObject createStorageObjectBase(Item item) {
         String size = convertFromB(item.size());
-        String lastModified = item.isDir() ? null : item.lastModified().plusHours(GMT2_TIME).format(getTimePattern());
+        Boolean isDir = item.isDir();
+        String lastModified = isDir ? "" : item.lastModified().plusHours(GMT2_TIME).format(getTimePattern());
 
         return StorageObject.builder()
                 .size(size)
                 .lastModified(lastModified)
+                .isDir(isDir)
                 .build();
     }
 
@@ -127,14 +124,9 @@ public class StorageUtil {
                 .build();
     }
 
-    private String extractNameFromPath(String fullPath, int userFolderLength) {
+    private String extractRelativePath(String fullPath, int userFolderLength) {
         String path = fullPath.substring(userFolderLength);
         int lastSlashIndex = path.lastIndexOf('/');
         return lastSlashIndex != -1 ? path.substring(0,lastSlashIndex) : path;
-    }
-
-    private String getParentFolder(String path) {
-        String rootFolderForDelete = path.substring(0, path.length() - 1);
-        return rootFolderForDelete.substring(0, rootFolderForDelete.lastIndexOf('/') + 1);
     }
 }

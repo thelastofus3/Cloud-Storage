@@ -15,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 
 @Slf4j
 @Controller
@@ -33,10 +32,10 @@ public class FolderController {
 
     @PostMapping(FOLDER_UPLOAD)
     public String uploadFolder(@Valid @ModelAttribute("folderUpload") FolderUploadRequest folderUploadRequest,
-                               Principal principal, BindingResult bindingResult, Model model) {
+                               BindingResult bindingResult, Model model) {
         handleBindingResultErrors(bindingResult, model);
 
-        folderService.upload(folderUploadRequest, principal);
+        folderService.upload(folderUploadRequest);
         log.info("Folder success save");
 
         return "redirect:/";
@@ -44,10 +43,10 @@ public class FolderController {
 
     @PostMapping(FOLDER_CREATE)
     public String createFolder(@Valid @ModelAttribute("folderCreate") FolderCreateRequest folderCreateRequest,
-                               Principal principal, BindingResult bindingResult, Model model) {
+                               BindingResult bindingResult, Model model) {
         handleBindingResultErrors(bindingResult, model);
 
-        folderService.create(folderCreateRequest, principal);
+        folderService.create(folderCreateRequest);
         log.info("Folder success create");
 
         return "redirect:/";
@@ -55,10 +54,10 @@ public class FolderController {
 
     @DeleteMapping(FOLDER_REMOVE)
     public String removeFolder(@Valid @ModelAttribute("folderRemove") FolderRemoveRequest folderRemoveRequest,
-                               Principal principal, BindingResult bindingResult, Model model) {
+                               BindingResult bindingResult, Model model) {
         handleBindingResultErrors(bindingResult, model);
 
-        folderService.remove(folderRemoveRequest, principal);
+        folderService.remove(folderRemoveRequest);
         log.debug("Folder success remove from minio");
 
         return "redirect:/";
@@ -66,10 +65,10 @@ public class FolderController {
 
     @PatchMapping(FOLDER_RENAME)
     public String renameFolder(@Valid @ModelAttribute("folderRename")FolderRenameRequest folderRenameRequest,
-                               Principal principal, BindingResult bindingResult, Model model) {
+                               BindingResult bindingResult, Model model) {
         handleBindingResultErrors(bindingResult, model);
 
-        folderService.rename(folderRenameRequest, principal);
+        folderService.rename(folderRenameRequest);
         log.debug("Folder success rename");
 
         return "redirect:/";
@@ -78,10 +77,10 @@ public class FolderController {
     @ResponseBody
     @GetMapping(FOLDER_DOWNLOAD)
     public ResponseEntity<ByteArrayResource> downloadFolder(@Valid @ModelAttribute("folderDownload") FolderDownloadRequest folderDownloadRequest,
-                                                            Principal principal, BindingResult bindingResult, Model model) {
+                                                            BindingResult bindingResult, Model model) {
         handleBindingResultErrors(bindingResult, model);
 
-        ByteArrayResource resource = folderService.download(folderDownloadRequest, principal);
+        ByteArrayResource resource = folderService.download(folderDownloadRequest);
 
         return ResponseEntity.ok()
                 .contentLength(resource.contentLength())

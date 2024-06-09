@@ -14,12 +14,12 @@
         <div class="card m-5" style="width: 18rem;" th:each="storageSearchObject : ${storageSearchObjects}">
             <div class="card-body">
                 <h5 class="card-title" th:text="${'Name: ' + storageSearchObject.getName()}">434.txt</h5>
-                <ul class="list-group list-group-flush" th:if="${storageSearchObject.lastModified != null}">
+                <ul class="list-group list-group-flush" th:unless="${storageSearchObject.getIsDir()}">
                     <li class="list-group-item" th:text="${'Size: ' + storageSearchObject.getSize()}">Size: 0.0 KiB</li>
                     <li class="list-group-item" th:text="${'Path: Home' + storageSearchObject.getPath()}">GGG/434.txt</li>
                     <li class="list-group-item" th:text="${'Last Modified: ' + storageSearchObject.getLastModified()}">22:34:55</li>
                 </ul>
-                <ul class="list-group list-group-flush" th:unless="${storageSearchObject.lastModified != null}">
+                <ul class="list-group list-group-flush" th:if="${storageSearchObject.getIsDir()}">
                     <li class="list-group-item">Size: -</li>
                     <li class="list-group-item" th:text="${'Path: Home' + storageSearchObject.getPath()}">GGG/434.txt</li>
                     <li class="list-group-item">Last Modified: -</li>

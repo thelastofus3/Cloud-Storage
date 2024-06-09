@@ -1,6 +1,5 @@
 package com.thelastofus.cloudstorage.util.size;
 
-import io.minio.messages.Item;
 import lombok.experimental.UtilityClass;
 
 import java.math.BigDecimal;

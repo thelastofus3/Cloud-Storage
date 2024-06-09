@@ -18,10 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
-import java.security.Principal;
 
-import static com.thelastofus.cloudstorage.util.storage.StorageUtil.getFilePath;
-import static com.thelastofus.cloudstorage.util.storage.StorageUtil.getUserMainFolder;
+import static com.thelastofus.cloudstorage.util.storage.StorageUtil.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,13 +29,13 @@ public class FileServiceImpl implements FileService {
     FileRepository fileRepository;
 
     @Override
-    public void upload(FileUploadRequest fileUploadRequest, Principal principal) {
+    public void upload(FileUploadRequest fileUploadRequest) {
         try {
             MultipartFile file = fileUploadRequest.getFile();
             if (file.isEmpty() || file.getOriginalFilename() == null || file.getSize() == 0)
                 throw new FileUploadException("File must have name and content");
 
-            String path = buildFilePath(principal, fileUploadRequest.getPath(), file.getOriginalFilename());
+            String path = buildPath(fileUploadRequest.getOwner(), fileUploadRequest.getPath(), file.getOriginalFilename());
             InputStream inputStream = file.getInputStream();
             fileRepository.saveFile(inputStream, path);
         } catch (Exception e) {
@@ -46,9 +44,9 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void remove(FileRemoveRequest fileRemoveRequest, Principal principal) {
+    public void remove(FileRemoveRequest fileRemoveRequest) {
         try {
-            String path = getFilePath(principal, fileRemoveRequest);
+            String path = getFilePath(fileRemoveRequest.getOwner(), fileRemoveRequest.getPath());
 
             fileRepository.removeFile(path);
         } catch (Exception e) {
@@ -57,11 +55,9 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public ByteArrayResource download(FileDownloadRequest fileDownloadRequest, Principal principal) {
-        try {
-            String path = getFilePath(principal, fileDownloadRequest);
-
-            InputStream inputStream = fileRepository.downloadFile(path);
+    public ByteArrayResource download(FileDownloadRequest fileDownloadRequest) {
+        String path = getFilePath(fileDownloadRequest.getOwner(), fileDownloadRequest.getPath());
+        try (InputStream inputStream = fileRepository.downloadFile(path)) {
             return new ByteArrayResource(inputStream.readAllBytes());
         } catch (Exception e) {
             throw new FileDownloadException("File download failed: " + e.getMessage());
@@ -69,9 +65,9 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void rename(FileRenameRequest fileRenameRequest, Principal principal) {
-        String from = getFilePath(principal, fileRenameRequest.getFrom());
-        String to = getFilePath(principal, fileRenameRequest.getTo(), fileRenameRequest.getFrom());
+    public void rename(FileRenameRequest fileRenameRequest) {
+        String from = getFilePath(fileRenameRequest.getOwner(), fileRenameRequest.getFrom());
+        String to = getFilePath(fileRenameRequest.getOwner(), fileRenameRequest.getTo(), fileRenameRequest.getFrom());
 
         renameFile(from, to);
     }
@@ -83,8 +79,5 @@ public class FileServiceImpl implements FileService {
         } catch (Exception e) {
             throw new FileRenameException("File rename failed: " + e.getMessage());
         }
-    }
-    private String buildFilePath(Principal principal, String path, String fileName) {
-        return getUserMainFolder(principal, path) + fileName;
     }
 }

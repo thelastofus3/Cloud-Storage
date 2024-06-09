@@ -7,14 +7,14 @@ import java.security.Principal;
 
 public interface FolderService {
 
-    void upload(FolderUploadRequest folderUploadRequest, Principal principal);
+    void upload(FolderUploadRequest folderUploadRequest);
 
-    void create(FolderCreateRequest folderCreateRequest, Principal principal);
+    void create(FolderCreateRequest folderCreateRequest);
 
-    void remove(FolderRemoveRequest folderRemoveRequest, Principal principal);
+    void remove(FolderRemoveRequest folderRemoveRequest);
 
-    ByteArrayResource download(FolderDownloadRequest folderDownloadRequest, Principal principal);
+    ByteArrayResource download(FolderDownloadRequest folderDownloadRequest);
 
-    void rename(FolderRenameRequest folderRenameRequest, Principal principal);
+    void rename(FolderRenameRequest folderRenameRequest);
 
 }

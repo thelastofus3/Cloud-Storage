@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface StorageService {
 
-    List<StorageObject> getStorageObjects(String currentPath, Principal principal);
+    List<StorageObject> storageObjects(String currentPath, Principal principal);
 
-    StorageSummary getStorageSummary(String currentPath, Principal principal);
+    StorageSummary storageSummary(String currentPath, Principal principal);
 
     List<StorageObject> search(String query, Principal principal);
 }

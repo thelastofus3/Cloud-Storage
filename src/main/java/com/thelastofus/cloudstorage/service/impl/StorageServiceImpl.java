@@ -29,9 +29,8 @@ public class StorageServiceImpl implements StorageService {
     UserService userService;
 
     @Override
-    public List<StorageObject> getStorageObjects(String currentPath, Principal principal) {
-        String userMainFolder = getUserMainFolder(principal, currentPath);
-        int userMainFolderLength = getUserMainFolderLength(principal);
+    public List<StorageObject> storageObjects(String currentPath, Principal principal) {
+        String userMainFolder = getUserMainFolder(principal.getName(), currentPath);
         List<StorageObject> storageObjects = new ArrayList<>();
         try {
             Iterable<Result<Item>> results = storageRepository.getObjects(userMainFolder, false);
@@ -39,7 +38,7 @@ public class StorageServiceImpl implements StorageService {
                 Item item = result.get();
 
                 if (item.objectName().startsWith(userMainFolder))
-                    storageObjects.add(createStorageObject(item, userMainFolder,userMainFolderLength));
+                    storageObjects.add(createStorageObject(item, userMainFolder, principal.getName()));
 
             }
         } catch (Exception e) {
@@ -49,8 +48,8 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public StorageSummary getStorageSummary(String path, Principal principal) {
-        String userMainFolder = getUserMainFolder(principal);
+    public StorageSummary storageSummary(String path, Principal principal) {
+        String userMainFolder = getUserMainFolder(principal.getName());
         LocalDateTime createdAt = userService.getCreatedAt(principal.getName());
         int countOfObjects = getCountOfObjects(userMainFolder, principal);
 
@@ -59,7 +58,7 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public List<StorageObject> search(String query, Principal principal) {
-        String userMainFolder = getUserMainFolder(principal);
+        String userMainFolder = getUserMainFolder(principal.getName());
         List<StorageObject> storageObjects = new ArrayList<>();
         findObjectsRecursively(query, userMainFolder, storageObjects, principal);
         return storageObjects;
@@ -73,7 +72,7 @@ public class StorageServiceImpl implements StorageService {
                 String objectName = getFileOrFolderName(item.objectName(), item.isDir());
 
                 if (objectName.equals(query))
-                    storageObjects.add(createStorageSearchObject(item, item.isDir()));
+                    storageObjects.add(createStorageSearchObject(item));
 
                 if (item.isDir())
                     findObjectsRecursively(query, item.objectName(), storageObjects, principal);

@@ -46,8 +46,8 @@ public class HomeController {
                               @RequestParam(value = "path", required = false, defaultValue = "") String currentPath,
                               Principal principal, Model model){
 
-        model.addAttribute("storageObjects",storageService.getStorageObjects(currentPath, principal));
-        model.addAttribute("storageSummary",storageService.getStorageSummary(currentPath, principal));
+        model.addAttribute("storageObjects",storageService.storageObjects(currentPath, principal));
+        model.addAttribute("storageSummary",storageService.storageSummary(currentPath, principal));
 
         return "storage/home";
     }
