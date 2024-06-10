@@ -21,11 +21,11 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    @Column(nullable = false,unique = true,length = 120)
+    @Column(nullable = false, unique = true, length = 120)
     String username;
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     String email;
-    @Column(nullable = false,length = 120)
+    @Column(nullable = false, length = 120)
     String password;
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)

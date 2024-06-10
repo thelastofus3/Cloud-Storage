@@ -25,7 +25,7 @@ public class StorageUtil {
     }
 
     public static String getUserMainFolder(String owner) {
-        return getUserMainFolder(owner,"");
+        return getUserMainFolder(owner, "");
     }
 
     public static StorageObject createStorageObject(Item item, String userFolder, String owner) {
@@ -80,7 +80,7 @@ public class StorageUtil {
     }
 
     public static String getFilePathForCopy(String from, String to) {
-        String rootPathWithoutLastSlash = from.substring(0,from.lastIndexOf('/'));
+        String rootPathWithoutLastSlash = from.substring(0, from.lastIndexOf('/'));
         return rootPathWithoutLastSlash.substring(0, rootPathWithoutLastSlash.lastIndexOf('/') + 1) + to + '/';
     }
 
@@ -127,6 +127,6 @@ public class StorageUtil {
     private String extractRelativePath(String fullPath, int userFolderLength) {
         String path = fullPath.substring(userFolderLength);
         int lastSlashIndex = path.lastIndexOf('/');
-        return lastSlashIndex != -1 ? path.substring(0,lastSlashIndex) : path;
+        return lastSlashIndex != -1 ? path.substring(0, lastSlashIndex) : path;
     }
 }

@@ -17,7 +17,7 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CustomUserDetails implements UserDetails {
 
     Long id;

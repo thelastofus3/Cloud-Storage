@@ -14,7 +14,7 @@ import java.io.InputStream;
 
 @Repository
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FileRepositoryImpl implements FileRepository {
 
     MinioProperties minioProperties;
@@ -51,13 +51,13 @@ public class FileRepositoryImpl implements FileRepository {
     @Override
     @SneakyThrows
     public void copyFile(String from, String to) {
-            minioClient.copyObject(CopyObjectArgs.builder()
-                    .source(CopySource.builder()
-                            .bucket(minioProperties.getBucket())
-                            .object(from)
-                            .build())
-                    .bucket(minioProperties.getBucket())
-                    .object(to)
-            .build());
+        minioClient.copyObject(CopyObjectArgs.builder()
+                .source(CopySource.builder()
+                        .bucket(minioProperties.getBucket())
+                        .object(from)
+                        .build())
+                .bucket(minioProperties.getBucket())
+                .object(to)
+                .build());
     }
 }

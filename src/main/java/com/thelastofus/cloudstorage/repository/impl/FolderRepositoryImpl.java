@@ -18,7 +18,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FolderRepositoryImpl implements FolderRepository {
 
     MinioProperties minioProperties;
@@ -37,7 +37,7 @@ public class FolderRepositoryImpl implements FolderRepository {
     @SneakyThrows
     public void createFolder(String name) {
         minioClient.putObject(PutObjectArgs.builder()
-                .stream(new ByteArrayInputStream(new byte[] {}), 0, -1)
+                .stream(new ByteArrayInputStream(new byte[]{}), 0, -1)
                 .bucket(minioProperties.getBucket())
                 .object(name)
                 .build());
@@ -53,7 +53,7 @@ public class FolderRepositoryImpl implements FolderRepository {
                         .build())
                 .bucket(minioProperties.getBucket())
                 .object(to)
-        .build());
+                .build());
     }
 
     @Override

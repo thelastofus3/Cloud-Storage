@@ -5,7 +5,7 @@ import lombok.experimental.FieldDefaults;
 
 @Getter
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public enum SizeUnit {
     BYTES(" B"),
     KIBIBYTES(" KiB"),

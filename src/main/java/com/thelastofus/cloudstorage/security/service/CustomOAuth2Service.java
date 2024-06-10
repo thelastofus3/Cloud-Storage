@@ -15,14 +15,14 @@ import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CustomOAuth2Service extends DefaultOAuth2UserService {
 
     Map<String, Function<OAuth2User, OAuth2User>> oauthUserFactories;
 
     @Override
     @SneakyThrows
-    public OAuth2User loadUser(OAuth2UserRequest userRequest)  {
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();

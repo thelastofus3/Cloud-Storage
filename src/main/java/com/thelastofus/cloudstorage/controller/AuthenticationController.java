@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationController {
 
     private static final String AUTH_REGISTRATION = "/auth/registration";
@@ -24,16 +24,18 @@ public class AuthenticationController {
     UserService userService;
 
     @GetMapping(AUTH_LOGIN)
-    public String showLoginPage(){
+    public String showLoginPage() {
         return "auth/login";
     }
+
     @GetMapping(AUTH_REGISTRATION)
-    public String showRegistrationPage(@ModelAttribute("user") UserRegistration userRegistration){
+    public String showRegistrationPage(@ModelAttribute("user") UserRegistration userRegistration) {
         return "auth/registration";
     }
+
     @PostMapping(AUTH_REGISTRATION)
     public String doRegistration(@ModelAttribute("user") @Valid UserRegistration userRegistration,
-                                 BindingResult bindingResult){
+                                 BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "auth/registration";
 

@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MinioConfiguration {
 
     MinioProperties minioProperties;
@@ -20,7 +20,7 @@ public class MinioConfiguration {
         return MinioClient.builder()
                 .endpoint(minioProperties.getUrl())
                 .credentials(minioProperties.getAccessKey()
-                        ,minioProperties.getSecretKey())
+                        , minioProperties.getSecretKey())
                 .build();
     }
 

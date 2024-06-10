@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FolderRenameRequest extends FolderRequest{
+public class FolderRenameRequest extends FolderRequest {
 
     String from;
     @NotBlank(message = "Name of the folder should not be empty")

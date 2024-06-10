@@ -16,7 +16,7 @@ import java.security.Principal;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SearchController {
 
 
@@ -25,7 +25,7 @@ public class SearchController {
     StorageService storageService;
 
     @ModelAttribute
-    public void addAttributes(Principal principal, Model model){
+    public void addAttributes(Principal principal, Model model) {
         model.addAttribute("username", principal.getName());
     }
 

@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FolderController {
 
     private static final String FOLDER_UPLOAD = "/folder/upload";
@@ -67,7 +67,7 @@ public class FolderController {
     }
 
     @PatchMapping(FOLDER_RENAME)
-    public String renameFolder(@Valid @ModelAttribute("folderRename")FolderRenameRequest folderRenameRequest,
+    public String renameFolder(@Valid @ModelAttribute("folderRename") FolderRenameRequest folderRenameRequest,
                                BindingResult bindingResult, Model model) {
         handleBindingResultErrors(bindingResult, model);
 

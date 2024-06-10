@@ -21,7 +21,7 @@ import java.security.Principal;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class HomeController {
 
     private static final String HOME = "/";
@@ -29,7 +29,7 @@ public class HomeController {
     StorageService storageService;
 
     @ModelAttribute
-    public void addAttributes(Principal principal, Model model){
+    public void addAttributes(Principal principal, Model model) {
         model.addAttribute("username", principal.getName());
     }
 
@@ -44,10 +44,10 @@ public class HomeController {
                               @ModelAttribute("fileRename") FileRenameRequest fileRenameRequest,
                               @ModelAttribute("folderRename") FolderRenameRequest folderRenameRequest,
                               @RequestParam(value = "path", required = false, defaultValue = "") String currentPath,
-                              Principal principal, Model model){
+                              Principal principal, Model model) {
 
-        model.addAttribute("storageObjects",storageService.storageObjects(currentPath, principal));
-        model.addAttribute("storageSummary",storageService.storageSummary(currentPath, principal));
+        model.addAttribute("storageObjects", storageService.storageObjects(currentPath, principal));
+        model.addAttribute("storageSummary", storageService.storageSummary(currentPath, principal));
 
         return "storage/home";
     }

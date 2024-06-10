@@ -18,7 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -26,7 +25,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FileController {
 
     private static final String FILE_UPLOAD = "/file/upload";
@@ -59,7 +58,7 @@ public class FileController {
     }
 
     @PatchMapping(FILE_RENAME)
-    public String renameFile(@Valid @ModelAttribute("fileRename")FileRenameRequest fileRenameRequest,
+    public String renameFile(@Valid @ModelAttribute("fileRename") FileRenameRequest fileRenameRequest,
                              BindingResult bindingResult, Model model) {
         handleBindingResultErrors(bindingResult, model);
 
@@ -85,6 +84,7 @@ public class FileController {
                 .body(resource);
 
     }
+
     private void handleBindingResultErrors(BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors())
             model.addAttribute("errorMessages", bindingResult.getAllErrors());

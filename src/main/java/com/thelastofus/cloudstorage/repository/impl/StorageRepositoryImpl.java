@@ -15,7 +15,7 @@ import java.security.Principal;
 
 @Repository
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class StorageRepositoryImpl implements StorageRepository {
 
     MinioProperties minioProperties;

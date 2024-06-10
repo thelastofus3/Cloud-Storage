@@ -31,7 +31,7 @@ import static com.thelastofus.cloudstorage.util.storage.StorageUtil.*;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FolderServiceImpl implements FolderService {
 
     FolderRepository folderRepository;
@@ -77,7 +77,7 @@ public class FolderServiceImpl implements FolderService {
         String path = getFolderPath(folderDownloadRequest.getOwner(), folderDownloadRequest.getPath());
         String name = folderDownloadRequest.getName();
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             ZipOutputStream zos = new ZipOutputStream(baos)){
+             ZipOutputStream zos = new ZipOutputStream(baos)) {
             addFilesAndFoldersToZip(zos, path, name);
             zos.close();
             return new ByteArrayResource(baos.toByteArray());
@@ -99,10 +99,10 @@ public class FolderServiceImpl implements FolderService {
     private void addFilesAndFoldersToNewFolder(String from, String to) {
         try {
             Iterable<Result<Item>> results = storageRepository.getObjects(from, false);
-            for(Result<Item> result : results) {
+            for (Result<Item> result : results) {
                 Item item = result.get();
                 String objectName = item.objectName();
-                if (item.isDir()){
+                if (item.isDir()) {
                     addFilesAndFoldersToNewFolder(objectName, getNewFolderPath(objectName, to));
                 } else {
                     folderRepository.copyFolder(objectName, getNewFilePath(objectName, to));

@@ -12,12 +12,12 @@ public class SizeUtil {
 
     public static String convertFromB(long size) {
         BigDecimal sizeInB = new BigDecimal(size);
-        if (sizeInB.compareTo(BToKiB) <= 0){
+        if (sizeInB.compareTo(BToKiB) <= 0) {
             return sizeInB + SizeUnit.BYTES.getAbbreviation();
         } else if (sizeInB.compareTo(BToMiB) >= 0) {
             return sizeInB.divide(BToMiB, 1, RoundingMode.HALF_UP) + SizeUnit.MEBIBYTES.getAbbreviation();
         } else {
-            return sizeInB.divide(BToKiB, 1,RoundingMode.HALF_UP) + SizeUnit.KIBIBYTES.getAbbreviation();
+            return sizeInB.divide(BToKiB, 1, RoundingMode.HALF_UP) + SizeUnit.KIBIBYTES.getAbbreviation();
         }
     }
 

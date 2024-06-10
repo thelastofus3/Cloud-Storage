@@ -17,8 +17,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
-public class SecurityConfiguration  {
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class SecurityConfiguration {
 
     CustomOAuth2Service customOAuth2Service;
     OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
@@ -27,24 +27,24 @@ public class SecurityConfiguration  {
     @SneakyThrows
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/login","/error","/auth/registration","/static/**").permitAll()
-                .anyRequest().authenticated())
-       .formLogin(login -> login
-               .loginPage("/auth/login")
-               .loginProcessingUrl("/auth/login")
-               .defaultSuccessUrl("/",true)
-               .failureUrl("/auth/login?error=true"))
-       .logout(logout -> logout
-               .logoutUrl("/auth/logout")
-               .logoutSuccessUrl("/auth/login"))
-       .oauth2Login(oauth2 -> oauth2
-               .loginPage("/auth/login")
-               .userInfoEndpoint(userEndpoint -> userEndpoint
-                       .userService(customOAuth2Service))
-               .defaultSuccessUrl("/",true)
-               .successHandler(oAuth2LoginSuccessHandler)
-               .failureUrl("/auth/login?error=true")
-       );
+                        .requestMatchers("/auth/login", "/error", "/auth/registration", "/static/**").permitAll()
+                        .anyRequest().authenticated())
+                .formLogin(login -> login
+                        .loginPage("/auth/login")
+                        .loginProcessingUrl("/auth/login")
+                        .defaultSuccessUrl("/", true)
+                        .failureUrl("/auth/login?error=true"))
+                .logout(logout -> logout
+                        .logoutUrl("/auth/logout")
+                        .logoutSuccessUrl("/auth/login"))
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/auth/login")
+                        .userInfoEndpoint(userEndpoint -> userEndpoint
+                                .userService(customOAuth2Service))
+                        .defaultSuccessUrl("/", true)
+                        .successHandler(oAuth2LoginSuccessHandler)
+                        .failureUrl("/auth/login?error=true")
+                );
 
         return http.build();
     }

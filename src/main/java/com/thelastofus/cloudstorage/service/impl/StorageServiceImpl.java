@@ -67,7 +67,7 @@ public class StorageServiceImpl implements StorageService {
     private void findObjectsRecursively(String query, String currentPath, List<StorageObject> storageObjects, Principal principal) {
         try {
             Iterable<Result<Item>> results = storageRepository.getObjects(currentPath, false);
-            for(Result<Item> result : results) {
+            for (Result<Item> result : results) {
                 Item item = result.get();
                 String objectName = getFileOrFolderName(item.objectName(), item.isDir());
 
@@ -89,7 +89,7 @@ public class StorageServiceImpl implements StorageService {
             for (Result<Item> ignored : results) {
                 countOfObjects++;
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new NoSuchFilesException("Failed to get information about files for user: " + principal.getName() + ", error: " + e.getMessage());
         }
 

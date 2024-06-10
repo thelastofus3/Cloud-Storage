@@ -23,7 +23,7 @@ import static com.thelastofus.cloudstorage.util.storage.StorageUtil.*;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FileServiceImpl implements FileService {
 
     FileRepository fileRepository;
