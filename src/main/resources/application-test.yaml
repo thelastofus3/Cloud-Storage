@@ -15,4 +15,3 @@ minio:
   url: http://localhost:9000
   accessKey: user
   secretKey: user
-  memory-limit: 1073741824

@@ -49,5 +49,4 @@ minio:
   url: ${MINIO_URL}
   accessKey: ${MINIO_USER}
   secretKey: ${MINIO_PASSWORD}
-  memoryLimit: ${MINIO_LIMIT}
 
