@@ -31,6 +31,11 @@
                                     Password error
                                 </div>
                             </div>
+                            <div th:if="${#fields.hasErrors('email')}">
+                                <div class="alert alert-light text-center" role="alert" th:errors="*{email}">
+                                    Password error
+                                </div>
+                            </div>
                             <div th:if="${#fields.hasErrors('username')}">
                                 <div class="alert alert-light text-center" role="alert" th:errors="*{username}">
                                     Login error
