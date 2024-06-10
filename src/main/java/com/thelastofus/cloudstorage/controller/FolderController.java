@@ -15,6 +15,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 
 @Slf4j
 @Controller
@@ -85,7 +88,7 @@ public class FolderController {
         return ResponseEntity.ok()
                 .contentLength(resource.contentLength())
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .header("Content-Disposition", "attachment; filename=" + folderDownloadRequest.getName() + ".zip")
+                .header("Content-Disposition", "attachment; filename=" + URLEncoder.encode(folderDownloadRequest.getName(), StandardCharsets.UTF_8).replace("+", "%20") + ".zip")
                 .body(resource);
     }
 

@@ -1,5 +1,6 @@
 package com.thelastofus.cloudstorage.service.impl;
 
+import com.google.common.io.ByteStreams;
 import com.thelastofus.cloudstorage.dto.folder.*;
 import com.thelastofus.cloudstorage.exception.*;
 import com.thelastofus.cloudstorage.repository.FolderRepository;
@@ -118,9 +119,11 @@ public class FolderServiceImpl implements FolderService {
             for (Result<Item> result : results) {
                 Item item = result.get();
                 String objectName = item.objectName();
+                InputStream inputStream = folderRepository.downloadFolder(objectName);
                 if (!item.isDir()) {
                     String fileName = objectName.substring(objectName.indexOf(folderName));
                     zos.putNextEntry(new ZipEntry(fileName));
+                    ByteStreams.copy(inputStream, zos);
                     zos.closeEntry();
                 }
             }
