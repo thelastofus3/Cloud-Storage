@@ -52,3 +52,11 @@ Logged-in users can log out of their accounts to terminate their session.
 ### Utilize Docker
 - Utilize Docker for easy setup and management of required services like MySQL, MinIO, and Redis.
 - Write a Docker Compose file to orchestrate the containers needed for the application stack.
+## Login 
+![Image alt](https://github.com/thelastofus3/Cloud-Storage/blob/master/cloud/login.png)
+
+## Registration 
+![Image alt](https://github.com/thelastofus3/Cloud-Storage/blob/master/cloud/registration.png)
+
+## Home page
+![Image alt](https://github.com/thelastofus3/Cloud-Storage/blob/master/cloud/main.png)
