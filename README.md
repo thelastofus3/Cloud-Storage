@@ -1,4 +1,4 @@
-##Cloud Storage Application
+Cloud Storage Application
 Welcome to the Cloud Storage Application! This README provides an overview of the application's functionality and architecture.
 
 Registration
